@@ -1,0 +1,685 @@
+---
+import MainLayout from '../layouts/main.astro';
+
+// Content for the hero slider
+const slides = [
+  {
+    image: 'https://i.imgur.com/dxsvS4U.jpeg',
+    title: 'Școala de Șoferi',
+    highlight: 'START DRIVE BVL',
+    desc: 'Performanță, Siguranță și Profesionalism în Inima Sucevei. Pregătim generații de șoferi responsabili.'
+  },
+  {
+    image: 'https://i.imgur.com/miHAgHu.jpeg',
+    title: 'Instructori Auto',
+    highlight: 'De Top',
+    desc: 'O echipă dedicată și răbdătoare, gata să îți ofere tot suportul de care ai nevoie pentru a promova.'
+  },
+  {
+    image: 'https://i.imgur.com/SsZQl1w.jpeg',
+    title: 'Toate Categoriile',
+    highlight: 'B, B1, C, CE',
+    desc: 'De la autoturisme până la camioane de mare tonaj, avem resursele și experiența necesară.'
+  }
+];
+
+const reviews = [
+  {
+    name: "Alexandru Popa",
+    initial: "A",
+    time: "acum 2 luni",
+    text: "Am avut o experiență excelentă cu școala de șoferi Start Drive BVL. Instructorii sunt calmi, profesioniști și te învață de la zero tot ce trebuie să știi pentru a lua permisul din prima. O recomand cu mare încredere!",
+    stars: 5,
+    bg: "bg-blue-500"
+  },
+  {
+    name: "Maria Ionescu",
+    initial: "M",
+    time: "acum 3 luni",
+    text: "Cea mai bună școală auto din Suceava! Mașinile sunt impecabile, iar programul de condus a fost mereu flexibil, perfect pentru programul meu. Am luat sala cu 26 și traseul fără emoții datorită pregătirii de top.",
+    stars: 5,
+    bg: "bg-rose-500"
+  },
+  {
+    name: "Cristian D.",
+    initial: "C",
+    time: "acum 5 luni",
+    text: "Profesionalism la superlativ. Instructorul meu a avut extrem de multă răbdare, mi-a explicat fiecare detaliu și a creat o atmosferă relaxată la volan, fără stres. Am recomandat deja Start Drive tuturor prietenilor mei.",
+    stars: 5,
+    bg: "bg-emerald-500"
+  }
+];
+
+const googleReviewsUrl = "https://www.google.com/search?q=START+DRIVE+BVL+(Scoala+de+Soferi)+Recenzii";
+
+const galleryPreview = [
+  "https://i.imgur.com/a7H0dcY.jpeg",
+  "https://i.imgur.com/y7rAASu.jpeg",
+  "https://i.imgur.com/TNY8kty.jpeg",
+  "https://i.imgur.com/GZrbulS.jpeg",
+  "https://i.imgur.com/lL14tcK.jpeg",
+  "https://i.imgur.com/5FAerI9.jpeg",
+];
+
+const faqs = [
+  {
+    q: "Cât durează cursurile pentru școala de șoferi (Categoria B)?",
+    a: "Cursurile pentru obținerea permisului auto de categoria B la școala noastră din Suceava durează minim 4 săptămâni. Acestea includ 24 de ore de pregătire teoretică (legislație rutieră, prim ajutor, mecanică) și 30 de ore de conducere practică alături de instructori autorizați."
+  },
+  {
+    q: "Se poate achita școlarizarea auto în rate?",
+    a: "Da, la Start Drive BVL oferim flexibilitate maximă cursanților noștri. Poți achita școlarizarea în rate egale, fără dobândă, pe parcursul celor 4 săptămâni de pregătire, prima rată achitându-se la înscriere."
+  },
+  {
+    q: "Ce documente conține dosarul de înscriere la examenul auto?",
+    a: "Pentru a te înscrie, ai nevoie de: Cartea de identitate (în original și copie), aviz psihologic eliberat de un cabinet autorizat, fișa medicală auto, cazier judiciar cu mențiunea 'examen auto' și chitanța pentru plata taxei de permis."
+  },
+  {
+    q: "Pot alege mașina și instructorul auto pe care voi face pregătirea?",
+    a: "Absolut! Dispuneam de o flotă auto modernă și diversificată (cutie manuală și automată) și o echipă de instructori cu o rată mare de promovabilitate. Ne adaptăm preferințelor tale pentru a-ți asigura cel mai ridicat nivel de confort la volan."
+  },
+  {
+    q: "Ce se întâmplă dacă pic examenul practic (traseul)?",
+    a: "Dacă ești respins la proba practică, dosarul rămâne valabil timp de 1 an de la promovarea sălii. Va trebui să efectuezi obligatoriu un pachet suplimentar minim de ore de condus (3 ședințe) înainte de a te putea reprograma pentru un nou examen auto."
+  },
+  {
+    q: "Sala de legislație se susține înainte de a începe orele de condus?",
+    a: "Da, legea impune parcurgerea și finalizarea cursurilor de pregătire teoretică (legislație rutieră) înainte de a începe pregătirea practică (orele de condus) pe drumurile publice."
+  }
+];
+
+const blogPosts = [
+  {
+    title: "Cum să scapi de emoții la examenul auto",
+    date: "15 Mai 2026",
+    excerpt: "Descoperă cele mai bune 5 tehnici pentru a-ți controla emoțiile în ziua examenului cu polițistul.",
+    image: "https://i.imgur.com/TNY8kty.jpeg"
+  },
+  {
+    title: "Modificări legislative codul rutier 2026",
+    date: "02 Mai 2026",
+    excerpt: "Află ce schimbări importante au apărut în Codul Rutier anul acesta și cum te afectează ca viitor șofer.",
+    image: "https://i.imgur.com/SsZQl1w.jpeg"
+  },
+  {
+    title: "Cum alegi categoria potrivită de permis?",
+    date: "20 Aprilie 2026",
+    excerpt: "Ghid complet despre diferențele dintre categoriile B, BE, C și CE și oportunitățile pe care ți le oferă.",
+    image: "https://i.imgur.com/dxsvS4U.jpeg"
+  }
+];
+---
+
+<MainLayout>
+  <!-- Hero Slider -->
+  <section class="relative w-full h-[600px] lg:h-[750px] overflow-hidden bg-slate-900 group">
+    <div id="slider-container" class="relative w-full h-full">
+      {slides.map((slide, i) => (
+        <div class="slide absolute inset-0 w-full h-full opacity-0 transition-opacity duration-1000 ease-in-out" data-index={i}>
+          <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/20 z-10"></div>
+          <img src={slide.image} alt={slide.title} class="absolute inset-0 w-full h-full object-cover scale-100 slide-img transition-transform duration-[8000ms] ease-out" />
+          
+          <div class="relative z-20 h-full flex items-center px-6 md:px-16 max-w-7xl mx-auto">
+            <div class="max-w-2xl slide-content translate-y-12 opacity-0 transition-all duration-1000 ease-out delay-300">
+              <!-- Ovasal inspired badge -->
+              <div class="inline-flex items-center gap-2 bg-rose-600/20 border border-rose-500/30 text-white px-4 py-1.5 rounded-full mb-6 backdrop-blur text-sm font-semibold">
+                <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+                Garanția calității. Sute de Suceveni au REUȘIT!
+              </div>
+
+              <h2 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 drop-shadow-xl tracking-tight leading-[1.1]">
+                {slide.title} <br/>
+                <span class="text-[#cc0000]">{slide.highlight}</span>
+              </h2>
+              <p class="text-lg md:text-xl text-slate-200 mb-10 font-light drop-shadow max-w-xl">
+                {slide.desc}
+              </p>
+              <div class="flex flex-col sm:flex-row gap-4">
+                <a href="/inscrieri" class="bg-[#cc0000] hover:bg-[#a30000] text-white font-bold py-4 px-8 rounded shadow-lg shadow-rose-600/30 transition-transform hover:-translate-y-1 text-center uppercase tracking-wider text-sm">
+                  Înscrie-te Online
+                </a>
+                <a href="/categorii" class="bg-white/10 hover:bg-white/20 backdrop-blur border border-white/30 text-white font-bold py-4 px-8 rounded transition-all hover:-translate-y-1 text-center uppercase tracking-wider text-sm">
+                  Vezi Categoriile
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Ovasal Trust Strip Bottom -->
+    <div class="absolute bottom-0 left-0 right-0 z-30 bg-black/40 backdrop-blur-md border-t border-white/10 hidden md:block">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center text-white">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-[#cc0000] rounded-full"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+          <span class="font-semibold tracking-widest text-sm uppercase">Plata în rate flexibile</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-[#cc0000] rounded-full"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg></div>
+          <span class="font-semibold tracking-widest text-sm uppercase">Instructori de TOP</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-[#cc0000] rounded-full"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg></div>
+          <span class="font-semibold tracking-widest text-sm uppercase">Garanția Calității</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Arrows -->
+    <button id="prev-slide" class="absolute left-6 top-1/2 -translate-y-1/2 z-30 w-14 h-14 bg-white/10 hover:bg-white/30 backdrop-blur border border-white/20 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all hover:scale-110">
+      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+    <button id="next-slide" class="absolute right-6 top-1/2 -translate-y-1/2 z-30 w-14 h-14 bg-white/10 hover:bg-white/30 backdrop-blur border border-white/20 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all hover:scale-110">
+      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    </button>
+  </section>
+
+  <!-- Tipuri de școlarizare -->
+  <section class="py-24 bg-[#f8fafc] relative overflow-hidden">
+    <!-- Decorativ -->
+    <div class="absolute top-0 right-0 -mr-32 -mt-32 w-96 h-96 rounded-full bg-rose-100/50 blur-3xl z-0 pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+      <div class="grid lg:grid-cols-2 gap-16 items-start">
+        <div class="max-w-xl">
+          <span class="text-sm font-bold text-[#cc0000] tracking-widest uppercase mb-2 block">START DRIVE BVL</span>
+          <h2 class="text-4xl md:text-5xl font-extrabold text-slate-800 mb-8 leading-tight">Excelență în Educația Auto din Suceava</h2>
+          <p class="text-slate-600 text-lg leading-relaxed mb-6">
+            Alegerea unei școli de șoferi este primul pas către independența ta. Cu <strong>Start Drive BVL</strong>, ai verde la condus. Oferim o abordare completă, combinând <span class="font-bold text-slate-800">sală de legislație modernizată</span>, instructori cu ani de experiență și o <span class="font-bold text-slate-800">flotă auto de ultimă generație</span>.
+          </p>
+          <p class="text-slate-600 text-lg leading-relaxed mb-6">
+            Misiunea noastră este să formăm conducători auto responsabili și siguri pe ei. De la pregătirea teoretică până la examenul practic cu poliția, te ghidăm pas cu pas. Procentajul nostru de promovabilitate se numără printre cele mai ridicate din județ datorită dedicării echipei noastre.
+          </p>
+          <ul class="space-y-4 mb-8">
+             <li class="flex items-center gap-3"><svg class="w-5 h-5 text-[#cc0000]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="text-slate-700 font-medium">Program de condus flexibil adaptat ție</span></li>
+             <li class="flex items-center gap-3"><svg class="w-5 h-5 text-[#cc0000]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="text-slate-700 font-medium">Plată în rate egale, fără absolut nicio dobândă</span></li>
+             <li class="flex items-center gap-3"><svg class="w-5 h-5 text-[#cc0000]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="text-slate-700 font-medium">Suport complet pentru dosarul de examen DRPCIV</span></li>
+          </ul>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-8 relative lg:-mt-12">
+          <!-- Glassmorphism Card 1 -->
+          <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-2xl border border-white overflow-hidden hover:-translate-y-2 transition-all duration-300 h-full flex flex-col relative z-20 group">
+            <div class="relative overflow-hidden h-56">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent z-10 pointer-events-none"></div>
+              <img src="https://i.imgur.com/dxsvS4U.jpeg" alt="Flota auto Categoria B" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+              <h3 class="absolute bottom-4 left-6 text-2xl font-bold text-white z-20">Categorii Auto</h3>
+            </div>
+            <div class="p-8 flex flex-col flex-grow items-center text-center">
+              <p class="text-slate-600 font-light mb-8 text-sm flex-grow">
+                Fie că dorești permisul pentru <strong>categoria B</strong>, ai nevoie de remorcă (<strong>BE</strong>) sau țintești cariera de șofer profesionist (<strong>C, CE</strong>), dispunem de vehicule moderne.
+              </p>
+              <a href="/categorii" class="w-full bg-slate-900 hover:bg-[#cc0000] text-white py-4 px-6 text-sm font-bold uppercase tracking-wider rounded transition-colors flex items-center justify-between group-hover:shadow-lg">
+                Vezi Mașinile
+                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+          
+          <!-- Glassmorphism Card 2 -->
+          <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-2xl border border-white overflow-hidden hover:-translate-y-2 transition-all duration-300 lg:mt-16 h-full flex flex-col relative z-10 group">
+            <div class="relative overflow-hidden h-56">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent z-10 pointer-events-none"></div>
+              <img src="https://i.imgur.com/SsZQl1w.jpeg" alt="Sala de curs legislație auto" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+              <h3 class="absolute bottom-4 left-6 text-2xl font-bold text-white z-20">Pregătire Teoretică</h3>
+            </div>
+            <div class="p-8 flex flex-col flex-grow items-center text-center">
+              <p class="text-slate-600 font-light mb-8 text-sm flex-grow">
+                Punem accent pe o pregătire teoretică de excepție. Sala noastră este dotată cu tehnologie interactivă și simulatoare de examen auto.
+              </p>
+              <a href="/inscrieri" class="w-full bg-slate-900 hover:bg-[#cc0000] text-white py-4 px-6 text-sm font-bold uppercase tracking-wider rounded transition-colors flex items-center justify-between group-hover:shadow-lg">
+                Înscrie-te
+                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cine suntem & De ce noi -->
+  <section class="py-24 bg-white relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <!-- Text -->
+        <div>
+          <span class="text-sm font-bold text-[#cc0000] tracking-widest uppercase mb-2 block">DESPRE NOI</span>
+          <h2 class="text-4xl md:text-5xl font-extrabold text-slate-800 mb-6 leading-tight">De ce să alegi Start Drive BVL?</h2>
+          <p class="text-slate-600 text-lg leading-relaxed mb-6">
+            Cu ani de experiență în domeniul educației rutiere, școala noastră de șoferi din Suceava se distinge prin profesionalism, răbdare și rezultate dovedite. 
+          </p>
+          <div class="space-y-6 mt-8">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-full bg-rose-50 text-[#cc0000] flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+              <div>
+                <h4 class="text-xl font-bold text-slate-800 mb-1">Rată Mare de Promovabilitate</h4>
+                <p class="text-slate-600 font-light">Mândria noastră este numărul mare de cursanți care obțin permisul auto din prima încercare, datorită pregătirii riguroase și simulărilor de examen.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-full bg-rose-50 text-[#cc0000] flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+              <div>
+                <h4 class="text-xl font-bold text-slate-800 mb-1">Program Adaptabil</h4>
+                <p class="text-slate-600 font-light">Înțelegem că ai un program încărcat. Oferim flexibilitate în programarea orelor de condus, încercând să ne pliem pe disponibilitatea ta.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-full bg-rose-50 text-[#cc0000] flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+              </div>
+              <div>
+                <h4 class="text-xl font-bold text-slate-800 mb-1">Plată în Rate (Fără Dobândă)</h4>
+                <p class="text-slate-600 font-light">Costul școlii de șoferi nu trebuie să fie o povară. Oferim posibilitatea plății în rate egale pe toată durata cursurilor.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Image Grid -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-4 mt-8">
+            <img src="https://i.imgur.com/dxsvS4U.jpeg" alt="Instructor Auto" class="w-full h-48 object-cover rounded-2xl shadow-lg" loading="lazy" />
+            <img src="https://i.imgur.com/TNY8kty.jpeg" alt="Cursant fericit" class="w-full h-64 object-cover rounded-2xl shadow-lg" loading="lazy" />
+          </div>
+          <div class="space-y-4">
+            <img src="https://i.imgur.com/SsZQl1w.jpeg" alt="Sala Legislatie" class="w-full h-64 object-cover rounded-2xl shadow-lg" loading="lazy" />
+            <img src="https://i.imgur.com/y7rAASu.jpeg" alt="Masina Scoala" class="w-full h-48 object-cover rounded-2xl shadow-lg" loading="lazy" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Carusel Categorii (Ovasal Style) -->
+  <section class="py-24 bg-[#111111] relative overflow-hidden">
+    
+    <!-- Decorații fundal (Linii punctate accent) -->
+    <div class="absolute left-10 top-1/2 flex gap-2">
+      <div class="w-8 h-2 bg-[#cc0000] transform -skew-x-12"></div>
+      <div class="w-8 h-2 bg-[#cc0000] transform -skew-x-12"></div>
+      <div class="w-8 h-2 bg-[#cc0000] transform -skew-x-12"></div>
+    </div>
+    <div class="absolute right-10 bottom-24 flex gap-2">
+      <div class="w-8 h-2 bg-[#cc0000] transform -skew-x-12"></div>
+      <div class="w-8 h-2 bg-[#cc0000] transform -skew-x-12"></div>
+      <div class="w-8 h-2 bg-[#cc0000] transform -skew-x-12"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 relative z-10">
+        <h2 class="text-4xl md:text-5xl font-extrabold text-white">Permis auto</h2>
+      </div>
+
+      <div class="flex justify-end gap-2 mb-4 relative z-10">
+        <button id="cat-prev" class="w-10 h-10 border border-white/20 flex items-center justify-center text-white hover:bg-[#cc0000] hover:border-[#cc0000] transition-colors focus:outline-none">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <button id="cat-next" class="w-10 h-10 border border-white/20 flex items-center justify-center text-white hover:bg-[#cc0000] hover:border-[#cc0000] transition-colors focus:outline-none">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <!-- Scrollable container -->
+      <div id="cat-scroll" class="flex overflow-x-auto gap-8 pb-12 snap-x snap-mandatory hide-scrollbar scroll-smooth relative z-10">
+        <!-- Categoria B1 -->
+        <div class="min-w-[320px] md:min-w-[380px] bg-[#1a1a1a] flex flex-col snap-center shrink-0 group relative shadow-2xl">
+          <div class="absolute -top-6 left-6 z-20">
+            <div class="relative w-16 h-16 bg-[#111111] border border-white/10 flex items-center justify-center">
+              <div class="absolute -top-1 -right-1 w-3 h-3 bg-[#cc0000]"></div>
+              <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M5 10V8a2 2 0 012-2h10a2 2 0 012 2v2M3 10v6a2 2 0 002 2h14a2 2 0 002-2v-6"/></svg>
+            </div>
+          </div>
+          <div class="h-56 w-full overflow-hidden relative">
+            <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10"></div>
+            <img src="https://i.imgur.com/dxsvS4U.jpeg" alt="Microcar" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+          </div>
+          <div class="p-8 flex-grow flex flex-col">
+            <h3 class="text-xl font-bold text-white mb-4">Permis de conducere<br/>Categoria B1</h3>
+            <p class="text-slate-400 font-light text-sm leading-relaxed mb-8 flex-grow">Începe experiența la volan de la 16 ani. Categoria B1 îți permite să conduci cvadricicluri și mașini mici de până la 400kg.</p>
+          </div>
+          <a href="/categorii" class="w-full bg-white h-14 flex items-center justify-between px-6 hover:bg-slate-100 transition-colors">
+            <div class="flex gap-1 text-slate-300">
+              <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7 7-7v14zm8 0l-7-7 7-7v14z" transform="scale(-1, 1) translate(-24, 0)"/></svg>
+            </div>
+            <span class="text-slate-900 font-bold text-xs uppercase tracking-widest">VEZI DETALII</span>
+          </a>
+        </div>
+
+        <!-- Categoria B -->
+        <div class="min-w-[320px] md:min-w-[380px] bg-[#1a1a1a] flex flex-col snap-center shrink-0 group relative shadow-2xl">
+          <div class="absolute -top-6 left-6 z-20">
+            <div class="relative w-16 h-16 bg-[#111111] border border-white/10 flex items-center justify-center">
+              <div class="absolute -top-1 -right-1 w-3 h-3 bg-[#cc0000]"></div>
+              <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M5 10V8a2 2 0 012-2h10a2 2 0 012 2v2M3 10v6a2 2 0 002 2h14a2 2 0 002-2v-6"/></svg>
+            </div>
+          </div>
+          <div class="h-56 w-full overflow-hidden relative">
+            <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10"></div>
+            <img src="https://i.imgur.com/dxsvS4U.jpeg" alt="Masina Start Drive" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+          </div>
+          <div class="p-8 flex-grow flex flex-col">
+            <h3 class="text-xl font-bold text-white mb-4">Permis de conducere<br/>Categoria B</h3>
+            <p class="text-slate-400 font-light text-sm leading-relaxed mb-8 flex-grow">Vrei să obții permisul categoria B și să pornești în una din aventurile cele mai interesante din viața ta?</p>
+          </div>
+          <a href="/categorii" class="w-full bg-white h-14 flex items-center justify-between px-6 hover:bg-slate-100 transition-colors">
+            <div class="flex gap-1 text-slate-300">
+              <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7 7-7v14zm8 0l-7-7 7-7v14z" transform="scale(-1, 1) translate(-24, 0)"/></svg>
+            </div>
+            <span class="text-slate-900 font-bold text-xs uppercase tracking-widest">VEZI DETALII</span>
+          </a>
+        </div>
+
+        <!-- Categoria BE -->
+        <div class="min-w-[320px] md:min-w-[380px] bg-[#1a1a1a] flex flex-col snap-center shrink-0 group relative shadow-2xl">
+          <div class="absolute -top-6 left-6 z-20">
+            <div class="relative w-16 h-16 bg-[#111111] border border-white/10 flex items-center justify-center">
+              <div class="absolute -top-1 -right-1 w-3 h-3 bg-[#cc0000]"></div>
+              <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v8l9-11h-7z"/></svg>
+            </div>
+          </div>
+          <div class="h-56 w-full overflow-hidden relative">
+            <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10"></div>
+            <img src="https://i.imgur.com/TNY8kty.jpeg" alt="Ansamblu BE" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+          </div>
+          <div class="p-8 flex-grow flex flex-col">
+            <h3 class="text-xl font-bold text-white mb-4">Permis de conducere<br/>Categoria BE</h3>
+            <p class="text-slate-400 font-light text-sm leading-relaxed mb-8 flex-grow">Adu un plus de siguranță la tractarea rulotelor sau a remorcilor de tonaj mai mare.</p>
+          </div>
+          <a href="/categorii" class="w-full bg-white h-14 flex items-center justify-between px-6 hover:bg-slate-100 transition-colors">
+            <div class="flex gap-1 text-slate-300">
+              <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7 7-7v14zm8 0l-7-7 7-7v14z" transform="scale(-1, 1) translate(-24, 0)"/></svg>
+            </div>
+            <span class="text-slate-900 font-bold text-xs uppercase tracking-widest">VEZI DETALII</span>
+          </a>
+        </div>
+
+        <!-- Categoria C -->
+        <div class="min-w-[320px] md:min-w-[380px] bg-[#1a1a1a] flex flex-col snap-center shrink-0 group relative shadow-2xl">
+          <div class="absolute -top-6 left-6 z-20">
+            <div class="relative w-16 h-16 bg-[#111111] border border-white/10 flex items-center justify-center">
+              <div class="absolute -top-1 -right-1 w-3 h-3 bg-[#cc0000]"></div>
+              <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+            </div>
+          </div>
+          <div class="h-56 w-full overflow-hidden relative">
+            <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10"></div>
+            <img src="https://i.imgur.com/a7H0dcY.jpeg" alt="Camion C" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+          </div>
+          <div class="p-8 flex-grow flex flex-col">
+            <h3 class="text-xl font-bold text-white mb-4">Permis de conducere<br/>Categoria C</h3>
+            <p class="text-slate-400 font-light text-sm leading-relaxed mb-8 flex-grow">Viitor profesionist al volanului, ești gata să faci pasul următor și să devii conducător auto de categorie C?</p>
+          </div>
+          <a href="/categorii" class="w-full bg-white h-14 flex items-center justify-between px-6 hover:bg-slate-100 transition-colors">
+            <div class="flex gap-1 text-slate-300">
+              <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7 7-7v14zm8 0l-7-7 7-7v14z" transform="scale(-1, 1) translate(-24, 0)"/></svg>
+            </div>
+            <span class="text-slate-900 font-bold text-xs uppercase tracking-widest">VEZI DETALII</span>
+          </a>
+        </div>
+        
+        <!-- Categoria CE -->
+        <div class="min-w-[320px] md:min-w-[380px] bg-[#1a1a1a] flex flex-col snap-center shrink-0 group relative shadow-2xl">
+          <div class="absolute -top-6 left-6 z-20">
+            <div class="relative w-16 h-16 bg-[#111111] border border-white/10 flex items-center justify-center">
+              <div class="absolute -top-1 -right-1 w-3 h-3 bg-[#cc0000]"></div>
+              <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+            </div>
+          </div>
+          <div class="h-56 w-full overflow-hidden relative">
+            <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10"></div>
+            <img src="https://i.imgur.com/a7H0dcY.jpeg" alt="Camion CE" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+          </div>
+          <div class="p-8 flex-grow flex flex-col">
+            <h3 class="text-xl font-bold text-white mb-4">Permis de conducere<br/>Categoria CE</h3>
+            <p class="text-slate-400 font-light text-sm leading-relaxed mb-8 flex-grow">Nivelul suprem pentru profesioniști. Cursuri pentru camion cu remorcă sau semiremorcă (TIR).</p>
+          </div>
+          <a href="/categorii" class="w-full bg-white h-14 flex items-center justify-between px-6 hover:bg-slate-100 transition-colors">
+            <div class="flex gap-1 text-slate-300">
+              <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7 7-7v14zm8 0l-7-7 7-7v14z" transform="scale(-1, 1) translate(-24, 0)"/></svg>
+            </div>
+            <span class="text-slate-900 font-bold text-xs uppercase tracking-widest">VEZI DETALII</span>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Blog Preview Section -->
+  <section class="py-24 bg-[#f8fafc]">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex flex-col sm:flex-row justify-between items-end gap-6 mb-16">
+        <div>
+          <span class="text-sm font-semibold text-slate-400 tracking-widest uppercase mb-2 block">NOUTĂȚI</span>
+          <h2 class="text-4xl font-light text-slate-800">Din Blogul Nostru</h2>
+        </div>
+        <a href="/articole" class="text-[#cc0000] font-bold hover:text-[#a30000] flex items-center gap-2 group whitespace-nowrap">
+          Toate articolele
+          <svg class="w-5 h-5 group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+        </a>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        {blogPosts.map(post => (
+          <div class="bg-white rounded-lg border border-slate-100 shadow-sm overflow-hidden group hover:shadow-xl transition-shadow">
+            <div class="h-56 overflow-hidden">
+              <img src={post.image} alt={post.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+            </div>
+            <div class="p-6">
+              <p class="text-sm text-[#cc0000] font-semibold mb-3">{post.date}</p>
+              <h3 class="text-xl font-bold text-slate-800 mb-3 group-hover:text-[#cc0000] transition-colors">{post.title}</h3>
+              <p class="text-slate-600 font-light mb-5">{post.excerpt}</p>
+              <a href="/articole" class="inline-flex items-center text-sm font-bold text-slate-900 group-hover:text-[#cc0000] transition-colors">
+                Citește mai mult <svg class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Recenzii Cursanți -->
+  <section class="py-24 bg-white border-t border-slate-100">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <span class="text-sm font-semibold text-slate-400 tracking-widest uppercase mb-2 block">CE SPUN CURSANȚII</span>
+        <h2 class="text-4xl font-light text-slate-800">Recenzii & Testimoniale</h2>
+      </div>
+      
+      <!-- Grid Recenzii -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        {reviews.map(review => (
+          <div class="bg-white border border-slate-100 rounded shadow-sm p-8 hover:shadow-md transition-shadow">
+            <!-- Top Row: User & Date -->
+            <div class="flex items-center justify-between mb-6">
+              <div class="flex items-center gap-4">
+                <div class={`w-12 h-12 rounded-full ${review.bg} text-white flex items-center justify-center text-xl font-bold`}>
+                  {review.initial}
+                </div>
+                <div class="flex flex-col">
+                  <span class="font-bold text-slate-900 text-sm">{review.name}</span>
+                  <span class="text-xs text-slate-500">{review.time}</span>
+                </div>
+              </div>
+              <!-- Google Logo Icon (subtle) -->
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+            </div>
+            
+            <!-- Stars -->
+            <div class="flex gap-1 mb-4">
+              {[...Array(review.stars)].map(() => (
+                <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              ))}
+            </div>
+
+            <!-- Text -->
+            <p class="text-slate-600 font-light leading-relaxed">
+              "{review.text}"
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <!-- Call to Action -->
+      <div class="flex flex-col items-center justify-center text-center mt-8 border-t border-slate-100 pt-16">
+        <a 
+          href={googleReviewsUrl} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="inline-flex items-center gap-3 bg-white border-2 border-[#cc0000] text-[#cc0000] hover:bg-[#cc0000] hover:text-white font-bold py-4 px-10 rounded transition-colors uppercase tracking-widest text-sm shadow-sm hover:shadow-lg group"
+        >
+          <span>Vezi mai multe recenzii pe Google</span>
+          <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="py-24 bg-gradient-to-b from-white to-slate-50 relative overflow-hidden">
+    <div class="absolute bottom-0 left-0 -ml-32 -mb-32 w-[30rem] h-[30rem] rounded-full bg-slate-100/60 blur-3xl z-0 pointer-events-none"></div>
+    <div class="max-w-4xl mx-auto px-6 relative z-10">
+      <div class="text-center mb-16">
+        <span class="text-sm font-bold text-[#cc0000] tracking-widest uppercase mb-2 block">CELE MAI PUSE ÎNTREBĂRI</span>
+        <h2 class="text-4xl md:text-5xl font-extrabold text-slate-800 mb-6">Ai nelămuriri? Te ajutăm!</h2>
+        <p class="text-slate-600 text-lg max-w-2xl mx-auto">Pregătirea dosarului și obținerea permisului auto nu trebuie să fie o bătaie de cap. Găsești mai jos cele mai frecvente întrebări primite de la cursanții noștri.</p>
+      </div>
+
+      <div class="space-y-6">
+        {faqs.map((faq, idx) => (
+          <div class="faq-item border-none rounded-2xl shadow-lg overflow-hidden bg-white hover:shadow-xl transition-all duration-300">
+            <button class="faq-btn w-full text-left px-8 py-6 flex items-center justify-between font-bold text-slate-800 md:text-lg bg-white focus:outline-none group">
+              {faq.q}
+              <div class="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center shrink-0 ml-4 group-hover:bg-[#cc0000] transition-colors duration-300">
+                <svg class="w-5 h-5 text-[#cc0000] group-hover:text-white transition-all faq-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </div>
+            </button>
+            <div class="faq-content hidden px-8 py-6 text-slate-600 font-light border-t border-slate-100 bg-slate-50 leading-relaxed text-base">
+              {faq.a}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Slider & FAQ Logic -->
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Slider
+      const slides = document.querySelectorAll('.slide');
+      const prevBtn = document.getElementById('prev-slide');
+      const nextBtn = document.getElementById('next-slide');
+      
+      let currentSlide = 0;
+      let slideInterval;
+      const intervalTime = 6000;
+
+      function goToSlide(index) {
+        if(!slides.length) return;
+        
+        slides[currentSlide].classList.remove('opacity-100', 'z-20');
+        slides[currentSlide].classList.add('opacity-0', 'z-10');
+        
+        const oldContent = slides[currentSlide].querySelector('.slide-content');
+        if(oldContent) {
+          oldContent.classList.remove('translate-y-0', 'opacity-100');
+          oldContent.classList.add('translate-y-12', 'opacity-0');
+        }
+
+        const oldImg = slides[currentSlide].querySelector('.slide-img');
+        if(oldImg) {
+          oldImg.classList.remove('scale-110');
+          oldImg.classList.add('scale-100');
+        }
+
+        currentSlide = index;
+
+        slides[currentSlide].classList.remove('opacity-0', 'z-10');
+        slides[currentSlide].classList.add('opacity-100', 'z-20');
+        
+        const newContent = slides[currentSlide].querySelector('.slide-content');
+        if(newContent) {
+          setTimeout(() => {
+            newContent.classList.remove('translate-y-12', 'opacity-0');
+            newContent.classList.add('translate-y-0', 'opacity-100');
+          }, 100);
+        }
+
+        const newImg = slides[currentSlide].querySelector('.slide-img');
+        if(newImg) {
+          setTimeout(() => {
+            newImg.classList.remove('scale-100');
+            newImg.classList.add('scale-110');
+          }, 50);
+        }
+      }
+
+      function nextSlide() { goToSlide((currentSlide + 1) % slides.length); }
+      function prevSlide() { goToSlide((currentSlide - 1 + slides.length) % slides.length); }
+
+      function startSlideShow() { slideInterval = setInterval(nextSlide, intervalTime); }
+      function resetSlideShow() { clearInterval(slideInterval); startSlideShow(); }
+
+      if(nextBtn) nextBtn.addEventListener('click', () => { nextSlide(); resetSlideShow(); });
+      if(prevBtn) prevBtn.addEventListener('click', () => { prevSlide(); resetSlideShow(); });
+      
+      if(slides.length) {
+        goToSlide(0);
+        startSlideShow();
+      }
+
+      // Carousel Categorii
+      const catScroll = document.getElementById('cat-scroll');
+      const catPrev = document.getElementById('cat-prev');
+      const catNext = document.getElementById('cat-next');
+      
+      if(catScroll && catPrev && catNext) {
+        catNext.addEventListener('click', () => {
+          catScroll.scrollBy({ left: 350, behavior: 'smooth' });
+        });
+        catPrev.addEventListener('click', () => {
+          catScroll.scrollBy({ left: -350, behavior: 'smooth' });
+        });
+      }
+
+      // FAQ Accordion
+      const faqBtns = document.querySelectorAll('.faq-btn');
+      faqBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const content = btn.nextElementSibling;
+          const icon = btn.querySelector('.faq-icon');
+          
+          // Toggle current
+          if (content.classList.contains('hidden')) {
+            content.classList.remove('hidden');
+            icon.classList.add('rotate-180');
+          } else {
+            content.classList.add('hidden');
+            icon.classList.remove('rotate-180');
+          }
+        });
+      });
+    });
+  </script>
+
+  <style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</MainLayout>

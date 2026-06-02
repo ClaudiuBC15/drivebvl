@@ -1,0 +1,215 @@
+---
+import MainLayout from '../layouts/main.astro';
+---
+
+<MainLayout>
+<style>
+.legal-page {
+background: #f9f9f9;
+min-height: 100vh;
+padding: 100px 20px 50px;
+}
+
+.legal-container {
+max-width: 900px;
+margin: 0 auto;
+background: white;
+padding: 50px;
+border-radius: 20px;
+box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.legal-title {
+font-size: 42px;
+font-weight: bold;
+color: #dc2626;
+margin-bottom: 15px;
+font-family: 'Montserrat', sans-serif;
+}
+
+.legal-subtitle {
+font-size: 16px;
+color: #666;
+margin-bottom: 40px;
+}
+
+.legal-content h2 {
+font-size: 28px;
+font-weight: bold;
+color: #000;
+margin-top: 35px;
+margin-bottom: 15px;
+font-family: 'Montserrat', sans-serif;
+}
+
+.legal-content h3 {
+font-size: 22px;
+font-weight: bold;
+color: #dc2626;
+margin-top: 25px;
+margin-bottom: 12px;
+font-family: 'Montserrat', sans-serif;
+}
+
+.legal-content p {
+font-size: 16px;
+line-height: 1.8;
+color: #333;
+margin-bottom: 20px;
+}
+
+.legal-content ul,
+.legal-content ol {
+margin-left: 30px;
+margin-bottom: 20px;
+}
+
+.legal-content li {
+font-size: 16px;
+line-height: 1.8;
+color: #333;
+margin-bottom: 10px;
+}
+
+.legal-content strong {
+color: #dc2626;
+font-weight: 700;
+}
+
+.back-link {
+display: inline-block;
+margin-top: 40px;
+padding: 15px 35px;
+background: linear-gradient(135deg, #dc2626 0%, #ff4444 100%);
+color: white;
+text-decoration: none;
+border-radius: 50px;
+font-weight: bold;
+transition: all 0.3s;
+}
+
+.back-link:hover {
+transform: translateY(-3px);
+box-shadow: 0 10px 25px rgba(220, 38, 38, 0.4);
+}
+
+@media (max-width: 768px) {
+.legal-container {
+padding: 30px 20px;
+}
+
+.legal-title {
+font-size: 32px;
+}
+
+.legal-content h2 {
+font-size: 24px;
+}
+
+.legal-content h3 {
+font-size: 20px;
+}
+
+.legal-content p,
+.legal-content li {
+font-size: 15px;
+}
+}
+</style>
+
+<div class="legal-page">
+<div class="legal-container">
+<h1 class="legal-title">📋 Termeni și Condiții</h1>
+<p class="legal-subtitle">Ultima actualizare: 23 Noiembrie 2024</p>
+
+<div class="legal-content">
+<h2>1. Acceptarea Termenilor</h2>
+<p>Prin înscrierea la cursurile oferite de START DRIVE BVL (Școala de Șoferi), acceptați în mod expres și fără rezerve prezentele Termene și Condiții.</p>
+
+<h2>2. Servicii Oferite</h2>
+<p>START DRIVE BVL oferă cursuri de pregătire pentru obținerea permisului de conducere pentru următoarele categorii:</p>
+<ul>
+<li><strong>Categoria B</strong> - Autoturisme și vehicule ușoare</li>
+<li><strong>Categoria B1</strong> - Cvadricicluri ușoare</li>
+<li><strong>Categoria BE</strong> - Autoturisme cu remorcă</li>
+<li><strong>Categoria C</strong> - Camioane și vehicule grele</li>
+<li><strong>Categoria CE</strong> - TIR-uri și transport</li>
+</ul>
+
+<h2>3. Condiții de Înscriere</h2>
+<h3>3.1 Documente Necesare</h3>
+<ul>
+<li>Carte de identitate sau pașaport valabil</li>
+<li>Certificat medical eliberat de medicul de familie</li>
+<li>4 fotografii tip buletin</li>
+<li>Dovada plății taxei de înscriere</li>
+</ul>
+
+<h3>3.2 Vârsta Minimă</h3>
+<ul>
+<li>Categoria B1: 16 ani</li>
+<li>Categoria B: 18 ani</li>
+<li>Categoria C și CE: 21 ani</li>
+</ul>
+
+<h2>4. Prețuri și Plăți</h2>
+<p>Prețurile pentru fiecare categorie de permis sunt afișate pe site-ul nostru și în sediul școlii. Acestea includ:</p>
+<ul>
+<li>Orele teoretice obligatorii</li>
+<li>Orele practice obligatorii</li>
+<li>Materiale didactice</li>
+<li>Taxe administrative</li>
+</ul>
+
+<p><strong>Important:</strong> Plata se poate face în rate, conform înțelegerii cu școala.</p>
+
+<h2>5. Anulare și Rambursare</h2>
+<h3>5.1 Anulare din partea cursantului</h3>
+<ul>
+<li>Anulare cu mai mult de 7 zile înainte de începerea cursurilor: rambursare 100% din suma plătită</li>
+<li>Anulare cu 3-7 zile înainte: rambursare 50%</li>
+<li>Anulare cu mai puțin de 3 zile: fără rambursare</li>
+</ul>
+
+<h3>5.2 Anulare din partea școlii</h3>
+<p>În cazul în care școala anulează cursul, cursantul va primi rambursarea integrală a sumei plătite.</p>
+
+<h2>6. Obligațiile Cursantului</h2>
+<ul>
+<li>Să fie prezent la orele de curs teoretice și practice</li>
+<li>Să respecte instructorii și personalul școlii</li>
+<li>Să îngrijească vehiculele școlii</li>
+<li>Să respecte legislația rutieră în vigoare</li>
+<li>Să nu conducă sub influența băuturilor alcoolice sau a substanțelor interzise</li>
+</ul>
+
+<h2>7. Obligațiile Școlii</h2>
+<ul>
+<li>Să ofere cursuri de calitate conform programei stabilite</li>
+<li>Să pună la dispoziție instructori calificați</li>
+<li>Să asigure vehicule în stare tehnică bună</li>
+<li>Să respecte programul stabilit</li>
+</ul>
+
+<h2>8. Forță Majoră</h2>
+<p>Niciuna dintre părți nu va fi răspunzătoare pentru neîndeplinirea obligațiilor sale contractuale, dacă aceasta se datorează unui eveniment de forță majoră.</p>
+
+<h2>9. Litigii</h2>
+<p>Orice litigiu decurgând din prezentul contract va fi soluționat pe cale amiabilă. În cazul în care acest lucru nu este posibil, litigiul va fi soluționat de instanțele competente din Suceava, România.</p>
+
+<h2>10. Modificări</h2>
+<p>START DRIVE BVL își rezervă dreptul de a modifica acești termeni și condiții în orice moment. Modificările vor fi comunicate cursanților prin email sau pe site.</p>
+
+<h2>11. Contact</h2>
+<p>Pentru întrebări legate de acești termeni și condiții, ne puteți contacta:</p>
+<ul>
+<li><strong>Telefon:</strong> 0744 420 905</li>
+<li><strong>Email:</strong> contact@startdrivebvl.ro</li>
+<li><strong>Adresă:</strong> Strada Mărăști, nr. 12, Suceava</li>
+</ul>
+</div>
+
+<a href="/" class="back-link">← Înapoi la Pagina Principală</a>
+</div>
+</div>
+</MainLayout>

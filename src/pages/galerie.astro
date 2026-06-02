@@ -1,0 +1,111 @@
+---
+import MainLayout from '../layouts/main.astro';
+
+// Toate imaginile preluate de pe bvlauto.pages.dev
+const galleryImages = [
+  "https://i.imgur.com/a7H0dcY.jpeg",
+  "https://i.imgur.com/y7rAASu.jpeg",
+  "https://i.imgur.com/TNY8kty.jpeg",
+  "https://i.imgur.com/GZrbulS.jpeg",
+  "https://i.imgur.com/lL14tcK.jpeg",
+  "https://i.imgur.com/5FAerI9.jpeg",
+  "https://i.imgur.com/ZPt5cxE.jpeg",
+  "https://i.imgur.com/cJRWu2Y.jpeg",
+  "https://i.imgur.com/DZ3eM1s.jpeg",
+  "https://i.imgur.com/JePRqEz.jpeg",
+  "https://i.imgur.com/Gd0aMoy.jpeg",
+  "https://i.imgur.com/cF9ZWXA.png",
+  "https://i.imgur.com/uFXW8u2.jpeg",
+  "https://i.imgur.com/ApPMueX.png",
+  "https://i.imgur.com/WJlCDWZ.jpeg",
+  "https://i.imgur.com/qdhYegj.jpeg",
+  "https://i.imgur.com/cndivZz.jpeg",
+  "https://i.imgur.com/3tFaVPf.jpeg",
+  "https://i.imgur.com/Se6MMLg.jpeg",
+  "https://i.imgur.com/L9GzjB4.jpeg"
+];
+---
+
+<MainLayout title="Galerie Foto | Start Drive BVL">
+  <!-- Hero Banner -->
+  <div class="relative w-full h-[350px] bg-slate-900 overflow-hidden flex flex-col justify-center items-center">
+    <div class="absolute inset-0 bg-[url('https://i.imgur.com/dxsvS4U.jpeg')] bg-cover bg-center bg-no-repeat opacity-40 mix-blend-overlay"></div>
+    <div class="absolute inset-0 bg-black/50"></div>
+    
+    <div class="relative z-10 text-center flex flex-col items-center">
+      <h1 class="text-4xl md:text-5xl font-bold text-white tracking-wide mb-6 font-['Lexend'] uppercase">Galerie Foto</h1>
+      <div class="flex items-center gap-2 text-white font-bold text-sm tracking-widest uppercase">
+        <a href="/" class="hover:text-[#cc0000] transition-colors">HOME</a>
+        <span class="text-white">&gt;</span>
+        <span class="text-white">GALERIE FOTO</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 py-24">
+    <div class="text-center mb-16">
+      <span class="text-sm font-semibold text-slate-400 tracking-widest uppercase mb-2 block">CURS LEGISLAȚIE & EXAMENE</span>
+      <h2 class="text-4xl font-light text-slate-800">Momente de succes</h2>
+      <p class="text-slate-500 mt-4 max-w-2xl mx-auto">Zâmbetele cursanților noștri după obținerea permisului auto reprezintă cea mai mare satisfacție a echipei noastre.</p>
+    </div>
+
+    <!-- Gallery Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {galleryImages.map((img, index) => (
+        <div class="aspect-square rounded-lg overflow-hidden relative group cursor-pointer shadow-sm border border-slate-100 gallery-item" data-index={index}>
+          <img src={img} alt={`Absolvent Start Drive ${index+1}`} class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />
+          <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <span class="text-white font-bold bg-rose-600 px-3 py-1 rounded-full text-sm">🎉 Promovat</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Lightbox (Basic implementation) -->
+  <div id="lightbox" class="fixed inset-0 z-[200] bg-black/90 hidden items-center justify-center opacity-0 transition-opacity duration-300">
+    <button id="close-lightbox" class="absolute top-6 right-6 text-white hover:text-rose-500 transition-colors">
+      <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <img id="lightbox-img" src="" alt="Zoomed Image" class="max-w-[90%] max-h-[90vh] object-contain rounded" />
+  </div>
+
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      const galleryItems = document.querySelectorAll('.gallery-item');
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightbox-img');
+      const closeBtn = document.getElementById('close-lightbox');
+
+      galleryItems.forEach(item => {
+        item.addEventListener('click', () => {
+          const imgSrc = item.querySelector('img').src;
+          lightboxImg.src = imgSrc;
+          lightbox.classList.remove('hidden');
+          lightbox.classList.add('flex');
+          // small delay for transition
+          setTimeout(() => {
+            lightbox.classList.remove('opacity-0');
+            lightbox.classList.add('opacity-100');
+          }, 10);
+        });
+      });
+
+      closeBtn.addEventListener('click', () => {
+        lightbox.classList.remove('opacity-100');
+        lightbox.classList.add('opacity-0');
+        setTimeout(() => {
+          lightbox.classList.remove('flex');
+          lightbox.classList.add('hidden');
+        }, 300);
+      });
+
+      // Close on background click
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+          closeBtn.click();
+        }
+      });
+    });
+  </script>
+</MainLayout>

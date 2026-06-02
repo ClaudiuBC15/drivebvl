@@ -1,0 +1,146 @@
+---
+import MainLayout from '../layouts/main.astro';
+
+const categories = [
+  {
+    id: 'B1',
+    name: 'Categoria B1',
+    image: 'https://i.imgur.com/miHAgHu.jpeg',
+    desc: [
+      '– cvadricicluri a căror masă proprie nu depășește 400 kg (550 kg pentru vehiculele destinate transportului de mărfuri), neincluzând masa bateriilor în cazul vehiculelor electrice și a căror putere maximă netă a motorului nu depășește 15 kW;'
+    ],
+    conditions: [
+      'Vârsta: 16 ani fără trei luni;',
+      'Copie carte (buletin) de identitate;',
+      'Apt din punct de vedere medical;',
+      'Apt din punct de vedere psihologic;',
+      'Acordul scris al părinților (notarial).'
+    ],
+    info: 'Cursul pentru obținerea permisului auto categoria B1 asigură formarea deprinderilor necesare conducerii în siguranță a cvadriciclurilor înainte de împlinirea vârstei de 18 ani.'
+  },
+  {
+    id: 'B',
+    name: 'Categoria B',
+    image: 'https://i.imgur.com/dxsvS4U.jpeg',
+    desc: [
+      '– autovehiculul a cărui masă totală maximă autorizată nu depășește 3.500 Kg și al cărui număr de locuri pe scaune, în afara locului conducătorului, nu este mai mare de 8;',
+      '– ansamblul format dintr-un autovehicul trăgător din categoria B și o remorcă a cărei masă totală maximă autorizată nu depășește 750 kg;'
+    ],
+    conditions: [
+      'Vârsta: 18 ani fără trei luni;',
+      'Copie carte (buletin) de identitate;',
+      'Apt din punct de vedere medical;',
+      'Apt din punct de vedere psihologic;'
+    ],
+    info: 'Cursul pentru obținerea permisului auto categoria B durează cel puțin 4 săptămâni, timp în care se efectuează minim 24 ore de pregătire teoretică și 30 ore de pregătire practică (conducere auto). Pregătirea teoretică o precede pe cea practică.'
+  },
+  {
+    id: 'BE',
+    name: 'Categoria BE (B Extins)',
+    image: 'https://i.imgur.com/y7rAASu.jpeg',
+    desc: [
+      '– ansamblul de vehicule a cărui masă totală maximă autorizată depășește 4.250 kg, format dintr-un autovehicul trăgător din categoria B și o remorcă sau semiremorcă a cărei masă totală maximă autorizată nu depășește 3.500 kg;'
+    ],
+    conditions: [
+      'Deținător permis auto categoria B;',
+      'Copie carte (buletin) de identitate;',
+      'Apt din punct de vedere medical;',
+      'Apt din punct de vedere psihologic;'
+    ],
+    info: 'Acest curs este esențial pentru cei care doresc să tracteze rulote mari, platforme auto sau remorci pentru bărci care depășesc greutatea standard permisă de categoria B.'
+  },
+  {
+    id: 'C',
+    name: 'Categoria C',
+    image: 'https://i.imgur.com/a7H0dcY.jpeg',
+    desc: [
+      '– autovehiculul, altul decât cele din categoria D sau D1, a cărui masă totală maximă autorizată este mai mare de 3.500 kg și care este proiectat și construit pentru transportul a maximum 8 pasageri în afara conducătorului auto;',
+      '– ansamblul format dintr-un autovehicul din categoria C și o remorcă a cărei masă maximă autorizată nu depășește 750 kg;'
+    ],
+    conditions: [
+      'Vârsta: 21 ani (sau 18 ani cu atestat CPI);',
+      'Deținător permis auto categoria B;',
+      'Copie carte (buletin) de identitate;',
+      'Apt din punct de vedere medical și psihologic;'
+    ],
+    info: 'Pregătirea practică este personalizată și axată pe manevrarea vehiculelor de gabarit depășit, parcări complexe și conducere preventivă în trafic intens.'
+  },
+  {
+    id: 'CE',
+    name: 'Categoria CE',
+    image: 'https://i.imgur.com/SsZQl1w.jpeg',
+    desc: [
+      '– ansamblul de vehicule constând dintr-un autovehicul trăgător din categoria C și o remorcă sau semiremorcă a cărei masă totală maximă autorizată este mai mare de 750 kg;'
+    ],
+    conditions: [
+      'Deținător permis auto categoria C;',
+      'Vârsta corespunzătoare categoriei C;',
+      'Copie carte (buletin) de identitate și permis de conducere;',
+      'Apt din punct de vedere medical și psihologic;'
+    ],
+    info: 'Cursul implică exerciții specifice în poligon (andocare, mers înapoi cu ansamblu) și trasee externe complexe destinate transportului de marfă.'
+  }
+];
+---
+
+<MainLayout title="Categorii Permis | Start Drive BVL">
+  <!-- Hero Banner -->
+  <div class="relative w-full h-[350px] bg-slate-900 overflow-hidden flex flex-col justify-center items-center">
+    <div class="absolute inset-0 bg-[url('https://i.imgur.com/dxsvS4U.jpeg')] bg-cover bg-center bg-no-repeat opacity-40 mix-blend-overlay"></div>
+    <div class="absolute inset-0 bg-black/50"></div>
+    
+    <div class="relative z-10 text-center flex flex-col items-center">
+      <h1 class="text-4xl md:text-5xl font-bold text-white tracking-wide mb-6 font-['Lexend'] uppercase">Categoriile Noastre</h1>
+      <div class="flex items-center gap-2 text-white font-bold text-sm tracking-widest uppercase">
+        <a href="/" class="hover:text-[#cc0000] transition-colors">HOME</a>
+        <span class="text-white">&gt;</span>
+        <span class="text-white">CATEGORII</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 py-16 space-y-24">
+    {categories.map((cat, index) => (
+      <div class="flex flex-col animate-fade-in-up" style={`animation-delay: ${index * 0.1}s;`}>
+        <div class="grid lg:grid-cols-2 gap-10 items-start mb-8">
+          <div class="rounded overflow-hidden shadow-lg h-64 lg:h-96 w-full">
+            <img src={cat.image} alt={cat.name} class="w-full h-full object-cover" />
+          </div>
+          
+          <div class="flex flex-col">
+            <span class="text-sm text-slate-500 uppercase tracking-widest mb-1">START DRIVE BVL</span>
+            <h2 class="text-4xl font-light text-slate-800 mb-6">{cat.name}</h2>
+            
+            <div class="space-y-4 mb-8">
+              {cat.desc.map(d => (
+                <p class="text-slate-600 font-light leading-relaxed">{d}</p>
+              ))}
+            </div>
+            
+            <h3 class="text-lg text-slate-700 mb-4">Condiții de înscriere:</h3>
+            
+            <ul class="space-y-3 mb-8">
+              {cat.conditions.map(cond => (
+                <li class="flex items-center gap-3 text-slate-600 font-light">
+                  <div class="w-6 h-6 rounded-full bg-emerald-400 text-white flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  </div>
+                  {cond}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div class="bg-rose-50 border border-rose-100 rounded p-6 flex gap-4">
+          <div class="w-8 h-8 rounded-full bg-rose-300/50 text-rose-600 flex items-center justify-center shrink-0 mt-0.5">
+            <span class="font-bold font-serif italic text-lg">i</span>
+          </div>
+          <p class="text-slate-700 font-medium text-sm md:text-base leading-relaxed">
+            {cat.info}
+          </p>
+        </div>
+      </div>
+    ))}
+  </div>
+</MainLayout>

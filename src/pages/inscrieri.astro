@@ -1,0 +1,109 @@
+---
+import MainLayout from '../layouts/main.astro';
+
+const documents = [
+  {
+    icon: '💳',
+    title: 'Taxă Permis Auto (89 Lei)',
+    content: 'Se poate plăti online pe ghișeul.ro, la orice agenție CEC Bank sau la terminalele SelfPay.'
+  },
+  {
+    icon: '📄',
+    title: 'Cazier Judiciar',
+    content: 'Cu mențiunea "EXAMEN AUTO". Se obține online prin Ghișeul.ro sau fizic de la sediul IPJ.'
+  },
+  {
+    icon: '🏥',
+    title: 'Aviz Medical',
+    content: 'Certificat medical care atestă că ești apt pentru a conduce autovehicule. (Te îndrumăm noi către clinicile partenere)'
+  },
+  {
+    icon: '🧠',
+    title: 'Aviz Psihologic',
+    content: 'Test psihologic efectuat la un cabinet autorizat. (Te îndrumăm noi către parteneri)'
+  }
+];
+---
+
+<MainLayout title="Înscrieri și Acte Necesare | Start Drive BVL">
+  <div class="bg-[#0f172a] py-20 text-center animate-fade-in">
+    <h1 class="text-4xl md:text-5xl font-heading font-extrabold text-white mb-4">Înscrieri & Acte Necesare</h1>
+    <p class="text-slate-400 max-w-xl mx-auto">Procesul de înscriere este simplu și transparent. Descoperă ce documente trebuie să pregătești.</p>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 py-24">
+    <div class="grid lg:grid-cols-2 gap-16">
+      
+      <!-- Acte Necesare -->
+      <div class="animate-fade-in-up" style="animation-delay: 0.1s;">
+        <div class="mb-10">
+          <h2 class="text-3xl font-heading font-bold text-slate-900 mb-4">Documentele pentru Dosar</h2>
+          <p class="text-slate-600">Noi te ajutăm cu întocmirea dosarului pas cu pas. Iată de ce ai nevoie pentru a începe școlarizarea:</p>
+        </div>
+        
+        <div class="space-y-6">
+          {documents.map(doc => (
+            <div class="flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-xl hover:border-rose-200 transition-colors">
+              <div class="text-3xl">{doc.icon}</div>
+              <div>
+                <h3 class="font-bold text-slate-900 mb-1">{doc.title}</h3>
+                <p class="text-sm text-slate-600">{doc.content}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Pasii de Inscriere -->
+      <div class="animate-fade-in-up" style="animation-delay: 0.2s;">
+        <div class="bg-rose-50 rounded-2xl p-8 border border-rose-100 h-full flex flex-col justify-center">
+          <h2 class="text-3xl font-heading font-bold text-slate-900 mb-8">Cum funcționează?</h2>
+          
+          <div class="space-y-8 relative">
+            <!-- Linie conectoare -->
+            <div class="absolute left-[19px] top-4 bottom-4 w-px bg-rose-200"></div>
+            
+            <div class="relative flex gap-6">
+              <div class="w-10 h-10 rounded-full bg-rose-600 text-white flex items-center justify-center font-bold shrink-0 shadow-lg relative z-10">1</div>
+              <div>
+                <h4 class="font-bold text-slate-900 mb-2">Alegi Categoria și ne Contactezi</h4>
+                <p class="text-sm text-slate-600">Ne poți suna sau poți veni direct la sediul nostru pentru a discuta detaliile programului.</p>
+              </div>
+            </div>
+            
+            <div class="relative flex gap-6">
+              <div class="w-10 h-10 rounded-full bg-rose-600 text-white flex items-center justify-center font-bold shrink-0 shadow-lg relative z-10">2</div>
+              <div>
+                <h4 class="font-bold text-slate-900 mb-2">Întocmirea Dosarului</h4>
+                <p class="text-sm text-slate-600">Aduni documentele necesare menționate, iar noi le așezăm în dosarul tău oficial.</p>
+              </div>
+            </div>
+            
+            <div class="relative flex gap-6">
+              <div class="w-10 h-10 rounded-full bg-rose-600 text-white flex items-center justify-center font-bold shrink-0 shadow-lg relative z-10">3</div>
+              <div>
+                <h4 class="font-bold text-slate-900 mb-2">Orele de Legislație (Teorie)</h4>
+                <p class="text-sm text-slate-600">Parcurgi materia în sala noastră modernă, pentru a fi pregătit 100% de traseu.</p>
+              </div>
+            </div>
+            
+            <div class="relative flex gap-6">
+              <div class="w-10 h-10 rounded-full bg-rose-600 text-white flex items-center justify-center font-bold shrink-0 shadow-lg relative z-10">4</div>
+              <div>
+                <h4 class="font-bold text-slate-900 mb-2">Orele de Condus (Practică)</h4>
+                <p class="text-sm text-slate-600">Pornești la drum alături de instructorii noștri. Programul este flexibil.</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-12 text-center">
+            <a href="/contact" class="inline-block bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 px-8 rounded transition-colors w-full sm:w-auto">
+              Programează-te Acum
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</MainLayout>

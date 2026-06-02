@@ -1,0 +1,135 @@
+---
+import MainLayout from '../layouts/main.astro';
+
+const faqs = [
+  {
+    question: "Care sunt cerințele pentru a începe cursurile la școala de șoferi Start Drive BVL?",
+    answer: "Pentru a te înscrie la cursurile noastre (Categoria B), trebuie să ai vârsta minimă de 18 ani fără 3 luni (17 ani și 9 luni), să prezinți o copie după cartea de identitate și avizele medical și psihologic care atestă că ești apt pentru a conduce."
+  },
+  {
+    question: "Cât durează cursul pentru obținerea permisului auto?",
+    answer: "Cursul standard durează cel puțin 4 săptămâni. Acesta cuprinde minim 24 de ore de pregătire teoretică (legislație rutieră) și 30 de ore de pregătire practică (conducere auto) alături de un instructor autorizat."
+  },
+  {
+    question: "Se pot plăti cursurile în rate?",
+    answer: "Da, venim în sprijinul cursanților noștri oferind posibilitatea plății în rate egale pe durata școlarizării. Prima rată se achită în momentul înscrierii și semnării contractului."
+  },
+  {
+    question: "Unde are loc pregătirea practică și teoretică?",
+    answer: "Orele de legislație (pregătirea teoretică) se desfășoară în sala noastră modernă, complet echipată, de pe Strada Mărășești 48, Suceava. Traseul practic se efectuează în zonele de examen din oraș și împrejurimi."
+  },
+  {
+    question: "Oferiți pregătire și pentru categoriile C, CE sau profesioniști?",
+    answer: "Da, Start Drive BVL oferă școlarizare completă nu doar pentru autoturisme (B1, B, BE), ci și pentru vehicule de mare tonaj (C, CE). Avem în flotă camioane moderne și instructori specializați pe gabarit depășit."
+  },
+  {
+    question: "Sunt obligatorii orele de conducere pe timp de noapte?",
+    answer: "Da, conform legislației, pe parcursul celor 30 de ore de pregătire practică vei efectua și cel puțin o ședință de conducere pe timp de noapte sau în condiții de vizibilitate redusă."
+  },
+  {
+    question: "Cât timp este valabil dosarul după absolvirea școlii?",
+    answer: "Dosarul de școlarizare (inclusiv orele de practică și teoria) are o valabilitate de exact 1 an calendaristic de la data absolvirii. În acest interval ai dreptul să susții examenele auto cu Poliția de câte ori este nevoie (cu respectarea orelor suplimentare)."
+  },
+  {
+    question: "Dacă pic examenul auto de traseu, trebuie să refac și sala?",
+    answer: "Nu! Odată ce ai promovat examenul teoretic (sala), acesta rămâne valabil pe toată perioada de 1 an a dosarului. La o eventuală nepromovare a traseului, va trebui doar să efectuezi minim 3 ședințe suplimentare (6 ore) de condus și să te reprogramezi."
+  },
+  {
+    question: "Pot face școala pe o mașină cu cutie automată?",
+    answer: "Da, la Start Drive BVL îți punem la dispoziție și autoturisme echipate cu cutie de viteze automată. Atenție, însă: pe permisul auto va fi menționat codul restricției, având dreptul legal să conduci exclusiv mașini automate."
+  }
+];
+
+// Generăm schema JSON-LD pentru AEO
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(faq => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.answer
+    }
+  }))
+};
+---
+
+<MainLayout title="Întrebări Frecvente - Start Drive BVL">
+  <!-- SEO/AEO JSON-LD Schema inject -->
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)}></script>
+
+  <!-- Hero Banner -->
+  <div class="relative w-full h-[350px] bg-slate-900 overflow-hidden flex flex-col justify-center items-center">
+    <div class="absolute inset-0 bg-[url('https://i.imgur.com/dxsvS4U.jpeg')] bg-cover bg-center bg-no-repeat opacity-40 mix-blend-overlay"></div>
+    <div class="absolute inset-0 bg-black/50"></div>
+    
+    <div class="relative z-10 text-center flex flex-col items-center">
+      <h1 class="text-4xl md:text-5xl font-bold text-white tracking-wide mb-6 font-['Lexend'] uppercase">Întrebări Frecvente</h1>
+      <div class="flex items-center gap-2 text-white font-bold text-sm tracking-widest uppercase">
+        <a href="/" class="hover:text-[#cc0000] transition-colors">HOME</a>
+        <span class="text-white">&gt;</span>
+        <span class="text-white">ÎNTREBĂRI FRECVENTE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ Content -->
+  <div class="max-w-4xl mx-auto px-6 py-24">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl font-bold text-slate-900 mb-4 font-['Lexend'] uppercase">Ai Neclarități?</h2>
+      <p class="text-slate-600 font-light text-lg">Am compilat cele mai frecvente întrebări primite de la cursanții noștri pentru a-ți oferi răspunsuri rapide și clare.</p>
+    </div>
+
+    <!-- Accordion Wrapper -->
+    <div class="space-y-4 faq-accordion">
+      {faqs.map((faq, index) => (
+        <div class="border border-slate-200 rounded-sm overflow-hidden bg-white">
+          <button 
+            class="faq-button w-full flex items-center justify-between p-6 text-left hover:bg-slate-50 transition-colors focus:outline-none group"
+            aria-expanded="false"
+          >
+            <span class="text-lg font-bold text-slate-800 group-hover:text-[#cc0000] transition-colors">{faq.question}</span>
+            <svg class="faq-icon w-6 h-6 text-slate-400 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div class="faq-content hidden px-6 pb-6 text-slate-600 font-light leading-relaxed">
+            <div class="pt-2 border-t border-slate-100 mt-2">
+              {faq.answer}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</MainLayout>
+
+<script>
+  // Simple Vanilla JS Accordion Logic
+  document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('.faq-button');
+    
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        const content = button.nextElementSibling;
+        const icon = button.querySelector('.faq-icon');
+        const isExpanded = button.getAttribute('aria-expanded') === 'true';
+        
+        // Close all other accordions (Optional - if we want only one open at a time)
+        document.querySelectorAll('.faq-content').forEach(c => c.classList.add('hidden'));
+        document.querySelectorAll('.faq-button').forEach(b => {
+          b.setAttribute('aria-expanded', 'false');
+          b.querySelector('.faq-icon')?.classList.remove('rotate-180');
+        });
+
+        // Toggle current accordion
+        if (!isExpanded) {
+          content?.classList.remove('hidden');
+          button.setAttribute('aria-expanded', 'true');
+          icon?.classList.add('rotate-180');
+        }
+      });
+    });
+  });
+</script>

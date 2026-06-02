@@ -1,0 +1,125 @@
+---
+import MainLayout from '../layouts/main.astro';
+
+const instructors = [
+  {
+    name: "Tofan Florin",
+    role: "Instructor Auto & Profesor Legislație",
+    categories: "B1, B, BE, C, CE, D, DE",
+    experience: "15+ ani",
+    stats: { hours: "1300+", students: "280+" },
+    tags: ["Expert toate categoriile", "Profesor legislație", "Program flexibil"],
+    image: "https://i.imgur.com/NAQG3Q3.png"
+  },
+  {
+    name: "Bivol Sergiu",
+    role: "Fondator & Instructor",
+    categories: "B1, B, BE, C, CE, D, DE",
+    experience: "12+ ani",
+    stats: { hours: "1200+", students: "250+" },
+    tags: ["Răbdare infinită", "Metodă personalizată", "Experiență TIR"],
+    image: "https://i.imgur.com/miHAgHu.jpeg"
+  },
+  {
+    name: "Bejinariu Florin",
+    role: "Instructor Auto & Profesor Legislatie",
+    categories: "B1, B, BE",
+    experience: "10+ ani",
+    stats: { hours: "1000+", students: "300+" },
+    tags: ["Expert legislație", "Metode interactive", "Simulări examen"],
+    image: "https://i.imgur.com/N10JK2n.png"
+  },
+  {
+    name: "Radu Matei",
+    role: "Instructor Practic",
+    categories: "B, B1",
+    experience: "6+ ani",
+    stats: { hours: "600+", students: "150+" },
+    tags: ["Tânăr și energic", "Metode moderne", "Program flexibil"],
+    image: "https://i.imgur.com/B2RP6gj.png"
+  }
+];
+---
+
+<MainLayout title="Echipa de Instructori | Start Drive BVL">
+  <!-- Hero Section -->
+  <div class="relative bg-[#1e1b4b] py-24 overflow-hidden">
+    <div class="absolute inset-0 opacity-20 bg-[url('https://i.imgur.com/miHAgHu.jpeg')] bg-cover bg-center mix-blend-overlay"></div>
+    <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+      <span class="text-rose-500 font-bold tracking-widest uppercase mb-4 block">START DRIVE BVL</span>
+      <h1 class="text-4xl md:text-6xl font-light text-white mb-6">Cunoaște Instructorii</h1>
+      <p class="text-slate-300 max-w-2xl mx-auto text-lg font-light">Fiecare instructor are experiență vastă și sute de elevi promovați. Alege profesionistul care te va ajuta să devii un șofer încrezător.</p>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 py-24 bg-[#f8fafc]">
+    <div class="grid lg:grid-cols-2 gap-12">
+      {instructors.map(instructor => (
+        <div class="bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden flex flex-col sm:flex-row group hover:shadow-2xl transition-all">
+          <div class="sm:w-2/5 aspect-square sm:aspect-auto overflow-hidden relative">
+            <img src={instructor.image} alt={instructor.name} class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+            <div class="absolute top-4 left-4 bg-[#cc0000] text-white text-xs font-bold px-3 py-1 rounded shadow">
+              {instructor.experience} Exp.
+            </div>
+          </div>
+          
+          <div class="sm:w-3/5 p-8 flex flex-col justify-center">
+            <h3 class="text-2xl font-bold text-slate-900 mb-1">{instructor.name}</h3>
+            <p class="text-[#cc0000] text-sm font-semibold mb-4">{instructor.role}</p>
+            
+            <div class="space-y-2 mb-6 text-sm font-light text-slate-600">
+              <p class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                Categorii: <strong>{instructor.categories}</strong>
+              </p>
+            </div>
+
+            <div class="flex gap-6 mb-6 pt-6 border-t border-slate-100">
+              <div>
+                <p class="text-xl font-bold text-slate-900">{instructor.stats.hours}</p>
+                <p class="text-xs text-slate-500 uppercase tracking-wider">Ore Instruire</p>
+              </div>
+              <div>
+                <p class="text-xl font-bold text-slate-900">{instructor.stats.students}</p>
+                <p class="text-xs text-slate-500 uppercase tracking-wider">Absolvenți</p>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mt-auto">
+              {instructor.tags.map(tag => (
+                <span class="bg-slate-100 text-slate-600 text-xs px-3 py-1 rounded-full">{tag}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Trust section -->
+    <div class="mt-32 text-center max-w-4xl mx-auto">
+      <h2 class="text-3xl font-light text-slate-800 mb-12">De ce să ne alegi pe noi?</h2>
+      <div class="grid sm:grid-cols-4 gap-8">
+        <div>
+          <div class="w-16 h-16 mx-auto bg-rose-100 text-[#cc0000] rounded-full flex items-center justify-center mb-4">✅</div>
+          <h4 class="font-bold text-slate-900">Certificați</h4>
+          <p class="text-sm text-slate-500 mt-2">Autorizați ISCTR</p>
+        </div>
+        <div>
+          <div class="w-16 h-16 mx-auto bg-rose-100 text-[#cc0000] rounded-full flex items-center justify-center mb-4">❤️</div>
+          <h4 class="font-bold text-slate-900">Empatici</h4>
+          <p class="text-sm text-slate-500 mt-2">Răbdare cu fiecare cursant</p>
+        </div>
+        <div>
+          <div class="w-16 h-16 mx-auto bg-rose-100 text-[#cc0000] rounded-full flex items-center justify-center mb-4">🎯</div>
+          <h4 class="font-bold text-slate-900">Personalizat</h4>
+          <p class="text-sm text-slate-500 mt-2">Adaptat stilului tău</p>
+        </div>
+        <div>
+          <div class="w-16 h-16 mx-auto bg-rose-100 text-[#cc0000] rounded-full flex items-center justify-center mb-4">⭐</div>
+          <h4 class="font-bold text-slate-900">Experiență</h4>
+          <p class="text-sm text-slate-500 mt-2">10.000+ ore cumulate</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>
