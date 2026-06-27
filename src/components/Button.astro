@@ -1,0 +1,42 @@
+---
+/**
+ * Button — unified CTA component.
+ * Replaces the dozens of duplicated long button class strings.
+ *
+ * @variant 'primary'  → brand red, solid (main CTA)
+ * @variant 'light'    → white solid (CTA on red/dark)
+ * @variant 'outline'  → glass outline (secondary on dark/hero)
+ * @variant 'ghost'    → bordered, ink (secondary on light)
+ * @size   'md' | 'lg'
+ */
+interface Props {
+  variant?: 'primary' | 'light' | 'outline' | 'ghost';
+  size?: 'md' | 'lg';
+  href?: string;
+  class?: string;
+  ripple?: boolean;
+  [key: string]: any;
+}
+
+const {
+  variant = 'primary',
+  size = 'lg',
+  href,
+  class: className = '',
+  ripple = false,
+  ...rest
+} = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+const classes = [
+  'btn',
+  `btn-${variant}`,
+  size === 'lg' ? 'btn-lg' : 'btn-md',
+  ripple ? 'ripple' : '',
+  className,
+].join(' ');
+---
+
+<Tag href={href} class={classes} {...rest}>
+  <slot />
+</Tag>

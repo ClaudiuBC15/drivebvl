@@ -1,0 +1,36 @@
+---
+import MainLayout from '../../layouts/main.astro';
+import { requireAuth } from '../../lib/auth';
+import { getDB, queryAll } from '../../lib/db';
+import AdminLayout from '../../components/admin/AdminLayout';
+import CategoryManager from '../../components/admin/CategoryManager';
+
+export const prerender = false;
+
+const redirect = requireAuth(Astro.request);
+if (redirect) {
+  return redirect;
+}
+
+const db = getDB(Astro.locals);
+let categories: any[] = [];
+
+try {
+  categories = await queryAll(db, 'SELECT * FROM categories ORDER BY sort_order ASC');
+} catch (err) {
+  console.error('Error fetching categories:', err);
+}
+---
+
+<MainLayout title="Categorii CMS | Start Drive BVL" description="Administrare conținut categorii permis auto.">
+  <AdminLayout activeTab="categories" client:load>
+    <div class="mb-6 flex items-center justify-between">
+      <div>
+        <h3 class="text-xl font-bold text-slate-800">Administrare Categorii Auto</h3>
+        <p class="text-xs text-slate-500 font-light mt-1">Modifică textele paginilor de categorii: titluri, subtitluri, descrieri, condiții sau acte necesare.</p>
+      </div>
+    </div>
+    
+    <CategoryManager initialCategories={categories} client:load />
+  </AdminLayout>
+</MainLayout>

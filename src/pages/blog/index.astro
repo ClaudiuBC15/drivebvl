@@ -1,0 +1,285 @@
+---
+import MainLayout from '../../layouts/main.astro';
+import Button from '../../components/Button.astro';
+import { getDB, queryAll } from '../../lib/db';
+
+export const prerender = false;
+
+const db = getDB(Astro.locals);
+
+// Parse query parameters
+const search = Astro.url.searchParams.get('search') || '';
+const activeCat = Astro.url.searchParams.get('categorie') || '';
+
+// Fetch all distinct categories of published articles
+const categoryRows = await queryAll<any>(
+  db,
+  "SELECT DISTINCT category FROM articles WHERE status = 'published' AND category IS NOT NULL AND category != ''"
+);
+const categories = ['Toate', ...categoryRows.map(r => r.category)];
+
+// Build main articles query
+let query = "SELECT * FROM articles WHERE status = 'published'";
+const params: any[] = [];
+
+if (activeCat && activeCat !== 'Toate') {
+  query += " AND category = ?";
+  params.push(activeCat);
+}
+
+if (search) {
+  query += " AND (title LIKE ? OR excerpt LIKE ? OR content LIKE ?)";
+  const pattern = `%${search}%`;
+  params.push(pattern, pattern, pattern);
+}
+
+query += " ORDER BY created_at DESC";
+const articles = await queryAll<any>(db, query, params);
+
+// Fetch recent articles for the sidebar
+const recentArticles = await queryAll<any>(
+  db,
+  "SELECT * FROM articles WHERE status = 'published' ORDER BY created_at DESC LIMIT 4"
+);
+
+// Date formatting helper
+function formatDate(dateStr: string) {
+  if (!dateStr) return '';
+  try {
+    // SQLite datetime is YYYY-MM-DD HH:MM:SS. Convert spaces to T for standard ISO parsing.
+    const cleanStr = dateStr.includes(' ') && !dateStr.includes('T') ? dateStr.replace(' ', 'T') : dateStr;
+    const date = new Date(cleanStr);
+    if (isNaN(date.getTime())) return dateStr;
+    return date.toLocaleDateString('ro-RO', { day: '2-digit', month: 'short', year: 'numeric' });
+  } catch {
+    return dateStr;
+  }
+}
+---
+
+<MainLayout 
+  title="Blog & Sfaturi Auto | Școala de Șoferi Start Drive BVL Suceava"
+  description="Ghiduri complete de legislatie auto, sfaturi practice pentru promovarea traseului auto si stiri legislative din Suceava de la echipa Start Drive BVL."
+>
+  <!-- Hero Section -->
+  <div class="relative w-full min-h-[360px] bg-[#0a0a0b] overflow-hidden flex flex-col justify-center items-center px-6 py-16">
+    <!-- Background Image -->
+    <div class="absolute inset-0 w-full h-full">
+      <img src="/images/hero_nou.jpg" alt="Start Drive BVL Blog" class="w-full h-full object-cover object-center opacity-25" />
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-b from-[#0a0a0b]/90 via-[#0a0a0b]/75 to-[#0a0a0b]"></div>
+    
+    <div class="relative z-10 text-center flex flex-col items-center max-w-4xl mx-auto">
+      <span class="text-xs font-bold uppercase tracking-[0.25em] text-[#ff3333] mb-4">
+        BLOG
+      </span>
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-[1.1] mb-6 uppercase" style="font-family:'Plus Jakarta Sans',sans-serif">
+        Informații utile pentru<br/>
+        <span class="text-[#cc0000]">viitorii șoferi</span>
+      </h1>
+      <p class="text-slate-300 text-base sm:text-lg md:text-xl font-light max-w-2xl leading-relaxed">
+        Sfaturi, noutăți și ghiduri care te ajută să înveți mai ușor și să fii pregătit pentru drum.
+      </p>
+    </div>
+  </div>
+
+  <div class="bg-[#fafafa] min-h-screen py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+        
+        <!-- Stânga: Articole (8 coloane) -->
+        <main class="lg:col-span-8 space-y-12">
+          
+          <h2 class="text-2xl md:text-3xl font-black text-[#0a0a0b] tracking-tight">Toate articolele</h2>
+
+          <!-- Articles List Grid (2 columns on sm+) -->
+          {articles.length > 0 ? (
+            <div class="space-y-12">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                {articles.map((article) => (
+                  <article class="bg-white rounded-[24px] border border-slate-200/50 shadow-[0_4px_20px_rgba(0,0,0,0.01)] overflow-hidden group hover:shadow-[0_12px_30px_rgba(0,0,0,0.035)] transition-all duration-300 flex flex-col h-full">
+                    
+                    {/* Image Container */}
+                    <a href={`/blog/${article.slug}`} class="block relative aspect-[16/10] overflow-hidden bg-slate-100 shrink-0">
+                      <img 
+                        src={article.image_url || '/images/cat-b.png'} 
+                        alt={article.title} 
+                        class="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                      {/* Overlapping Pill for Date and Category */}
+                      <div class="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm border border-slate-100 px-3.5 py-1.5 rounded-full shadow-sm text-[10px] font-bold tracking-wider uppercase text-slate-500 flex items-center gap-1.5 z-10">
+                        <span>{formatDate(article.created_at)}</span>
+                        <span class="text-slate-300">•</span>
+                        <span class="text-[#cc0000]">{article.category || 'Generale'}</span>
+                      </div>
+                    </a>
+
+                    {/* Content Container */}
+                    <div class="p-6 flex flex-col justify-between flex-grow">
+                      <div class="space-y-3">
+                        <a href={`/blog/${article.slug}`} class="block group-hover:text-[#cc0000] transition-colors">
+                          <h3 class="text-lg md:text-xl font-extrabold text-[#0a0a0b] tracking-tight leading-snug line-clamp-2">
+                            {article.title}
+                          </h3>
+                        </a>
+                        
+                        <p class="text-slate-500 font-light text-sm leading-relaxed line-clamp-3">
+                          {article.excerpt}
+                        </p>
+                      </div>
+                      
+                      <a href={`/blog/${article.slug}`} class="inline-flex items-center gap-1.5 text-xs font-bold text-[#cc0000] hover:text-red-700 transition-colors uppercase tracking-wider mt-6">
+                        Citește mai mult
+                        <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                      </a>
+                    </div>
+
+                  </article>
+                ))}
+              </div>
+
+            </div>
+          ) : (
+            <div class="text-center py-20 bg-white border border-slate-200/60 rounded-3xl">
+              <div class="w-16 h-16 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                </svg>
+              </div>
+              <h3 class="text-lg font-bold text-slate-800 mb-1">Niciun articol găsit</h3>
+              <p class="text-slate-500 font-light text-sm max-w-sm mx-auto px-4">
+                Nu am găsit articole care să corespundă criteriilor alese. Încearcă alte filtre sau altă căutare.
+              </p>
+              <a href="/blog" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#cc0000] uppercase tracking-wider mt-6">
+                Resetează filtrele
+              </a>
+            </div>
+          )}
+
+        </main>
+
+        {/* Dreapta: Sidebar (4 coloane) */}
+        <aside class="lg:col-span-4 space-y-10">
+          
+          <!-- Căutare -->
+          <div class="bg-white border border-slate-200/60 rounded-[20px] p-6 shadow-[0_4px_20px_rgba(0,0,0,0.01)]">
+            <h3 class="text-sm font-bold text-[#0a0a0b] uppercase tracking-wider mb-4">Caută în blog</h3>
+            <form action="/blog" method="GET" class="relative">
+              {activeCat && <input type="hidden" name="categorie" value={activeCat} />}
+              <input 
+                type="text" 
+                name="search"
+                value={search}
+                placeholder="Caută un articol..."
+                class="w-full bg-slate-50 border border-slate-200/80 rounded-xl pl-4 pr-12 py-3.5 text-slate-800 placeholder-slate-400 focus:bg-white focus:border-[#cc0000] focus:ring-4 focus:ring-red-500/5 transition-all outline-none text-sm font-light"
+              />
+              <button type="submit" class="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-slate-100 hover:bg-[#cc0000]/10 text-slate-400 hover:text-[#cc0000] flex items-center justify-center transition-all cursor-pointer">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </button>
+            </form>
+          </div>
+
+          <!-- Categorii -->
+          <div class="bg-white border border-slate-200/60 rounded-[20px] p-6 shadow-[0_4px_20px_rgba(0,0,0,0.01)]">
+            <h3 class="text-sm font-bold text-[#0a0a0b] uppercase tracking-wider mb-4">Categorii</h3>
+            <div class="flex flex-col">
+              {categories.map((cat) => {
+                const isCatActive = (cat === 'Toate' && !activeCat) || (activeCat === cat);
+                const displayName = cat === 'Toate' ? 'Toate articolele' : cat;
+                const targetUrl = cat === 'Toate' 
+                  ? `/blog${search ? `?search=${encodeURIComponent(search)}` : ''}`
+                  : `/blog?categorie=${encodeURIComponent(cat)}${search ? `&search=${encodeURIComponent(search)}` : ''}`;
+                
+                return (
+                  <a 
+                    href={targetUrl} 
+                    class={`flex items-center justify-between py-3.5 border-b border-slate-100/70 last:border-0 text-sm font-semibold transition-all group/cat ${
+                      isCatActive 
+                        ? 'text-[#cc0000]' 
+                        : 'text-slate-600 hover:text-[#cc0000] hover:pl-1'
+                    }`}
+                  >
+                    <span>{displayName}</span>
+                    <svg class={`w-4 h-4 transition-transform ${isCatActive ? 'text-[#cc0000] translate-x-0.5' : 'text-slate-300 group-hover/cat:text-[#cc0000] group-hover/cat:translate-x-0.5'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+
+          <!-- Pregătit să începi? CTA Card -->
+          <div class="bg-slate-50 border border-slate-200/50 rounded-[20px] p-8 text-center space-y-6 shadow-sm">
+            <div class="w-16 h-16 rounded-full bg-[#cc0000]/10 flex items-center justify-center mx-auto text-[#cc0000]">
+              <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2v-7" />
+              </svg>
+            </div>
+            <div class="space-y-2">
+              <h4 class="font-extrabold text-[#0a0a0b] text-lg" style="font-family:'Plus Jakarta Sans',sans-serif">Pregătit să începi?</h4>
+              <p class="text-xs text-slate-500 font-light leading-relaxed">
+                Înscrie-te acum și fă primul pas către permisul tău.
+              </p>
+            </div>
+            <Button href="/inscrieri" variant="primary" ripple class="w-full text-center text-xs py-3.5 shadow-md">
+              Înscrie-te gratuit
+            </Button>
+          </div>
+
+          <!-- Articole populare -->
+          <div class="bg-white border border-slate-200/60 rounded-[20px] p-6 shadow-[0_4px_20px_rgba(0,0,0,0.01)]">
+            <h3 class="text-sm font-bold text-[#0a0a0b] uppercase tracking-wider mb-6">Articole populare</h3>
+            <div class="space-y-5">
+              {recentArticles.map((art) => (
+                <a href={`/blog/${art.slug}`} class="flex gap-4 group">
+                  <div class="w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-slate-100 border border-slate-100 shadow-inner">
+                    <img 
+                      src={art.image_url || '/images/cat-b.png'} 
+                      alt={art.title} 
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <div class="space-y-1">
+                    <h4 class="text-xs font-bold text-[#0a0a0b] group-hover:text-[#cc0000] leading-snug line-clamp-2 transition-colors" style="font-family:'Plus Jakarta Sans',sans-serif">
+                      {art.title}
+                    </h4>
+                    <span class="text-[10px] text-slate-400 font-medium block">
+                      {formatDate(art.created_at)}
+                    </span>
+                  </div>
+                </a>
+              ))}
+            </div>
+            
+            <div class="mt-6 pt-5 border-t border-slate-100">
+              <a href="/blog" class="block w-full border border-slate-200 hover:border-slate-350 text-slate-600 hover:text-slate-800 font-bold py-3.5 text-center rounded-xl transition-all text-xs uppercase tracking-wider">
+                Vezi toate articolele
+              </a>
+            </div>
+          </div>
+
+        </aside>
+        
+      </div>
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  /* Hide scrollbar utility */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>

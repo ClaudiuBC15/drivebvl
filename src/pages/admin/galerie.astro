@@ -1,0 +1,36 @@
+---
+import MainLayout from '../../layouts/main.astro';
+import { requireAuth } from '../../lib/auth';
+import { getDB, queryAll } from '../../lib/db';
+import AdminLayout from '../../components/admin/AdminLayout';
+import GalleryManager from '../../components/admin/GalleryManager';
+
+export const prerender = false;
+
+const redirect = requireAuth(Astro.request);
+if (redirect) {
+  return redirect;
+}
+
+const db = getDB(Astro.locals);
+let images: any[] = [];
+
+try {
+  images = await queryAll(db, 'SELECT * FROM gallery_images ORDER BY sort_order ASC, created_at DESC');
+} catch (err) {
+  console.error('Error fetching gallery images:', err);
+}
+---
+
+<MainLayout title="Galerie CMS | Start Drive BVL" description="Administrare imagini galerie foto.">
+  <AdminLayout activeTab="gallery" client:load>
+    <div class="mb-6 flex items-center justify-between">
+      <div>
+        <h3 class="text-xl font-bold text-slate-800">Galerie Foto</h3>
+        <p class="text-xs text-slate-500 font-light mt-1">Încarcă link-uri de imagini cu absolvenții noștri fericiți. Imaginile vor apărea automat în pagina publică de Galerie.</p>
+      </div>
+    </div>
+    
+    <GalleryManager initialImages={images} client:load />
+  </AdminLayout>
+</MainLayout>

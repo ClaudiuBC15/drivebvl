@@ -1,47 +1,27 @@
 ---
 import MainLayout from '../layouts/main.astro';
+import { getDB, queryAll, parseJSON } from '../lib/db';
 
-const instructors = [
-  {
-    name: "Tofan Florin",
-    role: "Instructor Auto & Profesor Legislație",
-    categories: "B1, B, BE, C, CE, D, DE",
-    experience: "15+ ani",
-    stats: { hours: "1300+", students: "280+" },
-    tags: ["Expert toate categoriile", "Profesor legislație", "Program flexibil"],
-    image: "https://i.imgur.com/NAQG3Q3.png"
-  },
-  {
-    name: "Bivol Sergiu",
-    role: "Fondator & Instructor",
-    categories: "B1, B, BE, C, CE, D, DE",
-    experience: "12+ ani",
-    stats: { hours: "1200+", students: "250+" },
-    tags: ["Răbdare infinită", "Metodă personalizată", "Experiență TIR"],
-    image: "https://i.imgur.com/miHAgHu.jpeg"
-  },
-  {
-    name: "Bejinariu Florin",
-    role: "Instructor Auto & Profesor Legislatie",
-    categories: "B1, B, BE",
-    experience: "10+ ani",
-    stats: { hours: "1000+", students: "300+" },
-    tags: ["Expert legislație", "Metode interactive", "Simulări examen"],
-    image: "https://i.imgur.com/N10JK2n.png"
-  },
-  {
-    name: "Radu Matei",
-    role: "Instructor Practic",
-    categories: "B, B1",
-    experience: "6+ ani",
-    stats: { hours: "600+", students: "150+" },
-    tags: ["Tânăr și energic", "Metode moderne", "Program flexibil"],
-    image: "https://i.imgur.com/B2RP6gj.png"
-  }
-];
+export const prerender = false;
+
+const db = getDB(Astro.locals);
+const instructorsFromDb = await queryAll<any>(db, 'SELECT * FROM instructors ORDER BY sort_order ASC');
+
+const instructors = instructorsFromDb.map(inst => ({
+  name: inst.name,
+  role: inst.role,
+  categories: inst.categories,
+  experience: inst.experience,
+  stats: { hours: inst.hours, students: inst.students },
+  tags: parseJSON<string[]>(inst.tags, []),
+  image: inst.image_url
+}));
 ---
 
-<MainLayout title="Echipa de Instructori | Start Drive BVL">
+<MainLayout 
+  title="Echipa de Instructori | Start Drive BVL Suceava"
+  description="Cunoaște echipa de instructori auto Start Drive BVL Suceava — profesioniști cu peste 10 ani experiență, sute de absolvenți și certificări ISCTR."
+>
   <!-- Hero Section -->
   <div class="relative bg-[#1e1b4b] py-24 overflow-hidden">
     <div class="absolute inset-0 opacity-20 bg-[url('https://i.imgur.com/miHAgHu.jpeg')] bg-cover bg-center mix-blend-overlay"></div>

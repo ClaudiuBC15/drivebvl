@@ -1,109 +1,598 @@
 ---
 import MainLayout from '../layouts/main.astro';
+import Button from '../components/Button.astro';
+import { getDB, queryAll, parseJSON } from '../lib/db';
 
-const documents = [
-  {
-    icon: '💳',
-    title: 'Taxă Permis Auto (89 Lei)',
-    content: 'Se poate plăti online pe ghișeul.ro, la orice agenție CEC Bank sau la terminalele SelfPay.'
-  },
-  {
-    icon: '📄',
-    title: 'Cazier Judiciar',
-    content: 'Cu mențiunea "EXAMEN AUTO". Se obține online prin Ghișeul.ro sau fizic de la sediul IPJ.'
-  },
-  {
-    icon: '🏥',
-    title: 'Aviz Medical',
-    content: 'Certificat medical care atestă că ești apt pentru a conduce autovehicule. (Te îndrumăm noi către clinicile partenere)'
-  },
-  {
-    icon: '🧠',
-    title: 'Aviz Psihologic',
-    content: 'Test psihologic efectuat la un cabinet autorizat. (Te îndrumăm noi către parteneri)'
+export const prerender = false;
+
+const db = getDB(Astro.locals);
+
+// 1. Fetch general settings
+let settings: Record<string, string> = {
+  contact_phone: '0744 420 905',
+  contact_schedule: 'Luni - Vineri: 08:00 - 17:00',
+  inscrieri_cta_title: 'Ești pregătit să începi?',
+  inscrieri_cta_text: 'Înscrie-te astăzi și începe pregătirea pentru permisul tău.',
+  inscrieri_support_text: 'Nu trebuie să te descurci singur. Echipa Start Drive BVL te ajută cu pregătirea dosarului, programarea examenelor medicale și toate informațiile necesare pentru înscriere.'
+};
+
+try {
+  const rows = await queryAll<any>(db, 'SELECT key, value FROM settings');
+  rows.forEach(r => {
+    settings[r.key] = r.value;
+  });
+} catch (err) {
+  console.error('Error fetching settings for enrollment page:', err);
+}
+
+// 2. Fetch categories for documents tab
+let categories: any[] = [];
+try {
+  categories = await queryAll<any>(db, 'SELECT * FROM categories ORDER BY sort_order ASC');
+} catch (err) {
+  console.error('Error fetching categories for enrollment page:', err);
+}
+
+const processedCategories = categories.map(cat => {
+  const docsArray = parseJSON<string[]>(cat.documents, []);
+  return {
+    id: cat.id,
+    name: cat.name,
+    slug: cat.slug,
+    documents: docsArray.map(docStr => getDocumentDetails(docStr))
+  };
+});
+
+// 3. Fetch process steps (category = 'Pași Înscriere')
+let steps: any[] = [];
+try {
+  steps = await queryAll<any>(db, "SELECT * FROM faqs WHERE category = 'Pași Înscriere' ORDER BY sort_order ASC");
+  if (steps.length === 0) {
+    // Fallback if D1 seeds are not yet executed
+    steps = [
+      { question: 'Alegi Categoria și ne Contactezi', answer: 'Ne poți suna sau poți veni direct la sediul nostru pentru a discuta detaliile programului.', sort_order: 1 },
+      { question: 'Întocmirea Dosarului', answer: 'Aduni documentele necesare menționate, iar noi le așezăm în dosarul tău oficial.', sort_order: 2 },
+      { question: 'Orele de Legislație (Teorie)', answer: 'Parcurgi materia în sala noastră modernă, pentru a fi pregătit 100% de traseu.', sort_order: 3 },
+      { question: 'Orele de Condus (Practică)', answer: 'Pornești la drum alături de instructorii noștri. Programul este flexibil.', sort_order: 4 }
+    ];
   }
+} catch (err) {
+  console.error('Error fetching steps for enrollment page:', err);
+}
+
+const formattedSteps = steps.map((step, i) => {
+  const isEven = (i & 1) === 0;
+  return {
+    ...step,
+    rowClass: "relative flex items-start gap-6 md:gap-12 mb-12 last:mb-0 " + (isEven ? "md:flex-row" : "md:flex-row-reverse"),
+    colClass: "ml-20 md:ml-0 md:w-[calc(50%-3rem)] " + (isEven ? "md:pr-8 md:text-right" : "md:pl-8")
+  };
+});
+
+// 4. Fetch general FAQs (category = 'Înscriere')
+let faqs: any[] = [];
+try {
+  faqs = await queryAll<any>(db, "SELECT * FROM faqs WHERE category = 'Înscriere' ORDER BY sort_order ASC");
+} catch (err) {
+  console.error('Error fetching FAQs for enrollment page:', err);
+}
+
+// 5. Testimonial Images from Facebook screenshots
+const testimonialImages = [
+  '/images/recenzie-1.png',
+  '/images/recenzie-2.png',
+  '/images/recenzie-3.png',
+  '/images/recenzie-4.png',
+  '/images/recenzie-5.png',
+  '/images/recenzie-6.png',
+  '/images/recenzie-7.png'
 ];
+
+// Helper to format/explain documents based on title or key phrases
+function getDocumentDetails(docStr: string) {
+  if (docStr.includes(':')) {
+    const idx = docStr.indexOf(':');
+    return {
+      title: docStr.substring(0, idx).trim(),
+      desc: docStr.substring(idx + 1).trim()
+    };
+  }
+
+  const clean = docStr.toLowerCase();
+  let title = docStr;
+  let desc = 'Document necesar la dosarul oficial de înscriere. Echipa Start Drive te ghidează pas cu pas în obținerea lui.';
+
+  if (clean.includes('identitate') || clean.includes('buletin')) {
+    title = 'Carte de Identitate (Buletin)';
+    desc = 'Copie simplă după cartea de identitate (buletinul) în curs de valabilitate.';
+  } else if (clean.includes('cazier')) {
+    title = 'Cazier Judiciar';
+    desc = 'Cazier judiciar eliberat cu mențiunea "EXAMEN AUTO". Se poate obține online instant pe platforma Ghișeul.ro sau fizic de la orice sediu de poliție local.';
+  } else if (clean.includes('medical')) {
+    title = 'Aviz Medical (Fișă Medicală)';
+    desc = 'Certificat medical tip, eliberat de o clinică autorizată care atestă că ești apt medical pentru conducere. Te îndrumăm noi către clinicile partenere.';
+  } else if (clean.includes('psihologic')) {
+    title = 'Aviz Psihologic';
+    desc = 'Aviz obținut în urma unei testări psihologice la un cabinet psihologic autorizat. Te îndrumăm și programăm noi rapid la cabinete partenere.';
+  } else if (clean.includes('taxa') || clean.includes('taxă') || clean.includes('permis')) {
+    title = 'Taxă Permis Auto (89 Lei)';
+    desc = 'Dovada de plată a taxei pentru eliberarea permisului de conducere. Se achită online prin Ghișeul.ro, la orice agenție CEC Bank sau la terminalele SelfPay.';
+  } else if (clean.includes('acord') || clean.includes('părinți') || clean.includes('parinti')) {
+    title = 'Acord Notarial Părinți';
+    desc = 'Acord notarial scris din partea părinților sau a tutorelui legal (obligatoriu doar pentru minori - categoria B1).';
+  } else if (clean.includes('copie permis') || clean.includes('permis auto')) {
+    title = 'Copie Permis de Conducere';
+    desc = 'Copie simplă a permisului actual (necesară pentru extindere la alte categorii: BE, CE, etc.).';
+  }
+
+  return { title, desc };
+}
+
+// Generate FAQ Schema
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(f => ({
+    "@type": "Question",
+    "name": f.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": f.answer
+    }
+  }))
+};
 ---
 
-<MainLayout title="Înscrieri și Acte Necesare | Start Drive BVL">
-  <div class="bg-[#0f172a] py-20 text-center animate-fade-in">
-    <h1 class="text-4xl md:text-5xl font-heading font-extrabold text-white mb-4">Înscrieri & Acte Necesare</h1>
-    <p class="text-slate-400 max-w-xl mx-auto">Procesul de înscriere este simplu și transparent. Descoperă ce documente trebuie să pregătești.</p>
-  </div>
+<MainLayout 
+  title="Înscrieri și Acte Necesare | Start Drive BVL Suceava"
+  description="Află ce documente ai nevoie pentru a te înscrie la Start Drive BVL Suceava: cazier, aviz medical, aviz psihologic. Proces simplu, rapid și transparent."
+>
+  <!-- SEO Schema JSON-LD -->
+  {faqs.length > 0 && (
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
+  )}
 
-  <div class="max-w-7xl mx-auto px-6 py-24">
-    <div class="grid lg:grid-cols-2 gap-16">
-      
-      <!-- Acte Necesare -->
-      <div class="animate-fade-in-up" style="animation-delay: 0.1s;">
-        <div class="mb-10">
-          <h2 class="text-3xl font-heading font-bold text-slate-900 mb-4">Documentele pentru Dosar</h2>
-          <p class="text-slate-600">Noi te ajutăm cu întocmirea dosarului pas cu pas. Iată de ce ai nevoie pentru a începe școlarizarea:</p>
-        </div>
-        
-        <div class="space-y-6">
-          {documents.map(doc => (
-            <div class="flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-xl hover:border-rose-200 transition-colors">
-              <div class="text-3xl">{doc.icon}</div>
-              <div>
-                <h3 class="font-bold text-slate-900 mb-1">{doc.title}</h3>
-                <p class="text-sm text-slate-600">{doc.content}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <!-- Pasii de Inscriere -->
-      <div class="animate-fade-in-up" style="animation-delay: 0.2s;">
-        <div class="bg-rose-50 rounded-2xl p-8 border border-rose-100 h-full flex flex-col justify-center">
-          <h2 class="text-3xl font-heading font-bold text-slate-900 mb-8">Cum funcționează?</h2>
-          
-          <div class="space-y-8 relative">
-            <!-- Linie conectoare -->
-            <div class="absolute left-[19px] top-4 bottom-4 w-px bg-rose-200"></div>
-            
-            <div class="relative flex gap-6">
-              <div class="w-10 h-10 rounded-full bg-rose-600 text-white flex items-center justify-center font-bold shrink-0 shadow-lg relative z-10">1</div>
-              <div>
-                <h4 class="font-bold text-slate-900 mb-2">Alegi Categoria și ne Contactezi</h4>
-                <p class="text-sm text-slate-600">Ne poți suna sau poți veni direct la sediul nostru pentru a discuta detaliile programului.</p>
-              </div>
-            </div>
-            
-            <div class="relative flex gap-6">
-              <div class="w-10 h-10 rounded-full bg-rose-600 text-white flex items-center justify-center font-bold shrink-0 shadow-lg relative z-10">2</div>
-              <div>
-                <h4 class="font-bold text-slate-900 mb-2">Întocmirea Dosarului</h4>
-                <p class="text-sm text-slate-600">Aduni documentele necesare menționate, iar noi le așezăm în dosarul tău oficial.</p>
-              </div>
-            </div>
-            
-            <div class="relative flex gap-6">
-              <div class="w-10 h-10 rounded-full bg-rose-600 text-white flex items-center justify-center font-bold shrink-0 shadow-lg relative z-10">3</div>
-              <div>
-                <h4 class="font-bold text-slate-900 mb-2">Orele de Legislație (Teorie)</h4>
-                <p class="text-sm text-slate-600">Parcurgi materia în sala noastră modernă, pentru a fi pregătit 100% de traseu.</p>
-              </div>
-            </div>
-            
-            <div class="relative flex gap-6">
-              <div class="w-10 h-10 rounded-full bg-rose-600 text-white flex items-center justify-center font-bold shrink-0 shadow-lg relative z-10">4</div>
-              <div>
-                <h4 class="font-bold text-slate-900 mb-2">Orele de Condus (Practică)</h4>
-                <p class="text-sm text-slate-600">Pornești la drum alături de instructorii noștri. Programul este flexibil.</p>
-              </div>
-            </div>
-          </div>
-          
-          <div class="mt-12 text-center">
-            <a href="/contact" class="inline-block bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 px-8 rounded transition-colors w-full sm:w-auto">
-              Programează-te Acum
-            </a>
-          </div>
-        </div>
-      </div>
-
+  <!-- Hero Header Banner -->
+  <div class="relative w-full min-h-[380px] bg-[#0a0a0b] overflow-hidden flex flex-col justify-center items-center pt-32 pb-16 px-6 md:pt-40 md:pb-20">
+    <div class="absolute inset-0 bg-[url('/images/cat-b.png')] bg-cover bg-center opacity-20 scale-105"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-[#0a0a0b]/80 via-[#0a0a0b]/95 to-[#0a0a0b]"></div>
+    
+    <div class="relative z-10 text-center flex flex-col items-center max-w-3xl reveal">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-red-950/80 text-[#ff3333] border border-red-900/50 mb-6 backdrop-blur-md">
+        Înscrieri &amp; Acte
+      </span>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight uppercase mb-4 leading-none">
+        Înscrieri &amp; Acte Necesare
+      </h1>
+      <p class="text-lg md:text-xl text-slate-400 font-light tracking-wide max-w-xl">
+        Procesul este simplu, rapid și complet ghidat de echipa noastră. Vezi ce acte ai nevoie în funcție de categorie.
+      </p>
     </div>
   </div>
+
+  <div class="max-w-7xl mx-auto px-6 py-16 md:py-24 space-y-28">
+    
+    <!-- ==================== SECTION 1: CAT DUREAZA INSCRIEREA ==================== -->
+    <section class="reveal">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <span class="eyebrow">Timp de execuție</span>
+        <h2 class="text-3xl md:text-4xl font-extrabold text-[#0a0a0b] mt-4" style="font-family:'Plus Jakarta Sans',sans-serif; letter-spacing:-0.02em">Cât durează înscrierea?</h2>
+        <p class="text-slate-500 text-sm md:text-base leading-relaxed mt-3">Ne asigurăm că birocrația nu îți pune piedici. Iată timpul necesar etapelor:</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Card 1 -->
+        <div class="bg-white border border-slate-200/60 hover:border-red-500/20 hover:shadow-2xl transition-all duration-300 rounded-2xl p-8 text-center group flex flex-col items-center">
+          <div class="w-14 h-14 bg-red-50 text-[#cc0000] rounded-2xl flex items-center justify-center text-2xl font-bold mb-6 group-hover:scale-110 transition-transform shadow-sm">
+            📝
+          </div>
+          <h3 class="text-xl font-bold text-[#0a0a0b] mb-2" style="font-family:'Plus Jakarta Sans',sans-serif">Pregătirea dosarului</h3>
+          <span class="text-sm font-black text-[#cc0000] uppercase tracking-wider block mb-4">15 - 30 Minute</span>
+          <p class="text-slate-500 text-sm leading-relaxed font-light">Completăm contractul de școlarizare, îți pregătim cererea de înscriere și îți organizăm restul documentelor în sediul nostru.</p>
+        </div>
+        
+        <!-- Card 2 -->
+        <div class="bg-white border border-slate-200/60 hover:border-red-500/20 hover:shadow-2xl transition-all duration-300 rounded-2xl p-8 text-center group flex flex-col items-center">
+          <div class="w-14 h-14 bg-red-50 text-[#cc0000] rounded-2xl flex items-center justify-center text-2xl font-bold mb-6 group-hover:scale-110 transition-transform shadow-sm">
+            🔍
+          </div>
+          <h3 class="text-xl font-bold text-[#0a0a0b] mb-2" style="font-family:'Plus Jakarta Sans',sans-serif">Validarea documentelor</h3>
+          <span class="text-sm font-black text-[#cc0000] uppercase tracking-wider block mb-4">În aceeași zi</span>
+          <p class="text-slate-500 text-sm leading-relaxed font-light">Echipa noastră verifică validitatea avizelor, a cazierului și a dovezilor de plată imediat ce sunt aduse la secretariat.</p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-white border border-slate-200/60 hover:border-red-500/20 hover:shadow-2xl transition-all duration-300 rounded-2xl p-8 text-center group flex flex-col items-center">
+          <div class="w-14 h-14 bg-red-50 text-[#cc0000] rounded-2xl flex items-center justify-center text-2xl font-bold mb-6 group-hover:scale-110 transition-transform shadow-sm">
+            🚀
+          </div>
+          <h3 class="text-xl font-bold text-[#0a0a0b] mb-2" style="font-family:'Plus Jakarta Sans',sans-serif">Începerea cursurilor</h3>
+          <span class="text-sm font-black text-[#cc0000] uppercase tracking-wider block mb-4">Imediat după confirmare</span>
+          <p class="text-slate-500 text-sm leading-relaxed font-light">Imediat ce dosarul este înregistrat în sistemul nostru, ești programat la orele de legislație teoretică în sala oficială.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 2: TE AJUTAM CU TOT PROCESUL ==================== -->
+    <section class="bg-slate-950 rounded-3xl overflow-hidden border border-white/10 shadow-2xl relative reveal">
+      <div class="absolute -right-32 -top-32 w-80 h-80 bg-[#cc0000]/10 rounded-full blur-3xl"></div>
+      
+      <div class="grid lg:grid-cols-2 gap-10 items-center">
+        <!-- Text -->
+        <div class="p-8 md:p-14 lg:p-20 text-white space-y-6">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/10 text-white border border-white/10 backdrop-blur-md">
+            🎧 Asistență dosar completă
+          </div>
+          <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight" style="font-family:'Plus Jakarta Sans',sans-serif">Te ajutăm cu tot procesul</h2>
+          <p class="text-slate-300 text-base md:text-lg font-light leading-relaxed">
+            {settings.inscrieri_support_text}
+          </p>
+          <div class="pt-4 flex flex-wrap gap-4">
+            <Button href="#acte-necesare" variant="primary" class="!bg-[#cc0000] hover:!bg-red-700">Alege Categoria Auto</Button>
+            <Button href="tel:+40744420905" variant="outline" class="!border-white/20 !text-white hover:!bg-white/10">Suna Secretariat</Button>
+          </div>
+        </div>
+
+        <!-- Real Photo Classroom -->
+        <div class="relative h-[320px] lg:h-full min-h-[350px] overflow-hidden lg:rounded-l-2xl border-t lg:border-t-0 lg:border-l border-white/10">
+          <img src="/images/about-classroom.png" alt="Sala de curs Start Drive BVL" class="w-full h-full object-cover" />
+          <div class="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-slate-950 via-slate-950/20 to-transparent"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 3: ACTE NECESARE ACCORDION ==================== -->
+    <section id="acte-necesare" class="scroll-mt-10 reveal">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <span class="eyebrow">Acte necesare la dosar</span>
+        <h2 class="text-3xl md:text-4xl font-extrabold text-[#0a0a0b] mt-4" style="font-family:'Plus Jakarta Sans',sans-serif; letter-spacing:-0.02em">Documentele pentru Dosar</h2>
+        <p class="text-slate-500 text-sm md:text-base leading-relaxed mt-3">Selectează categoria de permis dorită pentru a vedea exact lista documentelor necesare, redate sub formă de acordion:</p>
+      </div>
+
+      <!-- Categories Tabs Selector -->
+      <div class="flex flex-wrap justify-center gap-2 mb-10">
+        {processedCategories.map((cat, idx) => (
+          <button 
+            class={`tab-btn px-6 py-3 rounded-xl font-bold uppercase tracking-wider text-xs border transition-all duration-200 cursor-pointer ${
+              idx === 0 
+                ? 'bg-[#cc0000] text-white border-[#cc0000] shadow-md shadow-red-900/10' 
+                : 'bg-white text-slate-600 border-slate-200 hover:border-[#cc0000] hover:text-[#cc0000]'
+            }`}
+            data-target={`docs-${cat.id.toLowerCase()}`}
+          >
+            {cat.name}
+          </button>
+        ))}
+      </div>
+
+      <!-- Tab Content Area -->
+      <div class="max-w-3xl mx-auto">
+        {processedCategories.map((cat, idx) => (
+          <div 
+            id={`docs-${cat.id.toLowerCase()}`} 
+            class={`tab-content space-y-4 ${idx === 0 ? '' : 'hidden'}`}
+          >
+            {cat.documents.length > 0 ? (
+              cat.documents.map((doc, docIdx) => (
+                <div class="border border-slate-200/80 rounded-2xl bg-white overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-colors hover:border-red-200 duration-200">
+                  <button 
+                    class="accordion-trigger w-full text-left px-6 py-4 md:py-5 font-extrabold text-[#0a0a0b] hover:text-[#cc0000] flex justify-between items-center outline-none transition-colors"
+                    data-target={`content-${cat.id.toLowerCase()}-${docIdx}`}
+                    aria-expanded="false"
+                  >
+                    <span class="text-sm md:text-base flex items-center gap-3">
+                      <span class="w-2.5 h-2.5 rounded-full bg-[#cc0000]/80"></span>
+                      {doc.title}
+                    </span>
+                    <svg class="w-5 h-5 text-slate-400 transform transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  <div 
+                    id={`content-${cat.id.toLowerCase()}-${docIdx}`} 
+                    class="accordion-content hidden px-6 pb-6 text-slate-600 font-light text-sm md:text-base leading-relaxed border-t border-slate-50 pt-4"
+                  >
+                    {doc.desc}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div class="text-center p-10 bg-white border border-slate-200 rounded-2xl text-slate-400">
+                Nu există documente adăugate pentru această categorie.
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 4: PASII DE INSCRIERE ==================== -->
+    <section class="py-16 md:py-24 relative overflow-hidden bg-slate-50/40">
+      <div class="text-center max-w-2xl mx-auto mb-20 reveal">
+        <span class="eyebrow">Cum funcționează?</span>
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#0a0a0b] mt-4" style="font-family:'Plus Jakarta Sans',sans-serif; letter-spacing:-0.02em">Cum te înscrii la școala de șoferi</h2>
+        <p class="text-slate-500 text-sm md:text-base leading-relaxed mt-3">Urmează acești pași simpli pentru a începe pregătirea ta teoretică și practică la Start Drive BVL:</p>
+      </div>
+
+      <div class="relative max-w-6xl mx-auto px-4">
+        
+        {formattedSteps.map((step, i) => {
+          const isEven = (i & 1) === 0;
+          const displayNum = String(i + 1).padStart(2, '0');
+          const isLast = i === formattedSteps.length - 1;
+
+          return (
+            <div class="relative flex flex-col md:flex-row items-start gap-6 md:gap-0 mb-16 md:mb-24 last:mb-0 group">
+              
+              {/* Desktop S-Curve Dotted Connectors */}
+              {!isLast && (
+                <div class="absolute top-[68px] left-1/2 -translate-x-1/2 w-40 z-10 hidden md:block" style="bottom: -104px;">
+                  <svg viewBox="0 0 100 100" preserveAspectRatio="none" class="w-full h-full text-[#cc0000]/25" fill="none">
+                    {isEven ? (
+                      <path d="M 50 0 C 95 15, 95 85, 50 100" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="animate-line-flow" />
+                    ) : (
+                      <path d="M 50 0 C 5 15, 5 85, 50 100" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="animate-line-flow" />
+                    )}
+                  </svg>
+                </div>
+              )}
+
+              {/* Mobile Vertical Dotted Line */}
+              {!isLast && (
+                <div class="absolute left-6 top-14 bottom-[-64px] w-px border-l-2 border-dashed border-[#cc0000]/20 md:hidden z-10"></div>
+              )}
+
+              {/* Central/Left Icon Badge */}
+              <div class="absolute left-0 md:left-1/2 -translate-x-0 md:-translate-x-1/2 top-1 md:top-2 z-20 flex flex-col items-center justify-start">
+                <div class="w-12 h-12 md:w-16 md:h-16 rounded-full bg-slate-950 text-white border-[3px] md:border-4 border-white flex items-center justify-center shadow-lg relative z-20 group-hover:bg-[#cc0000] group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(204,0,0,0.35)] transition-all duration-500">
+                  {/* Brand Steering Wheel SVG */}
+                  <svg viewBox="0 0 44 44" fill="none" class="w-6 h-6 md:w-8 md:h-8 transition-transform duration-700 ease-out group-hover:rotate-180" aria-hidden="true">
+                    <circle cx="22" cy="22" r="12.5" stroke="#ffffff" stroke-width="2.4" opacity="0.95" />
+                    <circle cx="22" cy="22" r="3.4" fill="#ffffff" />
+                    <path d="M22 22 L22 9.5 M22 22 L31.5 27.5 M22 22 L12.5 27.5" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" opacity="0.95" />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Content Card (alternates left/right on desktop) */}
+              <div class={`w-full md:w-[calc(50%-48px)] pl-16 md:pl-0 ${isEven ? 'md:mr-auto md:text-right' : 'md:ml-auto md:text-left'}`}>
+                <div class="bg-white border border-slate-200/60 rounded-2xl p-6 md:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.015)] transition-all duration-300 hover:shadow-[0_12px_30px_rgba(204,0,0,0.06)] hover:border-red-500/20 relative group/card overflow-hidden">
+                  
+                  {/* Decorative Number for Mobile */}
+                  <span class="absolute right-6 bottom-2 text-6xl font-black text-transparent opacity-[0.07] select-none md:hidden" style="-webkit-text-stroke: 1.5px #cc0000; font-family:'Plus Jakarta Sans',sans-serif;">
+                    {displayNum}
+                  </span>
+
+                  <h3 class="text-lg md:text-xl font-bold text-[#0a0a0b] mb-3 group-hover/card:text-[#cc0000] transition-colors duration-300">
+                    {step.question}
+                  </h3>
+                  <p class="text-slate-500 text-sm md:text-base leading-relaxed font-light">
+                    {step.answer}
+                  </p>
+                </div>
+              </div>
+
+              {/* Decorative Outline Number for Desktop (positioned on opposite side) */}
+              <div class={`hidden md:flex items-center w-[calc(50%-48px)] h-16 md:h-20 ${isEven ? 'absolute right-0 top-0 pl-16 justify-start text-left' : 'absolute left-0 top-0 pr-16 justify-end text-right'}`}>
+                <span class="text-8xl lg:text-9xl font-black text-transparent opacity-15 group-hover:opacity-30 transition-opacity duration-300 select-none" style="-webkit-text-stroke: 2px #cc0000; font-family:'Plus Jakarta Sans',sans-serif;">
+                  {displayNum}
+                </span>
+              </div>
+
+            </div>
+          );
+        })}
+      </div>
+    </section>
+
+    {/* Local Styles for SVG dash flow animation */}
+    <style>
+      @keyframes line-flow {
+        from {
+          stroke-dashoffset: 24;
+        }
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+      .animate-line-flow {
+        stroke-dasharray: 8, 8;
+        animation: line-flow 1.5s linear infinite;
+      }
+    </style>
+
+    <!-- ==================== SECTION 5: TESTIMONIALE SLIDER ==================== -->
+    <section class="reveal">
+      <div class="flex flex-col sm:flex-row justify-between items-end gap-6 mb-12">
+        <div>
+          <span class="eyebrow">Ce spun cursanții noștri</span>
+          <h2 class="text-3xl md:text-4xl font-extrabold text-[#0a0a0b] mt-4" style="font-family:'Plus Jakarta Sans',sans-serif; letter-spacing:-0.02em">Părerile Absolvenților</h2>
+        </div>
+        <div class="flex gap-2">
+          <button id="testimonials-prev" class="w-12 h-12 rounded-full border-2 border-[#0a0a0b] flex items-center justify-center hover:bg-[#cc0000] hover:border-[#cc0000] hover:text-white transition-all cursor-pointer" aria-label="Anterior">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <button id="testimonials-next" class="w-12 h-12 rounded-full border-2 border-[#0a0a0b] flex items-center justify-center hover:bg-[#cc0000] hover:border-[#cc0000] hover:text-white transition-all cursor-pointer" aria-label="Următorul">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div id="testimonials-scroll" class="flex gap-6 overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth pb-4">
+        {testimonialImages.map((imgSrc, idx) => (
+          <div class="min-w-[280px] md:min-w-[420px] max-w-[450px] bg-white border border-slate-200/50 rounded-2xl p-3 shrink-0 snap-center shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center justify-center" style={`transition-delay:${idx * 90}ms`}>
+            <div class="overflow-hidden rounded-xl bg-slate-950/[0.02] flex items-center justify-center w-full h-full p-2 border border-slate-100/40">
+              <img 
+                src={imgSrc} 
+                alt={`Recenzie Facebook ${idx + 1}`} 
+                class="w-full h-auto object-contain max-h-[140px] md:max-h-[160px] select-none pointer-events-none rounded-lg" 
+                loading="lazy" 
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 6: FAQ DEDICAT INSCRIERILOR ==================== -->
+    <section class="reveal">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <span class="eyebrow">Răspunsuri la nelămuriri</span>
+        <h2 class="text-3xl md:text-4xl font-extrabold text-[#0a0a0b] mt-4" style="font-family:'Plus Jakarta Sans',sans-serif; letter-spacing:-0.02em">Întrebări Frecvente Înscriere</h2>
+        <p class="text-slate-500 text-sm md:text-base leading-relaxed mt-3">Pregătit pentru școală? Iată detalii esențiale explicate:</p>
+      </div>
+
+      <div class="max-w-3xl mx-auto space-y-4">
+        {faqs.map((faq, idx) => (
+          <div class="border border-slate-200/80 rounded-2xl bg-white overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.01)]">
+            <button 
+              class="faq-toggle w-full text-left px-6 py-4 md:py-5 font-bold text-[#0a0a0b] hover:text-[#cc0000] flex justify-between items-center transition-colors focus:outline-none"
+              aria-expanded="false"
+              data-target={`faq-content-${idx}`}
+            >
+              <span class="text-sm md:text-base">{faq.question}</span>
+              <svg class="w-5 h-5 text-slate-400 transform transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div id={`faq-content-${idx}`} class="faq-content hidden px-6 pb-5 text-slate-600 font-light text-sm md:text-base leading-relaxed border-t border-slate-50 pt-3">
+              {faq.answer}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 7: CTA FINAL PUTERNIC ==================== -->
+    <section class="py-20 bg-[#cc0000] rounded-3xl relative overflow-hidden shadow-xl reveal">
+      <div class="absolute inset-0 bg-gradient-to-br from-[#cc0000] via-[#b30000] to-[#7a0000]"></div>
+      <div class="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+      <div class="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+
+      <div class="container-wide max-w-4xl text-center relative z-10 text-white space-y-6">
+        <h2 class="text-4xl md:text-5xl font-black mb-4 leading-tight uppercase" style="font-family:'Plus Jakarta Sans',sans-serif; letter-spacing:-0.02em">
+          {settings.inscrieri_cta_title}
+        </h2>
+        <p class="text-white/85 text-lg md:text-xl font-light max-w-2xl mx-auto">
+          {settings.inscrieri_cta_text}
+        </p>
+
+        <div class="flex flex-col sm:flex-row justify-center gap-4 pt-4">
+          <Button href="/inscrieri" variant="light" ripple>Înscrie-te Online Acum</Button>
+          <Button href={`tel:${settings.contact_phone.replace(/\s+/g, '')}`} variant="outline" class="!border-white/30 !text-white hover:!bg-white/10">
+            Sună direct: {settings.contact_phone}
+          </Button>
+        </div>
+
+        <div class="text-xs text-white/60 font-semibold pt-4 flex flex-wrap justify-center gap-x-6 gap-y-2">
+          <span>📞 {settings.contact_phone}</span>
+          <span>📅 Program: {settings.contact_schedule}</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Client-side Interactive Scripts -->
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. TABS SYSTEM
+      const tabs = document.querySelectorAll('.tab-btn');
+      const contents = document.querySelectorAll('.tab-content');
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const target = tab.getAttribute('data-target');
+
+          // Toggle tabs styling
+          tabs.forEach(t => {
+            t.classList.remove('bg-[#cc0000]', 'text-white', 'border-[#cc0000]', 'shadow-md', 'shadow-red-900/10');
+            t.classList.add('bg-white', 'text-slate-600', 'border-slate-200');
+          });
+          tab.classList.remove('bg-white', 'text-slate-600', 'border-slate-200');
+          tab.classList.add('bg-[#cc0000]', 'text-white', 'border-[#cc0000]', 'shadow-md', 'shadow-red-900/10');
+
+          // Toggle content panels
+          contents.forEach(content => {
+            if (content.id === target) {
+              content.classList.remove('hidden');
+            } else {
+              content.classList.add('hidden');
+            }
+          });
+        });
+      });
+
+      // 2. ACCORDION ACCENT
+      const accordionTriggers = document.querySelectorAll('.accordion-trigger');
+      accordionTriggers.forEach(trigger => {
+        trigger.addEventListener('click', () => {
+          const targetId = trigger.getAttribute('data-target');
+          const content = document.getElementById(targetId);
+          const expanded = trigger.getAttribute('aria-expanded') === 'true';
+
+          // Toggle arrow SVG
+          const svg = trigger.querySelector('svg');
+          if (svg) {
+            if (!expanded) {
+              svg.classList.add('rotate-180');
+            } else {
+              svg.classList.remove('rotate-180');
+            }
+          }
+
+          // Toggle display
+          if (content) {
+            if (!expanded) {
+              content.classList.remove('hidden');
+            } else {
+              content.classList.add('hidden');
+            }
+          }
+
+          trigger.setAttribute('aria-expanded', !expanded);
+        });
+      });
+
+      // 3. FAQ ACCORDION
+      const faqToggles = document.querySelectorAll('.faq-toggle');
+      faqToggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+          const targetId = toggle.getAttribute('data-target');
+          const content = document.getElementById(targetId);
+          const expanded = toggle.getAttribute('aria-expanded') === 'true';
+
+          // Toggle arrow SVG
+          const svg = toggle.querySelector('svg');
+          if (svg) {
+            if (!expanded) {
+              svg.classList.add('rotate-180');
+            } else {
+              svg.classList.remove('rotate-180');
+            }
+          }
+
+          // Toggle display
+          if (content) {
+            if (!expanded) {
+              content.classList.remove('hidden');
+            } else {
+              content.classList.add('hidden');
+            }
+          }
+
+          toggle.setAttribute('aria-expanded', !expanded);
+        });
+      });
+
+      // 4. TESTIMONIALS SLIDER SCROLL
+      const testScroll = document.getElementById('testimonials-scroll');
+      const testPrev = document.getElementById('testimonials-prev');
+      const testNext = document.getElementById('testimonials-next');
+      if (testScroll && testPrev && testNext) {
+        testNext.addEventListener('click', () => testScroll.scrollBy({ left: 400, behavior: 'smooth' }));
+        testPrev.addEventListener('click', () => testScroll.scrollBy({ left: -400, behavior: 'smooth' }));
+      }
+    });
+  </script>
 </MainLayout>

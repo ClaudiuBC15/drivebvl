@@ -1,0 +1,36 @@
+---
+import MainLayout from '../../layouts/main.astro';
+import { requireAuth } from '../../lib/auth';
+import { getDB, queryAll } from '../../lib/db';
+import AdminLayout from '../../components/admin/AdminLayout';
+import InstructorManager from '../../components/admin/InstructorManager';
+
+export const prerender = false;
+
+const redirect = requireAuth(Astro.request);
+if (redirect) {
+  return redirect;
+}
+
+const db = getDB(Astro.locals);
+let instructors: any[] = [];
+
+try {
+  instructors = await queryAll(db, 'SELECT * FROM instructors ORDER BY sort_order ASC');
+} catch (err) {
+  console.error('Error fetching instructors:', err);
+}
+---
+
+<MainLayout title="Instructori CMS | Start Drive BVL" description="Administrare instructori auto.">
+  <AdminLayout activeTab="instructors" client:load>
+    <div class="mb-6 flex items-center justify-between">
+      <div>
+        <h3 class="text-xl font-bold text-slate-800">Echipa de Instructori</h3>
+        <p class="text-xs text-slate-500 font-light mt-1">Creează, editează sau șterge instructorii de pe site. Detaliile acestora vor fi actualizate automat pe pagina publică.</p>
+      </div>
+    </div>
+    
+    <InstructorManager initialInstructors={instructors} client:load />
+  </AdminLayout>
+</MainLayout>

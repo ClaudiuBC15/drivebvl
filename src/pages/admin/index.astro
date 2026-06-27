@@ -1,0 +1,315 @@
+---
+import MainLayout from '../../layouts/main.astro';
+import { requireAuth } from '../../lib/auth';
+import { getDB, queryOne, queryAll } from '../../lib/db';
+import AdminLayout from '../../components/admin/AdminLayout';
+import StatsCard from '../../components/admin/StatsCard';
+import { Users, BookOpen, HelpCircle, Image as ImageIcon } from 'lucide-react';
+
+export const prerender = false;
+
+const redirect = requireAuth(Astro.request);
+if (redirect) {
+  return redirect;
+}
+
+const db = getDB(Astro.locals);
+
+// Fetch stats counts
+let totalLeads = 0;
+let newLeads = 0;
+let totalBlogs = 0;
+let totalFaqs = 0;
+let totalGallery = 0;
+let recentLeads: any[] = [];
+
+// Fetch category counts dynamically
+let catStats = {
+  B: 0,
+  A: 0,
+  BE: 0,
+  C: 0,
+  others: 0,
+  total: 0
+};
+
+try {
+  const leadsCountObj = await queryOne<{ total: number }>(db, 'SELECT COUNT(*) as total FROM leads');
+  const newLeadsCountObj = await queryOne<{ total: number }>(db, "SELECT COUNT(*) as total FROM leads WHERE status = 'nou'");
+  const blogsCountObj = await queryOne<{ total: number }>(db, 'SELECT COUNT(*) as total FROM articles');
+  const faqsCountObj = await queryOne<{ total: number }>(db, 'SELECT COUNT(*) as total FROM faqs');
+  const galleryCountObj = await queryOne<{ total: number }>(db, 'SELECT COUNT(*) as total FROM gallery_images');
+
+  totalLeads = leadsCountObj?.total || 0;
+  newLeads = newLeadsCountObj?.total || 0;
+  totalBlogs = blogsCountObj?.total || 0;
+  totalFaqs = faqsCountObj?.total || 0;
+  totalGallery = galleryCountObj?.total || 0;
+
+  recentLeads = await queryAll<any>(db, 'SELECT * FROM leads ORDER BY created_at DESC LIMIT 5');
+
+  const categoryCounts = await queryAll<{ category: string; count: number }>(db, 'SELECT category, COUNT(*) as count FROM leads GROUP BY category');
+  for (const row of categoryCounts) {
+    const cat = (row.category || '').toUpperCase();
+    const cnt = row.count || 0;
+    catStats.total += cnt;
+    if (cat === 'B') catStats.B += cnt;
+    else if (cat === 'A') catStats.A += cnt;
+    else if (cat === 'BE') catStats.BE += cnt;
+    else if (cat === 'C') catStats.C += cnt;
+    else catStats.others += cnt;
+  }
+} catch (err) {
+  console.error('Error fetching admin dashboard stats:', err);
+}
+
+// Date formatting helper
+function formatDate(dateStr: string) {
+  if (!dateStr) return '';
+  try {
+    const cleanStr = dateStr.includes(' ') && !dateStr.includes('T') ? dateStr.replace(' ', 'T') : dateStr;
+    const date = new Date(cleanStr);
+    if (isNaN(date.getTime())) return dateStr;
+    return date.toLocaleDateString('ro-RO', { 
+      day: '2-digit', 
+      month: 'short', 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
+  } catch {
+    return dateStr;
+  }
+}
+
+const totalCircum = 2 * Math.PI * 55; // 345.575
+const pctB = catStats.total > 0 ? (catStats.B / catStats.total) * 100 : 0;
+const pctA = catStats.total > 0 ? (catStats.A / catStats.total) * 100 : 0;
+const pctBE = catStats.total > 0 ? (catStats.BE / catStats.total) * 100 : 0;
+const pctC = catStats.total > 0 ? (catStats.C / catStats.total) * 100 : 0;
+const pctOthers = catStats.total > 0 ? (catStats.others / catStats.total) * 100 : 0;
+
+const lenB = (pctB / 100) * totalCircum;
+const lenA = (pctA / 100) * totalCircum;
+const lenBE = (pctBE / 100) * totalCircum;
+const lenC = (pctC / 100) * totalCircum;
+const lenOthers = (pctOthers / 100) * totalCircum;
+
+const offsetB = 0;
+const offsetA = -lenB;
+const offsetBE = -(lenB + lenA);
+const offsetC = -(lenB + lenA + lenBE);
+const offsetOthers = -(lenB + lenA + lenBE + lenC);
+---
+
+<MainLayout title="Overview CMS | Start Drive BVL" description="Dashboard centralizat Start Drive BVL.">
+  <AdminLayout activeTab="dashboard" client:load>
+    
+    <!-- Stats Cards Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+      <StatsCard 
+        title="Cereri Noi în Așteptare" 
+        value={newLeads} 
+        description="față de săptămâna trecută"
+        icon={Users}
+        trend="+12%"
+        trendType="up"
+      />
+      <StatsCard 
+        title="Articole Publicate" 
+        value={totalBlogs} 
+        description="luna aceasta"
+        icon={BookOpen}
+        trend="+2"
+        trendType="up"
+      />
+      <StatsCard 
+        title="Întrebări frecvente (FAQ)" 
+        value={totalFaqs} 
+        description="Fără modificări"
+        icon={HelpCircle}
+        trend="Stabil"
+        trendType="neutral"
+      />
+      <StatsCard 
+        title="Imagini în Galerie" 
+        value={totalGallery} 
+        description="în ultimele 7 zile"
+        icon={ImageIcon}
+        trend="+5"
+        trendType="up"
+      />
+    </div>
+
+    <!-- Row 2: Recent signups (from DB) - Full Width -->
+    <div class="mb-10">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-bold text-slate-800">Înscrieri recente</h3>
+        <a href="/admin/leads" class="text-xs font-bold text-[#cc0000] hover:text-red-750 transition-colors uppercase tracking-wider">
+          Vezi toate
+        </a>
+      </div>
+
+      <div class="bg-white border border-slate-200/60 rounded-3xl overflow-hidden shadow-[0_4px_25px_-5px_rgba(0,0,0,0.02)]">
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse text-left text-sm text-slate-700">
+            <thead class="bg-slate-50/50 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
+              <tr>
+                <th class="px-6 py-4.5 font-bold">Nume</th>
+                <th class="px-6 py-4.5 font-bold">Curs</th>
+                <th class="px-6 py-4.5 font-bold">Data</th>
+                <th class="px-6 py-4.5 font-bold text-right">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 bg-white">
+              {recentLeads.length > 0 ? (
+                recentLeads.map((lead) => (
+                  <tr class="hover:bg-slate-50/30 transition-colors">
+                    <td class="px-6 py-4 font-bold text-slate-800">{lead.name}</td>
+                    <td class="px-6 py-4">
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-150 uppercase tracking-wider">
+                        Categoria {lead.category || 'N/A'}
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 font-light text-slate-450 text-xs">{formatDate(lead.created_at)}</td>
+                    <td class="px-6 py-4 text-right">
+                      <span class={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider ${
+                        lead.status === 'nou' 
+                          ? 'bg-blue-50 text-blue-600 border border-blue-100/50' 
+                          : lead.status === 'contactat'
+                            ? 'bg-amber-50 text-amber-600 border border-amber-100/50'
+                            : 'bg-emerald-50 text-emerald-600 border border-emerald-100/50'
+                      }`}>
+                        {lead.status === 'nou' ? 'Nouă' : lead.status === 'contactat' ? 'În așteptare' : 'Confirmată'}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colspan={4} class="px-6 py-12 text-center text-slate-400 font-light text-sm">
+                    Nu s-a înregistrat nicio cerere recentă.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3: Charts Section & Quick Tools split -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-10">
+      
+      <!-- Left Column: Categories Donut Chart (5 cols) -->
+      <section class="lg:col-span-5 space-y-4">
+        <h3 class="text-lg font-bold text-slate-800">Înscrieri pe categorii</h3>
+        <div class="bg-white border border-slate-200/60 rounded-3xl p-6 shadow-[0_4px_25px_-5px_rgba(0,0,0,0.02)] flex flex-col sm:flex-row items-center justify-around gap-6 h-auto min-h-[240px]">
+          <!-- Donut SVG -->
+          <div class="relative w-36 h-36 flex items-center justify-center shrink-0">
+            <svg class="w-full h-full -rotate-90" viewBox="0 0 160 160">
+              <!-- Background Ring -->
+              <circle cx="80" cy="80" r="55" stroke="#f1f5f9" stroke-width="15" fill="transparent" />
+              {catStats.total > 0 ? (
+                <>
+                  {lenB > 0 && <circle cx="80" cy="80" r="55" stroke="#cc0000" stroke-width="15" fill="transparent" stroke-dasharray={`${lenB} ${totalCircum - lenB}`} stroke-dashoffset={offsetB} stroke-linecap="round" />}
+                  {lenA > 0 && <circle cx="80" cy="80" r="55" stroke="#3b82f6" stroke-width="15" fill="transparent" stroke-dasharray={`${lenA} ${totalCircum - lenA}`} stroke-dashoffset={offsetA} stroke-linecap="round" />}
+                  {lenBE > 0 && <circle cx="80" cy="80" r="55" stroke="#f97316" stroke-width="15" fill="transparent" stroke-dasharray={`${lenBE} ${totalCircum - lenBE}`} stroke-dashoffset={offsetBE} stroke-linecap="round" />}
+                  {lenC > 0 && <circle cx="80" cy="80" r="55" stroke="#eab308" stroke-width="15" fill="transparent" stroke-dasharray={`${lenC} ${totalCircum - lenC}`} stroke-dashoffset={offsetC} stroke-linecap="round" />}
+                  {lenOthers > 0 && <circle cx="80" cy="80" r="55" stroke="#94a3b8" stroke-width="15" fill="transparent" stroke-dasharray={`${lenOthers} ${totalCircum - lenOthers}`} stroke-dashoffset={offsetOthers} stroke-linecap="round" />}
+                </>
+              ) : (
+                <circle cx="80" cy="80" r="55" stroke="#e2e8f0" stroke-width="15" fill="transparent" />
+              )}
+            </svg>
+            <div class="absolute flex flex-col items-center justify-center">
+              <span class="text-2xl font-extrabold text-slate-800 leading-none">{catStats.total}</span>
+              <span class="text-[10px] text-slate-400 font-semibold uppercase mt-1 tracking-wider">Total</span>
+            </div>
+          </div>
+
+          <!-- Legend -->
+          <div class="flex flex-col gap-1.5 text-xs w-full max-w-[160px]">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2 text-slate-600 font-medium">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#cc0000]"></span>
+                <span>Categoria B</span>
+              </div>
+              <span class="font-bold text-slate-700">{catStats.B} ({pctB.toFixed(1)}%)</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2 text-slate-600 font-medium">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#3b82f6]"></span>
+                <span>Categoria A</span>
+              </div>
+              <span class="font-bold text-slate-700">{catStats.A} ({pctA.toFixed(1)}%)</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2 text-slate-600 font-medium">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#f97316]"></span>
+                <span>Categoria BE</span>
+              </div>
+              <span class="font-bold text-slate-700">{catStats.BE} ({pctBE.toFixed(1)}%)</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2 text-slate-600 font-medium">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#eab308]"></span>
+                <span>Categoria C</span>
+              </div>
+              <span class="font-bold text-slate-700">{catStats.C} ({pctC.toFixed(1)}%)</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2 text-slate-600 font-medium">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#94a3b8]"></span>
+                <span>Altele</span>
+              </div>
+              <span class="font-bold text-slate-700">{catStats.others} ({pctOthers.toFixed(1)}%)</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Quick Tools (7 cols) -->
+      <section class="lg:col-span-7 space-y-4">
+        <h3 class="text-lg font-bold text-slate-800">Administrare Rapidă</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 h-auto min-h-[240px]">
+          
+          <div class="p-5 bg-white border border-slate-200/60 rounded-3xl hover:border-[#cc0000]/30 shadow-[0_4px_25px_-5px_rgba(0,0,0,0.02)] transition-all group flex flex-col justify-between">
+            <div>
+              <span class="text-xs text-slate-400 font-bold uppercase tracking-wider block mb-1">Blog CMS</span>
+              <p class="text-xs text-slate-450 mt-1 font-light leading-relaxed">Adaugă sau editează articolele din blogul școlii auto.</p>
+            </div>
+            <a href="/admin/blog" class="font-extrabold text-slate-800 group-hover:text-[#cc0000] flex items-center justify-between text-xs transition-colors mt-4 uppercase tracking-wider">
+              Articol Nou
+              <span class="group-hover:translate-x-1 transition-transform">&rarr;</span>
+            </a>
+          </div>
+
+          <div class="p-5 bg-white border border-slate-200/60 rounded-3xl hover:border-[#cc0000]/30 shadow-[0_4px_25px_-5px_rgba(0,0,0,0.02)] transition-all group flex flex-col justify-between">
+            <div>
+              <span class="text-xs text-slate-400 font-bold uppercase tracking-wider block mb-1">Întrebări FAQ</span>
+              <p class="text-xs text-slate-450 mt-1 font-light leading-relaxed">Actualizează lista de întrebări frecvente și răspunsuri.</p>
+            </div>
+            <a href="/admin/faq" class="font-extrabold text-slate-800 group-hover:text-[#cc0000] flex items-center justify-between text-xs transition-colors mt-4 uppercase tracking-wider">
+              Întrebare Nouă
+              <span class="group-hover:translate-x-1 transition-transform">&rarr;</span>
+            </a>
+          </div>
+
+          <div class="p-5 bg-white border border-slate-200/60 rounded-3xl hover:border-[#cc0000]/30 shadow-[0_4px_25px_-5px_rgba(0,0,0,0.02)] transition-all group flex flex-col justify-between">
+            <div>
+              <span class="text-xs text-slate-400 font-bold uppercase tracking-wider block mb-1">Galerie Foto</span>
+              <p class="text-xs text-slate-450 mt-1 font-light leading-relaxed">Gestionează pozele cu absolvenții din galerie.</p>
+            </div>
+            <a href="/admin/galerie" class="font-extrabold text-slate-800 group-hover:text-[#cc0000] flex items-center justify-between text-xs transition-colors mt-4 uppercase tracking-wider">
+              Încarcă Poze
+              <span class="group-hover:translate-x-1 transition-transform">&rarr;</span>
+            </a>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+  </AdminLayout>
+</MainLayout>

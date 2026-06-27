@@ -1,0 +1,12 @@
+name = "start-drive-bvl"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+ADMIN_USER = "admin"
+ADMIN_PASS = "StartDrive2025!"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "start-drive-db"
+database_id = "local-dev-db"

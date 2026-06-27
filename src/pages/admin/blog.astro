@@ -1,0 +1,36 @@
+---
+import MainLayout from '../../layouts/main.astro';
+import { requireAuth } from '../../lib/auth';
+import { getDB, queryAll } from '../../lib/db';
+import AdminLayout from '../../components/admin/AdminLayout';
+import BlogManager from '../../components/admin/BlogManager';
+
+export const prerender = false;
+
+const redirect = requireAuth(Astro.request);
+if (redirect) {
+  return redirect;
+}
+
+const db = getDB(Astro.locals);
+let articles: any[] = [];
+
+try {
+  articles = await queryAll(db, 'SELECT * FROM articles ORDER BY created_at DESC');
+} catch (err) {
+  console.error('Error fetching articles:', err);
+}
+---
+
+<MainLayout title="Blog CMS | Start Drive BVL" description="Administrare articole de blog.">
+  <AdminLayout activeTab="blog" client:load>
+    <div class="mb-6 flex items-center justify-between">
+      <div>
+        <h3 class="text-xl font-bold text-slate-800">Blog Management</h3>
+        <p class="text-xs text-slate-500 font-light mt-1">Creează, editează, șterge sau marchează ca draft/published articolele de pe site.</p>
+      </div>
+    </div>
+    
+    <BlogManager initialArticles={articles} client:load />
+  </AdminLayout>
+</MainLayout>

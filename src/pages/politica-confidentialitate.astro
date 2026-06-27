@@ -2,256 +2,580 @@
 import MainLayout from '../layouts/main.astro';
 ---
 
-<MainLayout>
-<style>
-.legal-page {
-background: #f9f9f9;
-min-height: 100vh;
-padding: 100px 20px 50px;
-}
+<MainLayout 
+  title="Politica de Confidențialitate | Start Drive BVL"
+  description="Politica de confidențialitate și protecția datelor personale la Start Drive BVL Suceava, conform GDPR."
+>
+  <!-- Breadcrumbs & Header Section -->
+  <div class="relative bg-white pt-28 pb-12 md:pt-36 md:pb-16 overflow-hidden">
+    <!-- Grid pattern background decoration -->
+    <div class="absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-60"></div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto px-6">
+      <nav class="flex items-center gap-2 text-[10px] md:text-xs font-bold uppercase tracking-wider mb-6 text-slate-400">
+        <a href="/" class="hover:text-[#cc0000] transition-colors">Acasă</a>
+        <span>/</span>
+        <span class="text-[#cc0000]">Politica de confidențialitate</span>
+      </nav>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-7 space-y-6">
+          <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.1] relative">
+            Politica de <br/>
+            <span class="text-[#cc0000]">confidențialitate</span>
+            <span class="block w-12 h-1 bg-[#cc0000] mt-3"></span>
+          </h1>
+          <p class="text-xs text-slate-400 font-bold">Ultima actualizare: 20 mai 2024</p>
+          <p class="text-slate-600 font-light text-sm md:text-base leading-relaxed max-w-2xl">
+            La Start Drive BVL, respectăm confidențialitatea datelor tale și ne angajăm să îți protejăm informațiile personale. Această politică explică modul în care colectăm, folosim și protejăm datele tale.
+          </p>
+        </div>
+        <div class="lg:col-span-5 flex justify-center lg:justify-end">
+          <div class="rounded-3xl overflow-hidden shadow-2xl border border-slate-100 bg-slate-50 w-full max-w-md aspect-[4/3] relative">
+            <img src="/images/privacy_policy_hero.png" alt="Politica de confidențialitate Start Drive BVL" class="w-full h-full object-cover" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-.legal-container {
-max-width: 900px;
-margin: 0 auto;
-background: white;
-padding: 50px;
-border-radius: 20px;
-box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-}
+  <!-- Content Section -->
+  <section class="bg-slate-50/50 border-t border-slate-100 py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+        
+        <!-- Left Sidebar: Contents (Cuprins) & Pledge -->
+        <div class="lg:col-span-4 space-y-6 lg:sticky lg:top-24 h-fit">
+          <!-- Table of Contents -->
+          <div class="bg-white rounded-3xl border border-slate-200/60 p-6 md:p-8 shadow-[0_4px_25px_-5px_rgba(0,0,0,0.02)]">
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-6">Cuprins</h3>
+            <ul class="space-y-4">
+              <li>
+                <a href="#info-gen" class="toc-link flex items-center gap-1 text-sm font-semibold text-[#cc0000] border-l-2 border-[#cc0000] pl-3 transition-all" data-target="info-gen">
+                  1. Informații generale
+                </a>
+              </li>
+              <li>
+                <a href="#date-colect" class="toc-link flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-[#cc0000] border-l-2 border-transparent pl-3 transition-all" data-target="date-colect">
+                  2. Ce date colectăm
+                </a>
+              </li>
+              <li>
+                <a href="#folosire-date" class="toc-link flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-[#cc0000] border-l-2 border-transparent pl-3 transition-all" data-target="folosire-date">
+                  3. Cum folosim datele tale
+                </a>
+              </li>
+              <li>
+                <a href="#temei-legal" class="toc-link flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-[#cc0000] border-l-2 border-transparent pl-3 transition-all" data-target="temei-legal">
+                  4. Temeiul legal al prelucrării
+                </a>
+              </li>
+              <li>
+                <a href="#partajare-date" class="toc-link flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-[#cc0000] border-l-2 border-transparent pl-3 transition-all" data-target="partajare-date">
+                  5. Partajarea datelor
+                </a>
+              </li>
+              <li>
+                <a href="#stocare-date" class="toc-link flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-[#cc0000] border-l-2 border-transparent pl-3 transition-all" data-target="stocare-date">
+                  6. Stocarea datelor
+                </a>
+              </li>
+              <li>
+                <a href="#drepturi" class="toc-link flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-[#cc0000] border-l-2 border-transparent pl-3 transition-all" data-target="drepturi">
+                  7. Drepturile tale
+                </a>
+              </li>
+              <li>
+                <a href="#securitate-date" class="toc-link flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-[#cc0000] border-l-2 border-transparent pl-3 transition-all" data-target="securitate-date">
+                  8. Securitatea datelor
+                </a>
+              </li>
+              <li>
+                <a href="#cookies" class="toc-link flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-[#cc0000] border-l-2 border-transparent pl-3 transition-all" data-target="cookies">
+                  9. Cookie-uri
+                </a>
+              </li>
+              <li>
+                <a href="#modificari" class="toc-link flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-[#cc0000] border-l-2 border-transparent pl-3 transition-all" data-target="modificari">
+                  10. Modificări ale politicii
+                </a>
+              </li>
+              <li>
+                <a href="#contact-info" class="toc-link flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-[#cc0000] border-l-2 border-transparent pl-3 transition-all" data-target="contact-info">
+                  11. Contact
+                </a>
+              </li>
+            </ul>
+          </div>
 
-.legal-title {
-font-size: 42px;
-font-weight: bold;
-color: #dc2626;
-margin-bottom: 15px;
-font-family: 'Montserrat', sans-serif;
-}
+          <!-- Our Pledge Card -->
+          <div class="bg-white rounded-3xl border border-slate-200/60 p-6 md:p-8 shadow-[0_4px_25px_-5px_rgba(0,0,0,0.02)] flex items-start gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-red-50 text-[#cc0000] flex items-center justify-center border border-red-100/50 shrink-0">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-800 text-sm mb-1">Angajamentul nostru</h4>
+              <p class="text-xs text-slate-500 font-light leading-relaxed">
+                Ne angajăm să îți protejăm datele personale și să fim transparenți în privința modului în care acestea sunt utilizate.
+              </p>
+            </div>
+          </div>
+        </div>
 
-.legal-subtitle {
-font-size: 16px;
-color: #666;
-margin-bottom: 40px;
-}
+        <!-- Right Side: Interactive Accordions -->
+        <div class="lg:col-span-8 space-y-4">
+          
+          <!-- Section 1 -->
+          <div id="info-gen" class="accordion-item bg-white border border-slate-250/60 rounded-3xl overflow-hidden shadow-[0_4px_25px_-5px_rgba(0,0,0,0.02)] transition-all duration-300">
+            <button class="accordion-trigger w-full flex items-start gap-4 p-6 text-left focus:outline-none cursor-pointer">
+              <div class="w-10 h-10 rounded-full border border-red-100 bg-red-50/50 text-[#cc0000] flex items-center justify-center shrink-0 mt-0.5">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-slate-800 text-base mb-1">1. Informații generale</h3>
+                <p class="accordion-preview text-xs text-slate-500 font-light leading-relaxed">
+                  Această politică se aplică tuturor datelor personale colectate prin intermediul site-ului startdrivebvl.ro, telefonic, e-mail sau fizic, la sediul nostru.
+                </p>
+                <div class="accordion-content hidden mt-4 pt-4 border-t border-slate-100 text-sm text-slate-650 font-light leading-relaxed space-y-2.5">
+                  <p>START DRIVE BVL ("noi", "al nostru") respectă confidențialitatea datelor dumneavoastră personale și se angajează să le protejeze în conformitate cu Regulamentul General privind Protecția Datelor (GDPR) și legislația românească aplicabilă.</p>
+                  <p>Această politică descrie categoriile de date pe care le prelucrăm, scopurile în care le colectăm, temeiurile juridice, destinatari, durate de păstrare, precum și drepturile de care beneficiați în calitate de persoană vizată.</p>
+                </div>
+              </div>
+              <svg class="accordion-arrow w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0 mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
 
-.legal-content h2 {
-font-size: 28px;
-font-weight: bold;
-color: #000;
-margin-top: 35px;
-margin-bottom: 15px;
-font-family: 'Montserrat', sans-serif;
-}
+          <!-- Section 2 -->
+          <div id="date-colect" class="accordion-item bg-white border border-slate-250/60 rounded-3xl overflow-hidden shadow-[0_4px_25px_-5px_rgba(0,0,0,0.02)] transition-all duration-300">
+            <button class="accordion-trigger w-full flex items-start gap-4 p-6 text-left focus:outline-none cursor-pointer">
+              <div class="w-10 h-10 rounded-full border border-red-100 bg-red-50/50 text-[#cc0000] flex items-center justify-center shrink-0 mt-0.5">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-slate-800 text-base mb-1">2. Ce date colectăm</h3>
+                <p class="accordion-preview text-xs text-slate-500 font-light leading-relaxed">
+                  Colectăm datele tale personale doar în măsura necesară pentru a-ți putea oferi serviciile noastre. Acestea pot include: nume, număr de telefon, adresă de e-mail, adresă, date despre curs.
+                </p>
+                <div class="accordion-content hidden mt-4 pt-4 border-t border-slate-100 text-sm text-slate-655 font-light leading-relaxed space-y-2.5">
+                  <p>Colectăm și prelucrăm următoarele categorii de date cu caracter personal:</p>
+                  <ul class="list-disc pl-5 space-y-1.5">
+                    <li><strong>Date de Identificare:</strong> Nume și prenume, data nașterii, CNP (pentru dosar de examen și contract), serie și număr carte de identitate, adresă de domiciliu.</li>
+                    <li><strong>Date de Contact:</strong> Număr de telefon și adresă de e-mail, necesare pentru coordonarea orelor.</li>
+                    <li><strong>Date Medicale:</strong> Certificat medical și fișă psihologică eliberate de clinici autorizate, care atestă aptitudinea de a conduce.</li>
+                    <li><strong>Date de Curs:</strong> Categoria de permis vizată, progresul în orele teoretice și practice, evidența plăților și rezultatele simulărilor/examenelor.</li>
+                  </ul>
+                </div>
+              </div>
+              <svg class="accordion-arrow w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0 mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
 
-.legal-content h3 {
-font-size: 22px;
-font-weight: bold;
-color: #dc2626;
-margin-top: 25px;
-margin-bottom: 12px;
-font-family: 'Montserrat', sans-serif;
-}
+          <!-- Section 3 -->
+          <div id="folosire-date" class="accordion-item bg-white border border-slate-250/60 rounded-3xl overflow-hidden shadow-[0_4px_25px_-5px_rgba(0,0,0,0.02)] transition-all duration-300">
+            <button class="accordion-trigger w-full flex items-start gap-4 p-6 text-left focus:outline-none cursor-pointer">
+              <div class="w-10 h-10 rounded-full border border-red-100 bg-red-50/50 text-[#cc0000] flex items-center justify-center shrink-0 mt-0.5">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-slate-800 text-base mb-1">3. Cum folosim datele tale</h3>
+                <p class="accordion-preview text-xs text-slate-500 font-light leading-relaxed">
+                  Folosim datele tale pentru înscrierea la cursuri, comunicare, programări, facturare, îmbunătățirea serviciilor și informări relevante.
+                </p>
+                <div class="accordion-content hidden mt-4 pt-4 border-t border-slate-100 text-sm text-slate-655 font-light leading-relaxed space-y-2.5">
+                  <p>Datele colectate sunt folosite în scopuri bine determinate:</p>
+                  <ul class="list-disc pl-5 space-y-1.5">
+                    <li><strong>Înscrierea la cursuri:</strong> Crearea și administrarea dosarului tău oficial de cursant.</li>
+                    <li><strong>Pregătirea teoretică și practică:</strong> Programarea ședințelor de conducere cu instructorul ales și planificarea orelor în sala de legislație.</li>
+                    <li><strong>Înregistrare examen auto:</strong> Pregătirea documentelor și transmiterea datelor către autoritățile competente (DRPCIV, Poliție).</li>
+                    <li><strong>Administrativ &amp; Financiar:</strong> Facturare, procesare plăți, emitere de chitanțe și respectarea regulilor de contabilitate românești.</li>
+                    <li><strong>Notificări &amp; Relații clienți:</strong> Transmiterea de actualizări despre program, examene, modificări legislative sau chestionare de satisfacție.</li>
+                  </ul>
+                </div>
+              </div>
+              <svg class="accordion-arrow w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0 mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
 
-.legal-content p {
-font-size: 16px;
-line-height: 1.8;
-color: #333;
-margin-bottom: 20px;
-}
+          <!-- Section 4 -->
+          <div id="temei-legal" class="accordion-item bg-white border border-slate-250/60 rounded-3xl overflow-hidden shadow-[0_4px_25px_-5px_rgba(0,0,0,0.02)] transition-all duration-300">
+            <button class="accordion-trigger w-full flex items-start gap-4 p-6 text-left focus:outline-none cursor-pointer">
+              <div class="w-10 h-10 rounded-full border border-red-100 bg-red-50/50 text-[#cc0000] flex items-center justify-center shrink-0 mt-0.5">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-slate-800 text-base mb-1">4. Temeiul legal al prelucrării</h3>
+                <p class="accordion-preview text-xs text-slate-500 font-light leading-relaxed">
+                  Prelucrăm datele tale în baza consimțământului tău, a executării unui contract sau a obligațiilor legale aplicabile.
+                </p>
+                <div class="accordion-content hidden mt-4 pt-4 border-t border-slate-100 text-sm text-slate-655 font-light leading-relaxed space-y-2.5">
+                  <p>Temeiurile legale în baza cărora prelucrăm datele tale sunt:</p>
+                  <ul class="list-disc pl-5 space-y-1.5">
+                    <li><strong>Executarea unui contract:</strong> Majoritatea datelor sunt colectate pentru executarea contractului de școlarizare încheiat între părți.</li>
+                    <li><strong>Obligații legale:</strong> Înregistrarea și stocarea dosarului de cursant conform normelor Ministerului Transporturilor și reglementărilor rutiere.</li>
+                    <li><strong>Consimțământ:</strong> În cazul în care utilizezi formularele de contact online sau te abonezi la newsletter, prelucrăm datele pe baza acordului tău.</li>
+                    <li><strong>Interes legitim:</strong> Pentru securitatea sediului (dacă există camere de supraveghere) și îmbunătățirea securității platformei web.</li>
+                  </ul>
+                </div>
+              </div>
+              <svg class="accordion-arrow w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0 mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
 
-.legal-content ul,
-.legal-content ol {
-margin-left: 30px;
-margin-bottom: 20px;
-}
+          <!-- Section 5 -->
+          <div id="partajare-date" class="accordion-item bg-white border border-slate-250/60 rounded-3xl overflow-hidden shadow-[0_4px_25px_-5px_rgba(0,0,0,0.02)] transition-all duration-300">
+            <button class="accordion-trigger w-full flex items-start gap-4 p-6 text-left focus:outline-none cursor-pointer">
+              <div class="w-10 h-10 rounded-full border border-red-100 bg-red-50/50 text-[#cc0000] flex items-center justify-center shrink-0 mt-0.5">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 10.742l4.636-2.46M12.495 14.542l-4.636 2.455m10.49-6.911a3 3 0 11-6 0 3 3 0 016 0zm-11 5a3 3 0 11-6 0 3 3 0 016 0zm11 5a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-slate-800 text-base mb-1">5. Partajarea datelor</h3>
+                <p class="accordion-preview text-xs text-slate-500 font-light leading-relaxed">
+                  Nu vindem și nu închiriem datele tale către terți. Le putem partaja doar cu parteneri de încredere, care ne ajută să îți oferim serviciile (ex: procesatori de plăți), în condiții de confidențialitate.
+                </p>
+                <div class="accordion-content hidden mt-4 pt-4 border-t border-slate-100 text-sm text-slate-655 font-light leading-relaxed space-y-2.5">
+                  <p>Pentru prestarea serviciilor, transmitem anumite date doar către entități autorizate:</p>
+                  <ul class="list-disc pl-5 space-y-1.5">
+                    <li><strong>Autorități publice:</strong> Direcția Regim Permise de Conducere și Înmatriculare a Vehiculelor (DRPCIV), Serviciul Rutier și alte instituții de control autorizate de lege.</li>
+                    <li><strong>Procesatori de plăți și Bănci:</strong> Pentru procesarea corectă a plăților electronice efectuate de tine.</li>
+                    <li><strong>Furnizori IT &amp; Cloud:</strong> Servicii de hosting web securizate și soluții administrative software folosite pentru stocarea bazei de date.</li>
+                    <li><strong>Contabilitate:</strong> Firme externe de servicii de contabilitate acreditate.</li>
+                  </ul>
+                  <p><strong>Mențiune specială:</strong> Datele tale nu vor fi vândute, închiriate sau transferate în afara României sau Uniunii Europene în alte scopuri comerciale.</p>
+                </div>
+              </div>
+              <svg class="accordion-arrow w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0 mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
 
-.legal-content li {
-font-size: 16px;
-line-height: 1.8;
-color: #333;
-margin-bottom: 10px;
-}
+          <!-- Section 6 -->
+          <div id="stocare-date" class="accordion-item bg-white border border-slate-250/60 rounded-3xl overflow-hidden shadow-[0_4px_25px_-5px_rgba(0,0,0,0.02)] transition-all duration-300">
+            <button class="accordion-trigger w-full flex items-start gap-4 p-6 text-left focus:outline-none cursor-pointer">
+              <div class="w-10 h-10 rounded-full border border-red-100 bg-red-50/50 text-[#cc0000] flex items-center justify-center shrink-0 mt-0.5">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-slate-800 text-base mb-1">6. Stocarea datelor</h3>
+                <p class="accordion-preview text-xs text-slate-500 font-light leading-relaxed">
+                  Datele tale sunt stocate în condiții de siguranță și păstrate doar pentru perioada necesară îndeplinirii scopurilor menționate.
+                </p>
+                <div class="accordion-content hidden mt-4 pt-4 border-t border-slate-100 text-sm text-slate-655 font-light leading-relaxed space-y-2.5">
+                  <p>Stocăm datele tale în conformitate cu termenele prevăzute de legislație:</p>
+                  <ul class="list-disc pl-5 space-y-1.5">
+                    <li><strong>Dosarul de școlarizare:</strong> Conform regulamentului ARR și Ministerului Transporturilor, datele din fișa cursantului sunt arhivate timp de 1 an de la terminarea cursurilor sau eliberarea adeverinței.</li>
+                    <li><strong>Documente contabile (facturi, chitanțe):</strong> Sunt păstrate obligatoriu timp de 10 ani conform legislației fiscale naționale.</li>
+                    <li><strong>Date de contact online:</strong> Păstrate pentru o durată de maxim 3 ani sau până când decizi să îți retragi consimțământul (în cazul newsletter-ului).</li>
+                  </ul>
+                </div>
+              </div>
+              <svg class="accordion-arrow w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0 mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
 
-.legal-content strong {
-color: #dc2626;
-font-weight: 700;
-}
+          <!-- Section 7 -->
+          <div id="drepturi" class="accordion-item bg-white border border-slate-250/60 rounded-3xl overflow-hidden shadow-[0_4px_25px_-5px_rgba(0,0,0,0.02)] transition-all duration-300">
+            <button class="accordion-trigger w-full flex items-start gap-4 p-6 text-left focus:outline-none cursor-pointer">
+              <div class="w-10 h-10 rounded-full border border-red-100 bg-red-50/50 text-[#cc0000] flex items-center justify-center shrink-0 mt-0.5">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3 3L22 4" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-slate-800 text-base mb-1">7. Drepturile tale</h3>
+                <p class="accordion-preview text-xs text-slate-500 font-light leading-relaxed">
+                  Ai dreptul să accesezi, să corectezi, să ștergi sau să restricționezi prelucrarea datelor tale. Ne poți contacta oricând pentru exercitarea acestor drepturi.
+                </p>
+                <div class="accordion-content hidden mt-4 pt-4 border-t border-slate-100 text-sm text-slate-655 font-light leading-relaxed space-y-2.5">
+                  <p>În conformitate cu Regulamentul GDPR, beneficiezi de următoarele drepturi specifice:</p>
+                  <ul class="list-disc pl-5 space-y-1.5">
+                    <li><strong>Dreptul de Acces:</strong> Poți solicita confirmarea prelucrării datelor tale și o copie a acestora.</li>
+                    <li><strong>Dreptul la Rectificare:</strong> Corectarea datelor cu caracter personal incomplete sau greșite.</li>
+                    <li><strong>Dreptul la Ștergere ("de a fi uitat"):</strong> Solicitarea ștergerii datelor dacă acestea nu mai sunt necesare sau nu mai avem obligația legală să le păstrăm.</li>
+                    <li><strong>Dreptul la Restricționare:</strong> Solicitarea suspendării procesării datelor în anumite circumstanțe.</li>
+                    <li><strong>Dreptul de a retrage consimțământul:</strong> În orice moment, fără a afecta legalitatea prelucrării anterioare.</li>
+                    <li><strong>Dreptul la Portabilitate:</strong> Solicitarea transmiterii datelor tale către un alt operator.</li>
+                    <li><strong>Dreptul de a depune plângere:</strong> Te poți adresa oricând Autorității Naționale (ANSPDCP) dacă consideri că drepturile tale au fost încălcate.</li>
+                  </ul>
+                </div>
+              </div>
+              <svg class="accordion-arrow w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0 mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
 
-.back-link {
-display: inline-block;
-margin-top: 40px;
-padding: 15px 35px;
-background: linear-gradient(135deg, #dc2626 0%, #ff4444 100%);
-color: white;
-text-decoration: none;
-border-radius: 50px;
-font-weight: bold;
-transition: all 0.3s;
-}
+          <!-- Section 8 -->
+          <div id="securitate-date" class="accordion-item bg-white border border-slate-250/60 rounded-3xl overflow-hidden shadow-[0_4px_25px_-5px_rgba(0,0,0,0.02)] transition-all duration-300">
+            <button class="accordion-trigger w-full flex items-start gap-4 p-6 text-left focus:outline-none cursor-pointer">
+              <div class="w-10 h-10 rounded-full border border-red-100 bg-red-50/50 text-[#cc0000] flex items-center justify-center shrink-0 mt-0.5">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-slate-800 text-base mb-1">8. Securitatea datelor</h3>
+                <p class="accordion-preview text-xs text-slate-500 font-light leading-relaxed">
+                  Folosim măsuri tehnice și organizatorice adecvate pentru a proteja datele tale împotriva accesului neautorizat, pierderii sau divulgării.
+                </p>
+                <div class="accordion-content hidden mt-4 pt-4 border-t border-slate-100 text-sm text-slate-655 font-light leading-relaxed space-y-2.5">
+                  <p>Ne asigurăm că datele tale sunt păstrate în siguranță prin:</p>
+                  <ul class="list-disc pl-5 space-y-1.5">
+                    <li>Securizarea dosarelor fizice în dulapuri rezistente la foc și cu acces limitat doar personalului administrativ autorizat.</li>
+                    <li>Sisteme software moderne de gestiune a cursanților, securizate cu credențiale puternice și protocol HTTPS pe platforma web.</li>
+                    <li>Instruirea regulată a angajaților și instructorilor cu privire la bunele practici în materie de securitate GDPR.</li>
+                    <li>Efectuarea de backup-uri periodice pentru a preveni riscul pierderilor de date în caz de defecțiuni tehnice.</li>
+                  </ul>
+                </div>
+              </div>
+              <svg class="accordion-arrow w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0 mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
 
-.back-link:hover {
-transform: translateY(-3px);
-box-shadow: 0 10px 25px rgba(220, 38, 38, 0.4);
-}
+          <!-- Section 9 -->
+          <div id="cookies" class="accordion-item bg-white border border-slate-250/60 rounded-3xl overflow-hidden shadow-[0_4px_25px_-5px_rgba(0,0,0,0.02)] transition-all duration-300">
+            <button class="accordion-trigger w-full flex items-start gap-4 p-6 text-left focus:outline-none cursor-pointer">
+              <div class="w-10 h-10 rounded-full border border-red-100 bg-red-50/50 text-[#cc0000] flex items-center justify-center shrink-0 mt-0.5">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-slate-800 text-base mb-1">9. Cookie-uri</h3>
+                <p class="accordion-preview text-xs text-slate-500 font-light leading-relaxed">
+                  Site-ul nostru folosește cookie-uri pentru a îmbunătăți experiența ta de navigare. Poți gestiona preferințele cookie din setările browserului tău.
+                </p>
+                <div class="accordion-content hidden mt-4 pt-4 border-t border-slate-100 text-sm text-slate-655 font-light leading-relaxed space-y-2.5">
+                  <p>Site-ul startdrivebvl.ro utilizează fișiere de tip cookie (mici fișiere text stocate în browserul tău) pentru a asigura buna funcționare tehnică a platformei, a analiza performanța site-ului prin Google Analytics și a salva preferințele tale de navigare.</p>
+                  <p>Poți controla, șterge sau bloca oricând utilizarea modulelor cookie modificând setările de confidențialitate direct din browserul tău web, însă acest lucru poate afecta funcționarea anumitor pagini din cadrul site-ului.</p>
+                </div>
+              </div>
+              <svg class="accordion-arrow w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0 mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
 
-@media (max-width: 768px) {
-.legal-container {
-padding: 30px 20px;
-}
+          <!-- Section 10 -->
+          <div id="modificari" class="accordion-item bg-white border border-slate-250/60 rounded-3xl overflow-hidden shadow-[0_4px_25px_-5px_rgba(0,0,0,0.02)] transition-all duration-300">
+            <button class="accordion-trigger w-full flex items-start gap-4 p-6 text-left focus:outline-none cursor-pointer">
+              <div class="w-10 h-10 rounded-full border border-red-100 bg-red-50/50 text-[#cc0000] flex items-center justify-center shrink-0 mt-0.5">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-slate-800 text-base mb-1">10. Modificări ale politicii</h3>
+                <p class="accordion-preview text-xs text-slate-500 font-light leading-relaxed">
+                  Ne rezervăm dreptul de a actualiza această politică. Orice modificare va fi publicată pe această pagină, iar data actualizării va fi modificată în consecință.
+                </p>
+                <div class="accordion-content hidden mt-4 pt-4 border-t border-slate-100 text-sm text-slate-655 font-light leading-relaxed space-y-2.5">
+                  <p>Această politică de confidențialitate poate fi actualizată periodic pentru a reflecta schimbările din serviciile noastre sau modificările legislative românești/europene. Te încurajăm să consulți această pagină periodic pentru a fi la curent cu modul în care îți protejăm datele personale.</p>
+                </div>
+              </div>
+              <svg class="accordion-arrow w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0 mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
 
-.legal-title {
-font-size: 32px;
-}
+          <!-- Section 11 -->
+          <div id="contact-info" class="accordion-item bg-white border border-slate-250/60 rounded-3xl overflow-hidden shadow-[0_4px_25px_-5px_rgba(0,0,0,0.02)] transition-all duration-300">
+            <button class="accordion-trigger w-full flex items-start gap-4 p-6 text-left focus:outline-none cursor-pointer">
+              <div class="w-10 h-10 rounded-full border border-red-100 bg-red-50/50 text-[#cc0000] flex items-center justify-center shrink-0 mt-0.5">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-slate-800 text-base mb-1">11. Contact</h3>
+                <p class="accordion-preview text-xs text-slate-500 font-light leading-relaxed">
+                  Pentru orice întrebări legate de politica noastră de confidențialitate, ne poți contacta folosind datele de mai jos.
+                </p>
+                <div class="accordion-content hidden mt-4 pt-4 border-t border-slate-100 text-sm text-slate-655 font-light leading-relaxed space-y-2.5">
+                  <p>Dacă dorești să îți exerciți oricare dintre drepturile menționate anterior sau ai întrebări despre prelucrarea datelor, contactează Responsabilul nostru cu Protecția Datelor (DPO) la:</p>
+                  <ul class="list-none space-y-1.5 mt-2">
+                    <li><strong>Email:</strong> <a href="mailto:contact@startdrivebvl.ro" class="text-[#cc0000] hover:underline font-bold">contact@startdrivebvl.ro</a></li>
+                    <li><strong>Telefon:</strong> <span class="font-bold text-slate-800">0744 420 905</span></li>
+                    <li><strong>Adresă fizică:</strong> Strada Mărăști, Nr. 12, Bl. T2, Suceava (pe Mărășești, în parcarea MPO)</li>
+                  </ul>
+                </div>
+              </div>
+              <svg class="accordion-arrow w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0 mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
 
-.legal-content h2 {
-font-size: 24px;
-}
+        </div>
 
-.legal-content h3 {
-font-size: 20px;
-}
+      </div>
+    </div>
+  </section>
 
-.legal-content p,
-.legal-content li {
-font-size: 15px;
-}
-}
-</style>
+  <!-- Final CTA Section -->
+  <section class="bg-white pb-16 md:pb-24 pt-8">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="relative bg-gradient-to-r from-red-950 via-[#cc0000] to-red-900 rounded-3xl p-8 md:p-12 shadow-xl overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
+        <div class="absolute inset-0 bg-[url('/images/about-car.png')] bg-cover bg-center mix-blend-overlay opacity-10"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/20"></div>
+        
+        <div class="relative z-10 space-y-2">
+          <h2 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">Pregătit să începi?</h2>
+          <p class="text-red-100 font-light text-sm md:text-base max-w-md leading-relaxed">
+            Înscrie-te acum și fii primul pas către permisul tău.
+          </p>
+        </div>
+        
+        <div class="relative z-10 shrink-0">
+          <a 
+            href="/inscrieri" 
+            class="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-[#cc0000] font-bold py-3.5 px-8 rounded-xl transition-all duration-200 shadow-lg text-sm select-none"
+          >
+            Înscrie-te acum
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<div class="legal-page">
-<div class="legal-container">
-<h1 class="legal-title">🔒 Politica de Confidențialitate</h1>
-<p class="legal-subtitle">Ultima actualizare: 23 Noiembrie 2024</p>
+  <!-- Client-side Accordion & Sidebar sync script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const accordionItems = document.querySelectorAll('.accordion-item');
+      const tocLinks = document.querySelectorAll('.toc-link');
 
-<div class="legal-content">
-<h2>1. Introducere</h2>
-<p>START DRIVE BVL ("noi", "al nostru") respectă confidențialitatea datelor dumneavoastră personale și se angajează să le protejeze în conformitate cu Regulamentul General privind Protecția Datelor (GDPR) și legislația românească aplicabilă.</p>
+      // Expand specific section
+      function expandItem(item: Element) {
+        const content = item.querySelector('.accordion-content');
+        const arrow = item.querySelector('.accordion-arrow');
+        const preview = item.querySelector('.accordion-preview');
+        
+        if (content && content.classList.contains('hidden')) {
+          content.classList.remove('hidden');
+          if (arrow) arrow.classList.add('rotate-180');
+          if (preview) preview.classList.add('opacity-0', 'h-0', 'overflow-hidden');
+          item.classList.add('border-[#cc0000]/30', 'ring-2', 'ring-[#cc0000]/5');
+        }
+      }
 
-<h2>2. Operatorul de Date</h2>
-<p><strong>START DRIVE BVL</strong><br/>
-Adresă: Strada Mărăști, nr. 12, Suceava<br/>
-Email: contact@startdrivebvl.ro<br/>
-Telefon: 0744 420 905</p>
+      // Collapse specific section
+      function collapseItem(item: Element) {
+        const content = item.querySelector('.accordion-content');
+        const arrow = item.querySelector('.accordion-arrow');
+        const preview = item.querySelector('.accordion-preview');
+        
+        if (content && !content.classList.contains('hidden')) {
+          content.classList.add('hidden');
+          if (arrow) arrow.classList.remove('rotate-180');
+          if (preview) preview.classList.remove('opacity-0', 'h-0', 'overflow-hidden');
+          item.classList.remove('border-[#cc0000]/30', 'ring-2', 'ring-[#cc0000]/5');
+        }
+      }
 
-<h2>3. Ce Date Colectăm</h2>
-<h3>3.1 Date de Identificare</h3>
-<ul>
-<li>Nume și prenume</li>
-<li>Data nașterii</li>
-<li>CNP (pentru înscrierea la examen)</li>
-<li>Serie și număr carte de identitate</li>
-<li>Adresă de domiciliu</li>
-</ul>
+      // Add click handler to triggers
+      accordionItems.forEach(item => {
+        const trigger = item.querySelector('.accordion-trigger');
+        if (trigger) {
+          trigger.addEventListener('click', () => {
+            const content = item.querySelector('.accordion-content');
+            if (content) {
+              if (content.classList.contains('hidden')) {
+                expandItem(item);
+              } else {
+                collapseItem(item);
+              }
+            }
+          });
+        }
+      });
 
-<h3>3.2 Date de Contact</h3>
-<ul>
-<li>Număr de telefon</li>
-<li>Adresă de email</li>
-</ul>
+      // Toc Click Handler
+      tocLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetId = link.getAttribute('data-target');
+          if (targetId) {
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+              // Expand
+              expandItem(targetElement);
+              
+              // Scroll to element
+              targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-<h3>3.3 Date Medicale</h3>
-<ul>
-<li>Certificat medical (necesar pentru obținerea permisului)</li>
-<li>Informații despre aptitudinea medicală de a conduce</li>
-</ul>
+              // Highlight TOC
+              tocLinks.forEach(l => {
+                l.classList.remove('text-[#cc0000]', 'border-[#cc0000]');
+                l.classList.add('text-slate-500', 'border-transparent');
+              });
+              link.classList.remove('text-slate-500', 'border-transparent');
+              link.classList.add('text-[#cc0000]', 'border-[#cc0000]');
+            }
+          }
+        });
+      });
 
-<h3>3.4 Date despre Cursuri</h3>
-<ul>
-<li>Categoria de permis dorită</li>
-<li>Progresul în cadrul cursurilor</li>
-<li>Rezultate la examene</li>
-<li>Prezența la cursuri</li>
-</ul>
+      // Scroll Spy for Table of Contents
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px -10px -50% 0px',
+        threshold: 0.1
+      };
 
-<h2>4. Scopul Prelucrării Datelor</h2>
-<p>Datele dumneavoastră personale sunt prelucrate pentru:</p>
-<ul>
-<li><strong>Înscrierea la cursuri</strong> - pentru a vă crea un dosar de cursant</li>
-<li><strong>Derularea cursurilor</strong> - pentru a vă asigura accesul la ore teoretice și practice</li>
-<li><strong>Înscrierea la examen</strong> - pentru a transmite datele către autoritățile competente</li>
-<li><strong>Comunicare</strong> - pentru a vă informa despre program, modificări sau alte aspecte</li>
-<li><strong>Facturare</strong> - pentru a emite facturi și chitanțe</li>
-<li><strong>Îndeplinirea obligațiilor legale</strong> - conform legislației în vigoare</li>
-</ul>
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute('id');
+            if (id) {
+              const correspondingLink = document.querySelector(`.toc-link[data-target="${id}"]`);
+              if (correspondingLink) {
+                tocLinks.forEach(l => {
+                  l.classList.remove('text-[#cc0000]', 'border-[#cc0000]');
+                  l.classList.add('text-slate-500', 'border-transparent');
+                });
+                correspondingLink.classList.remove('text-slate-500', 'border-transparent');
+                correspondingLink.classList.add('text-[#cc0000]', 'border-[#cc0000]');
+              }
+            }
+          }
+        });
+      }, observerOptions);
 
-<h2>5. Temei Legal</h2>
-<p>Prelucrarea datelor se bazează pe:</p>
-<ul>
-<li><strong>Executarea contractului</strong> - pentru derularea cursurilor</li>
-<li><strong>Consimțământ</strong> - pentru comunicări de marketing (dacă ați acceptat)</li>
-<li><strong>Obligații legale</strong> - pentru raportări către autorități</li>
-<li><strong>Interes legitim</strong> - pentru îmbunătățirea serviciilor</li>
-</ul>
-
-<h2>6. Cui Dezvăluim Datele</h2>
-<p>Datele dumneavoastră pot fi transmise către:</p>
-<ul>
-<li><strong>Autorități competente</strong> - Poliția Rutieră, DRPCIV (pentru înscrierea la examen)</li>
-<li><strong>Furnizori de servicii</strong> - contabilitate, servicii IT</li>
-<li><strong>Parteneri contractuali</strong> - doar dacă este necesar pentru prestarea serviciilor</li>
-</ul>
-
-<p><strong>Important:</strong> Nu vindem și nu închiriem datele dumneavoastră către terți!</p>
-
-<h2>7. Cât Timp Păstrăm Datele</h2>
-<ul>
-<li><strong>Date de cursanți activi</strong> - pe durata cursurilor + 1 an</li>
-<li><strong>Date financiare</strong> - 10 ani (conform legislației fiscale)</li>
-<li><strong>Date medicale</strong> - 5 ani</li>
-<li><strong>Consimțământ marketing</strong> - până la retragerea consimțământului</li>
-</ul>
-
-<h2>8. Drepturile Dumneavoastră</h2>
-<p>În conformitate cu GDPR, aveți următoarele drepturi:</p>
-
-<h3>8.1 Dreptul de Acces</h3>
-<p>Aveți dreptul de a solicita o copie a datelor personale pe care le deținem despre dumneavoastră.</p>
-
-<h3>8.2 Dreptul la Rectificare</h3>
-<p>Aveți dreptul de a corecta datele inexacte sau incomplete.</p>
-
-<h3>8.3 Dreptul la Ștergere ("Dreptul de a fi uitat")</h3>
-<p>Puteți solicita ștergerea datelor în anumite condiții (cu excepția obligațiilor legale).</p>
-
-<h3>8.4 Dreptul la Restricționarea Prelucrării</h3>
-<p>Puteți solicita restricționarea prelucrării în anumite situații.</p>
-
-<h3>8.5 Dreptul la Portabilitatea Datelor</h3>
-<p>Aveți dreptul de a primi datele într-un format structurat și utilizabil.</p>
-
-<h3>8.6 Dreptul la Opoziție</h3>
-<p>Puteți să vă opuneți prelucrării datelor în anumite scopuri.</p>
-
-<h3>8.7 Dreptul de a Depune Plângere</h3>
-<p>Aveți dreptul de a depune o plângere la Autoritatea Națională de Supraveghere a Prelucrării Datelor cu Caracter Personal (ANSPDCP).</p>
-
-<h2>9. Securitatea Datelor</h2>
-<p>Implementăm măsuri tehnice și organizatorice pentru a proteja datele dumneavoastră:</p>
-<ul>
-<li>Stocare securizată a documentelor fizice</li>
-<li>Sisteme informatice protejate cu parolă</li>
-<li>Acces restricționat doar pentru personalul autorizat</li>
-<li>Backup-uri regulate</li>
-<li>Politici de securitate stricte</li>
-</ul>
-
-<h2>10. Cookie-uri și Tehnologii Similare</h2>
-<p>Site-ul nostru folosește cookie-uri pentru a îmbunătăți experiența utilizatorului. Pentru mai multe detalii, consultați <a href="/politica-cookies">Politica de Cookie-uri</a>.</p>
-
-<h2>11. Modificări ale Politicii</h2>
-<p>Ne rezervăm dreptul de a actualiza această politică. Modificările vor fi publicate pe site-ul nostru și vă vom informa prin email despre schimbările semnificative.</p>
-
-<h2>12. Contact</h2>
-<p>Pentru orice întrebări legate de prelucrarea datelor personale sau pentru a vă exercita drepturile, ne puteți contacta:</p>
-<ul>
-<li><strong>Email:</strong> contact@startdrivebvl.ro</li>
-<li><strong>Telefon:</strong> 0744 420 905</li>
-<li><strong>Adresă:</strong> Strada Mărăști, nr. 12, Suceava</li>
-</ul>
-
-<p><strong>Responsabil cu Protecția Datelor (DPO):</strong> Pentru cereri legate de GDPR, vă rugăm să ne contactați la adresele de mai sus.</p>
-</div>
-
-<a href="/" class="back-link">← Înapoi la Pagina Principală</a>
-</div>
-</div>
+      accordionItems.forEach(item => {
+        observer.observe(item);
+      });
+    });
+  </script>
 </MainLayout>

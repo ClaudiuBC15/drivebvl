@@ -1,0 +1,36 @@
+---
+import MainLayout from '../../layouts/main.astro';
+import { requireAuth } from '../../lib/auth';
+import { getDB, queryAll } from '../../lib/db';
+import AdminLayout from '../../components/admin/AdminLayout';
+import CarManager from '../../components/admin/CarManager';
+
+export const prerender = false;
+
+const redirect = requireAuth(Astro.request);
+if (redirect) {
+  return redirect;
+}
+
+const db = getDB(Astro.locals);
+let cars: any[] = [];
+
+try {
+  cars = await queryAll(db, 'SELECT * FROM cars ORDER BY sort_order ASC');
+} catch (err) {
+  console.error('Error fetching fleet cars:', err);
+}
+---
+
+<MainLayout title="Flotă CMS | Start Drive BVL" description="Administrare flotă de mașini.">
+  <AdminLayout activeTab="cars" client:load>
+    <div class="mb-6 flex items-center justify-between">
+      <div>
+        <h3 class="text-xl font-bold text-slate-800">Administrare Flotă Auto</h3>
+        <p class="text-xs text-slate-500 font-light mt-1">Creează, editează sau șterge mașinile din flotă. Modificările se vor reflecta automat în caruselul de pe pagina principală.</p>
+      </div>
+    </div>
+    
+    <CarManager initialCars={cars} client:load />
+  </AdminLayout>
+</MainLayout>

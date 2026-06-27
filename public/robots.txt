@@ -1,0 +1,8 @@
+# Start Drive BVL — robots.txt
+User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: https://startdrivebvl.ro/sitemap.xml

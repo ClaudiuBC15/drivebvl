@@ -1,0 +1,57 @@
+---
+import MainLayout from '../../layouts/main.astro';
+import { requireAuth } from '../../lib/auth';
+import { getDB, queryAll } from '../../lib/db';
+import AdminLayout from '../../components/admin/AdminLayout';
+import SettingsManager from '../../components/admin/SettingsManager';
+
+export const prerender = false;
+
+const redirect = requireAuth(Astro.request);
+if (redirect) {
+  return redirect;
+}
+
+const db = getDB(Astro.locals);
+let settings: Record<string, string> = {};
+
+try {
+  // Load settings
+  const settingsRows = await queryAll<any>(db, 'SELECT key, value FROM settings');
+  settingsRows.forEach(row => {
+    settings[row.key] = row.value;
+  });
+
+  // Ensure default values are populated if settings are empty
+  const defaultKeys = {
+    contact_phone: '0744 420 905',
+    contact_schedule: '08 - 17 Luni-Vineri, Sâmbătă - 10-14, Duminică - Închis',
+    inscrieri_cta_title: 'Ești pregătit să începi?',
+    inscrieri_cta_text: 'Înscrie-te astăzi și începe pregătirea pentru permisul tău.',
+    inscrieri_support_text: 'Nu trebuie să te descurci singur. Echipa Start Drive BVL te ajută cu pregătirea dosarului, programarea examenelor medicale și toate informațiile necesare pentru înscriere.',
+    admin_name: 'Admin',
+    admin_avatar: '/images/instructori/radu-matei.png'
+  };
+
+  for (const [key, val] of Object.entries(defaultKeys)) {
+    if (!settings[key]) {
+      settings[key] = val;
+    }
+  }
+} catch (err) {
+  console.error('Error fetching settings in admin:', err);
+}
+---
+
+<MainLayout title="Setări CMS | Start Drive BVL" description="Administrare setări generale site și profil administrator.">
+  <AdminLayout activeTab="settings" client:load>
+    <div class="mb-6 flex items-center justify-between">
+      <div>
+        <h3 class="text-xl font-bold text-slate-800">Setări Site</h3>
+        <p class="text-xs text-slate-500 font-light mt-1">Configurare date de contact, mesaje CTA și profil administrator.</p>
+      </div>
+    </div>
+    
+    <SettingsManager initialSettings={settings} client:load />
+  </AdminLayout>
+</MainLayout>

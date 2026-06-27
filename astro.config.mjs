@@ -1,11 +1,19 @@
 import { defineConfig } from 'astro/config';
 import { fileURLToPath } from 'node:url';
+import cloudflare from '@astrojs/cloudflare';
 import tailwindcss from '@tailwindcss/vite';
+import react from '@astrojs/react';
 
 const projectRoot = fileURLToPath(new URL('.', import.meta.url));
 
 export default defineConfig({
-  output: 'static',
+  output: 'server',
+  adapter: cloudflare({
+    platformProxy: {
+      enabled: true,
+    },
+  }),
+  integrations: [react()],
   devToolbar: {
     enabled: false,
   },
@@ -24,7 +32,11 @@ export default defineConfig({
       },
     },
     optimizeDeps: {
-      noDiscovery: true,
-    },
+      include: [
+        'react',
+        'react-dom',
+        '@radix-ui/react-avatar',
+      ]
+    }
   },
 });

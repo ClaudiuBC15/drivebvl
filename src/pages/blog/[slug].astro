@@ -1,0 +1,460 @@
+---
+import MainLayout from '../../layouts/main.astro';
+import { getDB, queryOne, queryAll } from '../../lib/db';
+
+export const prerender = false;
+
+const { slug } = Astro.params;
+const db = getDB(Astro.locals);
+
+// Fetch article by slug
+const article = await queryOne<any>(
+  db,
+  "SELECT * FROM articles WHERE slug = ? AND status = 'published'",
+  [slug]
+);
+
+if (!article) {
+  return new Response(null, { status: 404, statusText: 'Article Not Found' });
+}
+
+// Fetch related articles in the same category
+let relatedArticles = await queryAll<any>(
+  db,
+  "SELECT * FROM articles WHERE slug != ? AND category = ? AND status = 'published' LIMIT 3",
+  [slug, article.category]
+);
+
+// Fallback to latest articles if no category matches
+if (relatedArticles.length === 0) {
+  relatedArticles = await queryAll<any>(
+    db,
+    "SELECT * FROM articles WHERE slug != ? AND status = 'published' ORDER BY created_at DESC LIMIT 3",
+    [slug]
+  );
+}
+
+// Fetch admin profile settings for author fallback
+let adminName = 'Bivol Sergiu';
+let adminAvatar = '/images/instructori/radu-matei.png';
+
+try {
+  const adminNameRow = await queryOne<any>(db, "SELECT value FROM settings WHERE key = 'admin_name'");
+  const adminAvatarRow = await queryOne<any>(db, "SELECT value FROM settings WHERE key = 'admin_avatar'");
+  if (adminNameRow) adminName = adminNameRow.value;
+  if (adminAvatarRow) adminAvatar = adminAvatarRow.value;
+} catch (err) {
+  console.error("Error loading admin settings in blog details:", err);
+}
+
+// Date formatting helper
+function formatDate(dateStr: string) {
+  if (!dateStr) return '';
+  try {
+    const cleanStr = dateStr.includes(' ') && !dateStr.includes('T') ? dateStr.replace(' ', 'T') : dateStr;
+    const date = new Date(cleanStr);
+    if (isNaN(date.getTime())) return dateStr;
+    return date.toLocaleDateString('ro-RO', { day: '2-digit', month: 'short', year: 'numeric' });
+  } catch {
+    return dateStr;
+  }
+}
+
+// Get estimated reading time (words / 200)
+function getReadingTime(text: string): number {
+  if (!text) return 1;
+  // strip html tags
+  const cleanText = text.replace(/<\/?[^>]+(>|$)/g, "");
+  const words = cleanText.trim().split(/\s+/).length;
+  return Math.max(1, Math.ceil(words / 200));
+}
+const readingTime = getReadingTime(article.content);
+
+// Simple Markdown to HTML Parser (fallback for legacy markdown articles)
+function renderMarkdown(md: string): string {
+  if (!md) return '';
+  return md
+    .split('\n\n')
+    .map(para => {
+      let trimmed = para.trim();
+      if (!trimmed) return '';
+      
+      // Headings
+      if (trimmed.startsWith('### ')) {
+        return `<h3 class="text-xl font-extrabold text-[#0a0a0b] mt-8 mb-3 tracking-tight">${trimmed.substring(4)}</h3>`;
+      }
+      if (trimmed.startsWith('## ')) {
+        return `<h2 class="text-2xl font-black text-[#0a0a0b] mt-10 mb-4 tracking-tight border-b border-slate-100 pb-2">${trimmed.substring(3)}</h2>`;
+      }
+      if (trimmed.startsWith('# ')) {
+        return `<h1 class="text-3xl font-black text-[#0a0a0b] mt-12 mb-6 tracking-tight">${trimmed.substring(2)}</h1>`;
+      }
+      
+      // Bullet points
+      if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+        const items = trimmed.split('\n').map(item => {
+          const itemText = item.replace(/^[-*]\s+/, '');
+          return `<li class="relative pl-5 mb-2.5 font-light text-slate-600"><span class="absolute left-0 text-[#cc0000]">•</span>${itemText}</li>`;
+        }).join('');
+        return `<ul class="my-6 space-y-1">${items}</ul>`;
+      }
+      
+      // Numbered lists
+      if (/^\d+\.\s+/.test(trimmed)) {
+        const items = trimmed.split('\n').map(item => {
+          const itemText = item.replace(/^\d+\.\s+/, '');
+          return `<li class="list-decimal list-inside pl-1 mb-2.5 font-light text-slate-600">${itemText}</li>`;
+        }).join('');
+        return `<ol class="my-6 space-y-1">${items}</ol>`;
+      }
+      
+      // Inline styling: bold
+      let html = trimmed.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-[#0a0a0b]">$1</strong>');
+      return `<p class="mb-5 leading-relaxed text-slate-600 font-light text-base md:text-lg">${html}</p>`;
+    })
+    .filter(Boolean)
+    .join('\n');
+}
+
+// Detect if article is saved as HTML (WYSIWYG) or Markdown
+const isHtml = article.content && article.content.trim().startsWith('<');
+const htmlContent = isHtml ? article.content : renderMarkdown(article.content);
+
+// SEO schemas
+const canonicalUrl = `https://startdrivebvl.ro/blog/${slug}`;
+const schemaJson = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${canonicalUrl}#article`,
+      "isPartOf": {
+        "@id": "https://startdrivebvl.ro/#website"
+      },
+      "headline": article.title,
+      "description": article.excerpt || article.title,
+      "image": article.image_url || 'https://startdrivebvl.ro/images/logo.png',
+      "datePublished": article.created_at,
+      "dateModified": article.updated_at || article.created_at,
+      "author": {
+        "@type": "Person",
+        "name": article.author || 'admin'
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Start Drive BVL",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://startdrivebvl.ro/images/logo.png"
+        }
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${canonicalUrl}#breadcrumb`,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Acasă",
+          "item": "https://startdrivebvl.ro/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://startdrivebvl.ro/blog"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": article.title,
+          "item": canonicalUrl
+        }
+      ]
+    }
+  ]
+};
+---
+
+<MainLayout 
+  title={`${article.seo_title || article.title} | Blog Start Drive BVL`} 
+  description={article.seo_description || article.excerpt} 
+  ogImage={article.image_url}
+  canonical={canonicalUrl}
+>
+  <!-- Article JSON-LD metadata -->
+  <script type="application/ld+json" set:html={JSON.stringify(schemaJson)} is:inline />
+
+  <div class="bg-[#f8fafc] min-h-screen pt-28 pb-10 md:pt-36 md:pb-16">
+    <div class="max-w-4xl mx-auto px-6">
+      
+      <!-- Navigație & Breadcrumbs -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        {/* Breadcrumbs */}
+        <nav class="flex items-center gap-2 text-xs text-slate-400 font-bold uppercase tracking-wider" aria-label="Breadcrumb">
+          <a href="/" class="hover:text-[#cc0000] transition-colors">Acasă</a>
+          <span class="text-slate-300">/</span>
+          <a href="/blog" class="hover:text-[#cc0000] transition-colors">Blog</a>
+          <span class="text-slate-300">/</span>
+          <span class="text-slate-600 line-clamp-1 max-w-[200px] sm:max-w-xs">{article.title}</span>
+        </nav>
+
+        {/* Buton Înapoi */}
+        <a href="/blog" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-[#cc0000] transition-colors uppercase tracking-wider self-start sm:self-auto border border-slate-200 bg-white hover:border-red-100 hover:bg-red-50/20 px-3.5 py-2 rounded-lg shadow-sm">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+          Înapoi la articole
+        </a>
+      </div>
+
+      <!-- Article Header -->
+      <header class="mb-10">
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-red-50 text-[#cc0000] border border-red-100/50 mb-4">
+          {article.category}
+        </span>
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-[#0a0a0b] tracking-tight leading-tight mb-6" style="font-family:'Plus Jakarta Sans',sans-serif">
+          {article.title}
+        </h1>
+        
+        <div class="flex flex-wrap items-center gap-y-2 gap-x-6 text-sm text-slate-500 font-medium pb-6 border-b border-slate-200">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span>{formatDate(article.created_at)}</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <img src={adminAvatar} alt={article.author || 'Admin'} class="w-6 h-6 rounded-full object-cover border border-slate-200" />
+            <span>Scris de {(!article.author || article.author.toLowerCase() === 'admin') ? adminName : article.author}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0" />
+            </svg>
+            <span>{readingTime} {readingTime === 1 ? 'minut' : 'minute'} de citit</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Featured Image (Premium Large) -->
+      {article.image_url && (
+        <div class="w-full aspect-[21/9] rounded-2xl overflow-hidden shadow-md mb-12 bg-slate-100 border border-slate-200">
+          <img src={article.image_url} alt={article.title} class="w-full h-full object-cover" />
+        </div>
+      )}
+
+      <!-- Article Content (rendered HTML with Tiptap styling support) -->
+      <article class="bg-white rounded-3xl border border-slate-200/60 p-6 sm:p-10 md:p-12 shadow-[0_10px_30px_rgba(0,0,0,0.02)] blog-article-content">
+        <div set:html={htmlContent} />
+        
+        <!-- Social Sharing Pill -->
+        <div class="flex flex-wrap items-center gap-3 pt-8 border-t border-slate-150 mt-10">
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mr-2">Distribuie articolul:</span>
+          
+          <a 
+            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(canonicalUrl)}`}
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 hover:bg-red-50/30 hover:text-[#cc0000] text-slate-600 text-xs font-bold transition-all border border-slate-200"
+          >
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            <span>Facebook</span>
+          </a>
+
+          <a 
+            href={`https://api.whatsapp.com/send?text=${encodeURIComponent(article.title + ' ' + canonicalUrl)}`}
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 hover:bg-red-50/30 hover:text-[#cc0000] text-slate-600 text-xs font-bold transition-all border border-slate-200"
+          >
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.731-1.456L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.42 9.863-9.864.001-2.637-1.03-5.112-2.905-6.986-1.875-1.875-4.353-2.907-6.992-2.908-5.442 0-9.87 4.424-9.873 9.869-.001 1.745.462 3.448 1.343 4.966l-.993 3.626 3.729-.978z"/>
+            </svg>
+            <span>WhatsApp</span>
+          </a>
+
+          <button 
+            id="copy-link-btn"
+            data-url={canonicalUrl}
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 hover:bg-red-50/30 hover:text-[#cc0000] text-slate-600 text-xs font-bold transition-all border border-slate-200 cursor-pointer select-none"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+            </svg>
+            <span id="copy-btn-text">Copiază Link</span>
+          </button>
+        </div>
+      </article>
+
+      {/* CTA Bottom Section (Premium Upgrade with user requested text) */}
+      <div class="mt-12 bg-gradient-to-br from-[#0a0a0b] to-[#1e1b4b] text-white rounded-3xl p-8 md:p-12 border border-white/10 shadow-xl flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-[#cc0000]/10 blur-[50px] rounded-full pointer-events-none"></div>
+        <div class="relative z-10">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-[#cc0000] mb-2 block">START DRIVE BVL</span>
+          <h3 class="text-2xl md:text-3xl font-black mb-3 leading-tight tracking-tight">
+            Vrei să începi școala de șoferi? Înscrie-te acum.
+          </h3>
+          <p class="text-slate-400 text-sm font-light max-w-md">
+            Profită de rata noastră ridicată de promovabilitate de peste 95%. Avem instructori răbdători și o flotă modernă adaptată ție!
+          </p>
+        </div>
+        <a href="/inscrieri" class="bg-[#cc0000] hover:bg-red-700 text-white font-extrabold py-4 px-8 rounded-xl transition-all duration-300 uppercase tracking-widest text-xs shadow-lg shadow-red-950/40 hover:-translate-y-0.5 whitespace-nowrap relative z-10">
+          Înscrie-te Online →
+        </a>
+      </div>
+
+      {/* Related Articles Section */}
+      {relatedArticles.length > 0 && (
+        <section class="mt-20 pt-10 border-t border-slate-200">
+          <h3 class="text-2xl font-black text-[#0a0a0b] tracking-tight mb-8" style="font-family:'Plus Jakarta Sans',sans-serif">Articole Recomandate</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {relatedArticles.map((art) => (
+              <div class="bg-white border border-slate-200/60 rounded-2xl overflow-hidden group shadow-[0_4px_12px_rgba(0,0,0,0.015)] hover:shadow-lg transition-all hover:-translate-y-1">
+                <a href={`/blog/${art.slug}`} class="block aspect-[16/10] overflow-hidden bg-slate-100">
+                  <img src={art.image_url || '/images/cat-b.png'} alt={art.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                </a>
+                <div class="p-5">
+                  <span class="text-[10px] font-bold text-[#cc0000] uppercase tracking-wider block mb-2">{art.category}</span>
+                  <a href={`/blog/${art.slug}`} class="block group-hover:text-[#cc0000] transition-colors">
+                    <h4 class="font-extrabold text-[#0a0a0b] text-base leading-snug line-clamp-2 mb-2" style="font-family:'Plus Jakarta Sans',sans-serif">{art.title}</h4>
+                  </a>
+                  <span class="text-[11px] text-slate-400 font-medium block">{formatDate(art.created_at)}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+    </div>
+  </div>
+</MainLayout>
+
+<script is:inline>
+  document.getElementById('copy-link-btn')?.addEventListener('click', function() {
+    const url = this.getAttribute('data-url');
+    if (url) {
+      navigator.clipboard.writeText(url).then(() => {
+        const textSpan = document.getElementById('copy-btn-text');
+        if (textSpan) {
+          const originalText = textSpan.textContent;
+          textSpan.textContent = 'Copiat!';
+          setTimeout(() => {
+            textSpan.textContent = originalText;
+          }, 2000);
+        }
+      }).catch(err => {
+        console.error('Failed to copy link: ', err);
+      });
+    }
+  });
+</script>
+
+<style is:global>
+  /* Blog article typography and Tiptap output styling */
+  .blog-article-content {
+    color: #334155;
+    font-size: 1.075rem;
+    font-weight: 300;
+  }
+  .blog-article-content p {
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+    color: #334155;
+  }
+  .blog-article-content strong {
+    font-weight: 700;
+    color: #0f172a;
+  }
+  .blog-article-content h1, 
+  .blog-article-content h2, 
+  .blog-article-content h3, 
+  .blog-article-content h4,
+  .blog-article-content h5,
+  .blog-article-content h6 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #0f172a;
+    font-weight: 800;
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+  }
+  .blog-article-content h1 { font-size: 2rem; }
+  .blog-article-content h2 { font-size: 1.6rem; border-b: 1px solid #f1f5f9; padding-bottom: 0.5rem; }
+  .blog-article-content h3 { font-size: 1.35rem; }
+  .blog-article-content h4 { font-size: 1.15rem; }
+  .blog-article-content ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #334155;
+  }
+  .blog-article-content ol {
+    list-style-type: decimal;
+    padding-left: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #334155;
+  }
+  .blog-article-content li {
+    margin-bottom: 0.5rem;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+  .blog-article-content blockquote {
+    border-left: 4px solid #cc0000;
+    padding-left: 1.25rem;
+    font-style: italic;
+    color: #475569;
+    margin: 2rem 0;
+    background-color: #f8fafc;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-radius: 0 0.5rem 0.5rem 0;
+  }
+  .blog-article-content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 2rem 0;
+    font-size: 0.95rem;
+  }
+  .blog-article-content th, 
+  .blog-article-content td {
+    border: 1px solid #e2e8f0;
+    padding: 0.75rem 1rem;
+    text-align: left;
+  }
+  .blog-article-content th {
+    background-color: #f8fafc;
+    font-weight: 700;
+    color: #0f172a;
+  }
+  .blog-article-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.75rem;
+    margin: 2.5rem auto;
+    border: 1px solid #f1f5f9;
+    display: block;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+  .blog-article-content a {
+    color: #cc0000;
+    text-decoration: underline;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .blog-article-content a:hover {
+    color: #990000;
+  }
+  .blog-article-content iframe {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 0.75rem;
+    margin: 2.5rem 0;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+</style>

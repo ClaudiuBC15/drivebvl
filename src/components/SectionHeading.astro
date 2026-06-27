@@ -1,0 +1,55 @@
+---
+/**
+ * SectionHeading — unifies the repeated "eyebrow + title + intro" pattern.
+ * Supports centered (default) and left-aligned layouts.
+ */
+interface Props {
+  eyebrow?: string;
+  title: string;
+  intro?: string;
+  align?: 'center' | 'left';
+  /** 'light' = on dark section, 'dark' = on light section */
+  tone?: 'light' | 'dark';
+  class?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  intro,
+  align = 'center',
+  tone = 'dark',
+  class: className = '',
+} = Astro.props;
+
+const isCenter = align === 'center';
+const titleColor = tone === 'light' ? '#ffffff' : '#0a0a0b';
+const introColor = tone === 'light' ? 'rgba(255,255,255,0.7)' : '#6b6b76';
+---
+
+<div
+  class:list={[
+    'w-full mb-14 sm:mb-16',
+    isCenter ? 'text-center mx-auto max-w-2xl' : 'text-left max-w-xl',
+    className,
+  ]}
+>
+  {eyebrow && (
+    <span class:list={['eyebrow', isCenter && 'eyebrow-centered']}>
+      {eyebrow}
+    </span>
+  )}
+  <h2
+    class="font-extrabold mt-4 text-[2rem] sm:text-[2.6rem] leading-[1.08]"
+    style={`font-family:'Plus Jakarta Sans',sans-serif; color:${titleColor}; letter-spacing:-0.03em`}
+    set:html={title}
+  />
+  {intro && (
+    <p
+      class="mt-5 text-base sm:text-lg leading-relaxed"
+      style={`color:${introColor}`}
+    >
+      {intro}
+    </p>
+  )}
+</div>

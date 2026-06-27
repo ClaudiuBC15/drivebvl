@@ -1,0 +1,20 @@
+---
+/**
+ * Logo — START DRIVE BVL
+ * Renders the official logo.png image.
+ */
+interface Props {
+  variant?: 'light' | 'dark'; // Kept for interface compatibility
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<a href="/" class:list={['group inline-flex items-center', className]} aria-label="Start Drive BVL — pagina principală">
+  <img 
+    src="/images/logo.png" 
+    alt="Start Drive BVL Logo" 
+    class="h-10 sm:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.02]" 
+  />
+</a>

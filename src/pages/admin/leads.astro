@@ -1,0 +1,36 @@
+---
+import MainLayout from '../../layouts/main.astro';
+import { requireAuth } from '../../lib/auth';
+import { getDB, queryAll } from '../../lib/db';
+import AdminLayout from '../../components/admin/AdminLayout';
+import LeadsManager from '../../components/admin/LeadsManager';
+
+export const prerender = false;
+
+const redirect = requireAuth(Astro.request);
+if (redirect) {
+  return redirect;
+}
+
+const db = getDB(Astro.locals);
+let leads: any[] = [];
+
+try {
+  leads = await queryAll(db, 'SELECT * FROM leads ORDER BY created_at DESC');
+} catch (err) {
+  console.error('Error fetching leads:', err);
+}
+---
+
+<MainLayout title="Administrare Înscrieri | Start Drive BVL" description="Administrare cereri înscriere școală auto.">
+  <AdminLayout activeTab="leads" client:load>
+    <div class="mb-6 flex items-center justify-between">
+      <div>
+        <h3 class="text-xl font-bold text-slate-800">Cereri de Înscriere</h3>
+        <p class="text-xs text-slate-500 font-light mt-1">Vizualizează, caută, exportă sau schimbă statusul cererilor primite de pe site.</p>
+      </div>
+    </div>
+    
+    <LeadsManager initialLeads={leads} client:load />
+  </AdminLayout>
+</MainLayout>
