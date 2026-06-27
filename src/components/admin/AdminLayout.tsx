@@ -110,7 +110,7 @@ export default function AdminLayout({ children, activeTab }: AdminLayoutProps) {
 
       {/* Sidebar (Desktop & Mobile) */}
       <aside
-        className={`fixed md:sticky top-0 left-0 bottom-0 z-40 w-64 bg-white border-r border-slate-200/80 p-5 flex flex-col justify-between transform transition-transform duration-300 md:translate-x-0 ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:block'
+        className={`fixed md:sticky top-0 left-0 bottom-0 z-40 w-64 bg-white border-r border-slate-200/80 p-5 flex flex-col justify-between transform transition-transform duration-300 ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
           }`}
       >
         <div className="space-y-6">
