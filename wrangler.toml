@@ -9,4 +9,4 @@ ADMIN_PASS = "StartDrive2025!"
 [[d1_databases]]
 binding = "DB"
 database_name = "start-drive-db"
-database_id = "local-dev-db"
+database_id = "a59c93a1-8f82-4794-85d1-75b848b27b00"
