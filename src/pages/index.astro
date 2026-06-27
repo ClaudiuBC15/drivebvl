@@ -268,7 +268,7 @@ const googleReviewsUrl = "https://www.google.com/search?q=START+DRIVE+BVL+(Scoal
       <div id="categories-scroll" class="flex gap-6 overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth pb-4">
         {categories.map((cat, i) => (
           <a href={`/categoria/${cat.id.toLowerCase()}`} class="min-w-[280px] md:min-w-[320px] group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 reveal bg-white shrink-0 snap-center" style={`transition-delay:${i * 90}ms`}>
-            <div class="relative h-72 overflow-hidden">
+            <div class="relative h-48 sm:h-72 overflow-hidden bg-slate-50">
               <img src={cat.image} alt={cat.name} class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
               <!-- gradient replaces harsh red overlay -->
               <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0b]/85 via-[#0a0a0b]/10 to-transparent"></div>
@@ -489,7 +489,7 @@ const googleReviewsUrl = "https://www.google.com/search?q=START+DRIVE+BVL+(Scoal
       <div id="cars-scroll" class="flex gap-6 overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth pb-4">
         {cars.map((car, i) => (
           <div class="min-w-[300px] md:min-w-[380px] rounded-2xl overflow-hidden shadow-lg shrink-0 snap-center group reveal" style={`transition-delay:${i * 90}ms`}>
-            <div class="relative h-56 overflow-hidden">
+            <div class="relative h-44 sm:h-56 overflow-hidden bg-slate-50">
               <img src={car.image} alt={car.model} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
             </div>
             <div class="bg-[#f6f6f7] p-5 flex justify-between items-center">

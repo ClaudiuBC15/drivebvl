@@ -368,3 +368,23 @@
   opacity: 0.3;
   transition: 0s;
 }
+
+/* Enable visible scrollbar for overflow-x-auto on mobile tables */
+.overflow-x-auto {
+  scrollbar-width: thin;
+}
+.overflow-x-auto::-webkit-scrollbar {
+  height: 6px;
+  display: block; /* Force show scrollbar */
+}
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: #f8fafc;
+  border-radius: 10px;
+}
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
