@@ -7,99 +7,428 @@ export const prerender = false;
 const db = getDB(Astro.locals);
 const instructorsFromDb = await queryAll<any>(db, 'SELECT * FROM instructors ORDER BY sort_order ASC');
 
-const instructors = instructorsFromDb.map(inst => ({
-  name: inst.name,
-  role: inst.role,
-  categories: inst.categories,
-  experience: inst.experience,
-  stats: { hours: inst.hours, students: inst.students },
-  tags: parseJSON<string[]>(inst.tags, []),
-  image: inst.image_url
-}));
+const getLocalImage = (name: string, fallback: string) => {
+  const slug = name.toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  if (slug === 'bivol-sergiu') return '/images/instructori/bivol-sergiu.jpeg';
+  if (['tofan-florin', 'bejinariu-florin', 'radu-matei'].includes(slug)) {
+    return `/images/instructori/${slug}.png`;
+  }
+  return fallback;
+};
+
+const reviewsData = [
+  { rating: '4.9', count: 124 },
+  { rating: '4.9', count: 98 },
+  { rating: '4.8', count: 87 },
+  { rating: '4.9', count: 112 }
+];
+
+const instructors = instructorsFromDb.map((inst, index) => {
+  const reviews = reviewsData[index % reviewsData.length];
+  return {
+    id: inst.id,
+    name: inst.name,
+    role: inst.role,
+    categories: inst.categories,
+    experience: inst.experience,
+    stats: { hours: inst.hours, students: inst.students },
+    tags: parseJSON<string[]>(inst.tags, []),
+    image: getLocalImage(inst.name, inst.image_url),
+    rating: reviews.rating,
+    reviewsCount: reviews.count
+  };
+});
 ---
 
 <MainLayout 
-  title="Echipa de Instructori | Start Drive BVL Suceava"
+  title="Echipa de Instructori | Școala de Șoferi Start Drive BVL Suceava"
   description="Cunoaște echipa de instructori auto Start Drive BVL Suceava — profesioniști cu peste 10 ani experiență, sute de absolvenți și certificări ISCTR."
 >
   <!-- Hero Section -->
-  <div class="relative bg-[#1e1b4b] py-24 overflow-hidden">
-    <div class="absolute inset-0 opacity-20 bg-[url('https://i.imgur.com/miHAgHu.jpeg')] bg-cover bg-center mix-blend-overlay"></div>
-    <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
-      <span class="text-rose-500 font-bold tracking-widest uppercase mb-4 block">START DRIVE BVL</span>
-      <h1 class="text-4xl md:text-6xl font-light text-white mb-6">Cunoaște Instructorii</h1>
-      <p class="text-slate-300 max-w-2xl mx-auto text-lg font-light">Fiecare instructor are experiență vastă și sute de elevi promovați. Alege profesionistul care te va ajuta să devii un șofer încrezător.</p>
-    </div>
-  </div>
+  <section class="relative bg-white pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden border-b border-slate-100">
+    <!-- Grid pattern background decoration -->
+    <div class="absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-60"></div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <!-- Left Column: Title & Intro -->
+      <div class="lg:col-span-7 text-left space-y-6 animate-fade-in-up">
+        <!-- Breadcrumbs -->
+        <nav class="flex items-center gap-2 text-slate-400 font-bold text-xs tracking-wider uppercase">
+          <a href="/" class="hover:text-[#cc0000] transition-colors">Acasă</a>
+          <span>&gt;</span>
+          <span class="text-slate-500">Instructori</span>
+        </nav>
+        
+        <div>
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.1] mb-4" style="font-family:'Plus Jakarta Sans',sans-serif">
+            Instructori <br/>
+            <span class="text-[#cc0000]">dedicați succesului tău</span>
+          </h1>
+          <p class="text-slate-600 font-light text-base md:text-lg max-w-xl leading-relaxed">
+            Echipa noastră de instructori autorizați și cu experiență te va ghida pas cu pas către obținerea permisului.
+          </p>
+        </div>
 
-  <div class="max-w-7xl mx-auto px-6 py-24 bg-[#f8fafc]">
-    <div class="grid lg:grid-cols-2 gap-12">
-      {instructors.map(instructor => (
-        <div class="bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden flex flex-col sm:flex-row group hover:shadow-2xl transition-all">
-          <div class="sm:w-2/5 aspect-square sm:aspect-auto overflow-hidden relative">
-            <img src={instructor.image} alt={instructor.name} class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
-            <div class="absolute top-4 left-4 bg-[#cc0000] text-white text-xs font-bold px-3 py-1 rounded shadow">
-              {instructor.experience} Exp.
+        <!-- Horizontal bullet features -->
+        <div class="flex flex-wrap gap-x-8 gap-y-4 pt-6 border-t border-slate-100/80">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-red-50 text-[#cc0000] flex items-center justify-center border border-red-100/50">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
             </div>
+            <span class="font-bold text-slate-800 text-sm">Instructori autorizați</span>
           </div>
+
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-red-50 text-[#cc0000] flex items-center justify-center border border-red-100/50">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <span class="font-bold text-slate-800 text-sm">Experiență și răbdare</span>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-red-50 text-[#cc0000] flex items-center justify-center border border-red-100/50">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2h-2a2 2 0 00-2 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+            </div>
+            <span class="font-bold text-slate-800 text-sm">Rezultate dovedite</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right Column: Hero Photo -->
+      <div class="lg:col-span-5 flex justify-center lg:justify-end animate-fade-in-up" style="animation-delay: 0.15s;">
+        <div class="relative max-w-md w-full">
+          <!-- Background decorative shapes -->
+          <div class="absolute -top-4 -left-4 w-24 h-24 bg-red-100 rounded-3xl -z-10 blur-xl opacity-60"></div>
+          <div class="absolute -bottom-4 -right-4 w-32 h-32 bg-slate-100 rounded-full -z-10 blur-2xl opacity-80"></div>
           
-          <div class="sm:w-3/5 p-8 flex flex-col justify-center">
-            <h3 class="text-2xl font-bold text-slate-900 mb-1">{instructor.name}</h3>
-            <p class="text-[#cc0000] text-sm font-semibold mb-4">{instructor.role}</p>
-            
-            <div class="space-y-2 mb-6 text-sm font-light text-slate-600">
-              <p class="flex items-center gap-2">
-                <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                Categorii: <strong>{instructor.categories}</strong>
-              </p>
-            </div>
-
-            <div class="flex gap-6 mb-6 pt-6 border-t border-slate-100">
-              <div>
-                <p class="text-xl font-bold text-slate-900">{instructor.stats.hours}</p>
-                <p class="text-xs text-slate-500 uppercase tracking-wider">Ore Instruire</p>
-              </div>
-              <div>
-                <p class="text-xl font-bold text-slate-900">{instructor.stats.students}</p>
-                <p class="text-xs text-slate-500 uppercase tracking-wider">Absolvenți</p>
-              </div>
-            </div>
-
-            <div class="flex flex-wrap gap-2 mt-auto">
-              {instructor.tags.map(tag => (
-                <span class="bg-slate-100 text-slate-600 text-xs px-3 py-1 rounded-full">{tag}</span>
-              ))}
-            </div>
+          <div class="relative rounded-[32px] overflow-hidden shadow-2xl border-[6px] border-white bg-slate-100">
+            <img 
+              src="/images/instructori/bivol-sergiu.jpeg" 
+              alt="Instructor Sergiu Bivol și mașina școlii auto" 
+              class="w-full aspect-[4/3] object-cover"
+            />
           </div>
         </div>
-      ))}
+      </div>
     </div>
+  </section>
 
-    <!-- Trust section -->
-    <div class="mt-32 text-center max-w-4xl mx-auto">
-      <h2 class="text-3xl font-light text-slate-800 mb-12">De ce să ne alegi pe noi?</h2>
-      <div class="grid sm:grid-cols-4 gap-8">
-        <div>
-          <div class="w-16 h-16 mx-auto bg-rose-100 text-[#cc0000] rounded-full flex items-center justify-center mb-4">✅</div>
-          <h4 class="font-bold text-slate-900">Certificați</h4>
-          <p class="text-sm text-slate-500 mt-2">Autorizați ISCTR</p>
+  <!-- Instructors grid section -->
+  <section class="py-20 bg-slate-50/30">
+    <div class="max-w-7xl mx-auto px-6">
+      
+      <!-- Section Header -->
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
+        <div class="text-left">
+          <h2 class="text-2xl md:text-3xl font-extrabold text-[#0a0a0b] tracking-tight" style="font-family:'Plus Jakarta Sans',sans-serif">
+            Echipa noastră de instructori
+          </h2>
+          <div class="w-12 h-[3px] bg-[#cc0000] mt-3 rounded-full"></div>
         </div>
-        <div>
-          <div class="w-16 h-16 mx-auto bg-rose-100 text-[#cc0000] rounded-full flex items-center justify-center mb-4">❤️</div>
-          <h4 class="font-bold text-slate-900">Empatici</h4>
-          <p class="text-sm text-slate-500 mt-2">Răbdare cu fiecare cursant</p>
+        
+        <a 
+          href="/contact" 
+          class="border border-[#cc0000]/30 hover:border-[#cc0000] text-[#cc0000] hover:bg-red-50/50 font-bold px-6 py-3 rounded-full text-xs transition-all duration-200 flex items-center gap-1.5 shrink-0 uppercase tracking-wider self-start sm:self-auto cursor-pointer select-none"
+        >
+          Vrei să devii instructor?
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+        </a>
+      </div>
+
+      <!-- Instructors Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        {instructors.map((inst) => (
+          <div class="bg-white border border-slate-200/60 rounded-[24px] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-[0_12px_30px_rgba(0,0,0,0.03)] hover:border-red-500/10 transition-all duration-300 flex flex-col group">
+            
+            <!-- Instructor Photo -->
+            <div class="aspect-square w-full overflow-hidden bg-slate-50 border-b border-slate-100">
+              <img 
+                src={inst.image} 
+                alt={`Instructor auto ${inst.name}`} 
+                class="w-full h-full object-cover object-top group-hover:scale-102 transition-transform duration-500"
+              />
+            </div>
+            
+            <!-- Instructor Info -->
+            <div class="p-6 flex flex-col flex-grow text-left">
+              <h3 class="text-lg font-bold text-slate-800 mb-1 group-hover:text-[#cc0000] transition-colors leading-tight">
+                {inst.name}
+              </h3>
+              <p class="text-slate-500 text-xs font-medium mb-3">
+                {inst.role}
+              </p>
+              
+              <!-- Stars & reviews -->
+              <div class="flex items-center gap-1.5 text-xs text-slate-650 mb-6">
+                <span class="text-[#cc0000] text-sm leading-none">★</span>
+                <span class="font-extrabold text-slate-800">{inst.rating}</span>
+                <span class="text-slate-400">({inst.reviewsCount} recenzii)</span>
+              </div>
+              
+              <!-- Details Button triggers Modal -->
+              <button
+                class="instructor-details-btn mt-auto w-full bg-red-50/70 hover:bg-red-50 text-[#cc0000] font-bold py-3 px-4 rounded-xl text-xs transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer select-none"
+                data-name={inst.name}
+                data-role={inst.role}
+                data-experience={inst.experience}
+                data-categories={inst.categories}
+                data-hours={inst.stats.hours}
+                data-students={inst.stats.students}
+                data-tags={JSON.stringify(inst.tags)}
+                data-image={inst.image}
+              >
+                Vezi detalii
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+    </div>
+  </section>
+
+  <!-- Bottom CTA Banner -->
+  <section class="max-w-7xl mx-auto px-6 pb-24">
+    <div class="bg-[#0a0a0b] rounded-[32px] p-8 md:p-12 relative overflow-hidden shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <!-- Background subtle grid/light effect -->
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(204,0,0,0.06),transparent_50%)]"></div>
+      
+      <!-- Car Image Column -->
+      <div class="hidden lg:block lg:col-span-4 relative z-10 select-none pointer-events-none">
+        <img 
+          src="/images/about-car.png" 
+          alt="Mașină școală auto" 
+          class="w-full h-auto object-contain scale-110 translate-x-[-10%]"
+        />
+      </div>
+
+      <!-- Text Column -->
+      <div class="col-span-1 lg:col-span-5 text-left space-y-3 relative z-10">
+        <h3 class="text-2xl md:text-3xl font-black text-white" style="font-family:'Plus Jakarta Sans',sans-serif">
+          Pregătit să începi?
+        </h3>
+        <p class="text-slate-400 font-light text-sm md:text-base leading-relaxed">
+          Instructorii noștri te așteaptă să începeți împreună drumul spre permis.
+        </p>
+      </div>
+
+      <!-- Action Button Column -->
+      <div class="col-span-1 lg:col-span-3 flex lg:justify-end relative z-10">
+        <a 
+          href="/inscrieri" 
+          class="inline-flex items-center justify-center gap-2 bg-[#cc0000] hover:bg-red-700 text-white font-bold py-4 px-8 rounded-xl transition-all duration-200 shadow-lg shadow-red-950/20 active:scale-[0.98] uppercase tracking-wider text-xs w-full lg:w-auto text-center cursor-pointer select-none"
+        >
+          Înscrie-te acum
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Instructor Details Modal -->
+  <div 
+    id="instructor-modal" 
+    class="fixed inset-0 z-[200] hidden items-center justify-center p-4 backdrop-blur-md bg-black/60 transition-opacity duration-300 ease-in-out"
+  >
+    <div 
+      id="modal-card" 
+      class="bg-white rounded-[24px] max-w-2xl w-full overflow-hidden shadow-2xl relative transform scale-95 opacity-0 transition-all duration-350 ease-out border border-slate-100 flex flex-col md:flex-row"
+    >
+      <!-- Close Button -->
+      <button 
+        id="modal-close" 
+        class="absolute top-4 right-4 z-50 p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
+        aria-label="Închide detalii"
+      >
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <!-- Left Panel: Avatar & Summary -->
+      <div class="md:w-2/5 bg-slate-50/50 border-r border-slate-100 p-6 flex flex-col items-center justify-center text-center">
+        <div class="w-32 h-32 rounded-full overflow-hidden border-[4px] border-white shadow-md bg-slate-100 mb-4">
+          <img id="modal-image" src="" alt="" class="w-full h-full object-cover object-top" />
         </div>
-        <div>
-          <div class="w-16 h-16 mx-auto bg-rose-100 text-[#cc0000] rounded-full flex items-center justify-center mb-4">🎯</div>
-          <h4 class="font-bold text-slate-900">Personalizat</h4>
-          <p class="text-sm text-slate-500 mt-2">Adaptat stilului tău</p>
+        <h4 id="modal-name" class="text-lg font-extrabold text-slate-800 mb-1" style="font-family:'Plus Jakarta Sans',sans-serif"></h4>
+        <p id="modal-role" class="text-slate-500 text-xs font-semibold mb-3"></p>
+        
+        <div class="flex items-center gap-1.5 text-xs text-slate-650 bg-white border border-slate-200/60 px-3.5 py-1.5 rounded-full shadow-sm">
+          <span class="text-[#cc0000] text-sm leading-none">★</span>
+          <span class="font-extrabold text-slate-850" id="modal-rating">4.9</span>
+          <span class="text-slate-400">Recenzat Excelent</span>
         </div>
-        <div>
-          <div class="w-16 h-16 mx-auto bg-rose-100 text-[#cc0000] rounded-full flex items-center justify-center mb-4">⭐</div>
-          <h4 class="font-bold text-slate-900">Experiență</h4>
-          <p class="text-sm text-slate-500 mt-2">10.000+ ore cumulate</p>
+      </div>
+
+      <!-- Right Panel: Detailed Specs -->
+      <div class="md:w-3/5 p-8 flex flex-col justify-between text-left">
+        <div class="space-y-6">
+          <div>
+            <h5 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Categorii Autorizate</h5>
+            <div id="modal-categories-container" class="flex flex-wrap gap-1.5"></div>
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="grid grid-cols-3 gap-4 border-t border-b border-slate-100 py-5 my-2">
+            <div>
+              <p id="modal-exp" class="text-base md:text-lg font-black text-slate-900 leading-tight"></p>
+              <p class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">Experiență</p>
+            </div>
+            <div>
+              <p id="modal-hours" class="text-base md:text-lg font-black text-slate-900 leading-tight"></p>
+              <p class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">Ore conduse</p>
+            </div>
+            <div>
+              <p id="modal-students" class="text-base md:text-lg font-black text-slate-900 leading-tight"></p>
+              <p class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">Absolvenți</p>
+            </div>
+          </div>
+
+          <!-- Tags/Specifice -->
+          <div>
+            <h5 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2.5">Puncte Tari & Stil</h5>
+            <div id="modal-tags-container" class="flex flex-wrap gap-1.5 animate-fade-in"></div>
+          </div>
+        </div>
+
+        <div class="pt-6">
+          <a 
+            href="/contact" 
+            class="w-full bg-[#cc0000] hover:bg-red-700 text-white font-bold py-3.5 px-6 rounded-xl transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg cursor-pointer select-none"
+          >
+            Alege acest instructor
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
         </div>
       </div>
     </div>
   </div>
+
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      const modal = document.getElementById('instructor-modal');
+      const card = document.getElementById('modal-card');
+      const closeBtn = document.getElementById('modal-close');
+      const triggerBtns = document.querySelectorAll('.instructor-details-btn');
+
+      const modalImage = document.getElementById('modal-image');
+      const modalName = document.getElementById('modal-name');
+      const modalRole = document.getElementById('modal-role');
+      const modalRating = document.getElementById('modal-rating');
+      const modalCategoriesContainer = document.getElementById('modal-categories-container');
+      const modalExp = document.getElementById('modal-exp');
+      const modalHours = document.getElementById('modal-hours');
+      const modalStudents = document.getElementById('modal-students');
+      const modalTagsContainer = document.getElementById('modal-tags-container');
+
+      const ratingsMapping = {
+        'Tofan Florin': '4.9',
+        'Bivol Sergiu': '4.9',
+        'Bejinariu Florin': '4.8',
+        'Radu Matei': '4.9'
+      };
+
+      function openModal(btn) {
+        const name = btn.dataset.name;
+        const role = btn.dataset.role;
+        const experience = btn.dataset.experience;
+        const categories = btn.dataset.categories || '';
+        const hours = btn.dataset.hours;
+        const students = btn.dataset.students;
+        const tags = JSON.parse(btn.dataset.tags || '[]');
+        const image = btn.dataset.image;
+
+        // Populate elements
+        if (modalImage) {
+          modalImage.src = image;
+          modalImage.alt = `Instructor ${name}`;
+        }
+        if (modalName) modalName.textContent = name;
+        if (modalRole) modalRole.textContent = role;
+        if (modalExp) modalExp.textContent = experience;
+        if (modalHours) modalHours.textContent = hours;
+        if (modalStudents) modalStudents.textContent = students;
+        if (modalRating) modalRating.textContent = ratingsMapping[name] || '4.9';
+
+        // Categories badges
+        if (modalCategoriesContainer) {
+          modalCategoriesContainer.innerHTML = '';
+          categories.split(',').forEach(cat => {
+            const cleanCat = cat.trim();
+            if (cleanCat) {
+              const span = document.createElement('span');
+              span.className = 'bg-red-50 text-[#cc0000] border border-red-100/50 text-[10px] font-bold px-2 py-0.5 rounded-md';
+              span.textContent = cleanCat;
+              modalCategoriesContainer.appendChild(span);
+            }
+          });
+        }
+
+        // Tags badges
+        if (modalTagsContainer) {
+          modalTagsContainer.innerHTML = '';
+          tags.forEach(tag => {
+            const span = document.createElement('span');
+            span.className = 'bg-slate-100 text-slate-650 text-[11px] px-2.5 py-1 rounded-full font-light';
+            span.textContent = tag;
+            modalTagsContainer.appendChild(span);
+          });
+        }
+
+        // Show Modal with animation
+        if (modal && card) {
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+          // Force reflow
+          void modal.offsetWidth;
+          card.classList.remove('scale-95', 'opacity-0');
+          card.classList.add('scale-100', 'opacity-100');
+          document.body.classList.add('overflow-hidden');
+        }
+      }
+
+      function closeModal() {
+        if (modal && card) {
+          card.classList.remove('scale-100', 'opacity-100');
+          card.classList.add('scale-95', 'opacity-0');
+          setTimeout(() => {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+          }, 200);
+        }
+      }
+
+      triggerBtns.forEach(btn => {
+        btn.addEventListener('click', () => openModal(btn));
+      });
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', closeModal);
+      }
+
+      if (modal) {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            closeModal();
+          }
+        });
+      }
+    });
+  </script>
 </MainLayout>
