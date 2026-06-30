@@ -30,7 +30,7 @@ export default function SettingsManager({ initialSettings }: SettingsManagerProp
       const data = (await res.json()) as any;
       if (res.ok && data.success) {
         setSettings(prev => ({ ...prev, [targetField]: data.url }));
-        
+
         // Save avatar url to localStorage as fallback so it refreshes instantly in Layout
         if (targetField === 'admin_avatar') {
           localStorage.setItem('admin_avatar', data.url);
@@ -61,7 +61,7 @@ export default function SettingsManager({ initialSettings }: SettingsManagerProp
       const data = (await res.json()) as any;
       if (res.ok && data.success) {
         setSettingsSuccess(true);
-        
+
         // Save to localStorage so Sidebar layout is updated instantly without reloading
         if (settings.admin_name) {
           localStorage.setItem('admin_name', settings.admin_name);
@@ -69,7 +69,7 @@ export default function SettingsManager({ initialSettings }: SettingsManagerProp
         if (settings.admin_avatar) {
           localStorage.setItem('admin_avatar', settings.admin_avatar);
         }
-        
+
         // Dispatch custom event to notify Sidebar (AdminLayout)
         window.dispatchEvent(new Event('admin-profile-updated'));
 
@@ -171,7 +171,7 @@ export default function SettingsManager({ initialSettings }: SettingsManagerProp
           {/* Profil Administrator group */}
           <div className="border-t border-slate-100 pt-6 mt-6 space-y-6">
             <h5 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Profil Administrator (Meniu Sidebar)</h5>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-[10px] font-bold text-slate-450 uppercase tracking-wider mb-2">Nume Administrator</label>
@@ -184,7 +184,7 @@ export default function SettingsManager({ initialSettings }: SettingsManagerProp
                   placeholder="Ex: Admin"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-[10px] font-bold text-slate-450 uppercase tracking-wider mb-2">Poză de Profil</label>
                 <div className="flex items-center gap-3">
@@ -209,7 +209,7 @@ export default function SettingsManager({ initialSettings }: SettingsManagerProp
                 </div>
               </div>
             </div>
-            
+
             {settings.admin_avatar && (
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full overflow-hidden border border-slate-200 bg-slate-50 shrink-0">

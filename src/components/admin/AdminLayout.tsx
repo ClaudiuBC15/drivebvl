@@ -41,10 +41,10 @@ export default function AdminLayout({ children, activeTab }: AdminLayoutProps) {
         if (data.success && data.settings) {
           const name = data.settings.admin_name || 'Admin';
           const avatar = data.settings.admin_avatar || '/images/instructori/radu-matei.png';
-          
+
           setAdminName(name);
           setAdminAvatar(avatar);
-          
+
           localStorage.setItem('admin_name', name);
           localStorage.setItem('admin_avatar', avatar);
         }
@@ -102,9 +102,9 @@ export default function AdminLayout({ children, activeTab }: AdminLayoutProps) {
 
       {/* Mobile Backdrop */}
       {mobileOpen && (
-        <div 
+        <div
           onClick={() => setMobileOpen(false)}
-          className="fixed inset-0 bg-black/40 z-35 md:hidden"
+          className="fixed inset-0 bg-black/40 z-30 md:hidden"
         />
       )}
 
@@ -131,8 +131,8 @@ export default function AdminLayout({ children, activeTab }: AdminLayoutProps) {
                   key={item.id}
                   href={item.href}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 relative ${isActive
-                      ? 'bg-red-50 text-[#cc0000]'
-                      : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
+                    ? 'bg-red-50 text-[#cc0000]'
+                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
                     }`}
                 >
                   {/* Red active indicator line on the left */}
@@ -151,9 +151,9 @@ export default function AdminLayout({ children, activeTab }: AdminLayoutProps) {
         <div className="pt-4 border-t border-slate-100 mt-6 space-y-4">
           {/* Profile Card widget */}
           <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-2xl border border-slate-200/50">
-            <img 
-              src={adminAvatar} 
-              alt="Admin Profile Photo" 
+            <img
+              src={adminAvatar}
+              alt="Admin Profile Photo"
               className="w-9 h-9 rounded-full object-cover border border-slate-200"
             />
             <div className="flex flex-col min-w-0">
@@ -189,12 +189,12 @@ export default function AdminLayout({ children, activeTab }: AdminLayoutProps) {
                 3
               </span>
             </button>
-            
+
             <div className="h-6 w-px bg-slate-200"></div>
-            
+
             {/* User Dropdown Menu */}
             <div className="relative">
-              <button 
+              <button
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                 className="flex items-center gap-2 hover:bg-slate-50 py-1.5 px-3 rounded-xl transition-all cursor-pointer focus:outline-none"
               >
@@ -210,8 +210,8 @@ export default function AdminLayout({ children, activeTab }: AdminLayoutProps) {
                   <a href="/admin/settings" className="block px-4 py-2 text-xs font-medium text-slate-650 hover:bg-slate-50">
                     Setări cont
                   </a>
-                  <button 
-                    onClick={handleLogout} 
+                  <button
+                    onClick={handleLogout}
                     className="w-full text-left block px-4 py-2 text-xs font-medium text-red-600 hover:bg-red-50"
                   >
                     Deconectare

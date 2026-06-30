@@ -144,7 +144,7 @@ const googleReviewsUrl = "https://www.google.com/search?q=START+DRIVE+BVL+(Scoal
   <section id="hero-section" class="relative w-full min-h-screen flex flex-col justify-between overflow-hidden bg-[#0a0a0b]">
     <!-- Parallax Background Image -->
     <div id="hero-parallax" class="absolute inset-0 w-full h-full">
-      <img src="/images/hero_nou.jpg" alt="Absolvenți Start Drive BVL Suceava — Conducem în direcția corectă!" class="w-full h-full object-cover object-center" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;" />
+      <img src="/images/23.png" alt="Absolvenți Start Drive BVL Suceava — Conducem în direcția corectă!" class="w-full h-full object-cover object-center" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;" />
     </div>
     <!-- Overlay echilibrat — text lizibil, imagine parțial vizibilă -->
     <div class="absolute inset-0 bg-gradient-to-br from-[#0a0a0b]/82 via-[#0a0a0b]/55 to-[#0a0a0b]/70 z-10"></div>
@@ -153,11 +153,6 @@ const googleReviewsUrl = "https://www.google.com/search?q=START+DRIVE+BVL+(Scoal
     <!-- Main Content Area -->
     <div class="relative z-20 container-wide pt-28 pb-10 md:pt-36 md:pb-16 flex-grow flex items-center w-full">
       <div class="max-w-3xl">
-        <!-- Badge -->
-        <div class="inline-flex items-center gap-2.5 bg-white/10 backdrop-blur-md border border-white/15 text-white px-4 py-2 rounded-full mb-8 text-sm font-semibold reveal">
-          <span class="w-2 h-2 rounded-full bg-[#cc0000] ping-dot"></span>
-          Garanția calității — Peste 2000 de absolvenți au REUȘIT!
-        </div>
 
         <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 leading-[1.02] reveal" style="font-family:'Plus Jakarta Sans',sans-serif; letter-spacing:-0.035em">
           Școala de Șoferi<br/>
@@ -265,23 +260,25 @@ const googleReviewsUrl = "https://www.google.com/search?q=START+DRIVE+BVL+(Scoal
         </div>
       </div>
 
-      <div id="categories-scroll" class="flex gap-6 overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth pb-4">
+      <div id="categories-scroll" class="flex gap-6 overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth py-4 -my-4">
         {categories.map((cat, i) => (
-          <a href={`/categoria/${cat.id.toLowerCase()}`} class="min-w-[280px] md:min-w-[320px] group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 reveal bg-white shrink-0 snap-center" style={`transition-delay:${i * 90}ms`}>
-            <div class="relative h-48 sm:h-72 overflow-hidden bg-slate-50">
-              <img src={cat.image} alt={cat.name} class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
-              <!-- gradient replaces harsh red overlay -->
-              <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0b]/85 via-[#0a0a0b]/10 to-transparent"></div>
-              <div class="absolute inset-0 bg-[#cc0000]/0 group-hover:bg-[#cc0000]/30 transition-all duration-500"></div>
-              <span class="absolute bottom-5 left-5 text-white font-bold uppercase tracking-[0.12em] text-xs border border-white/60 px-4 py-2 rounded-full backdrop-blur-sm translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-                Vezi detalii →
-              </span>
-            </div>
-            <div class="p-6">
-              <h3 class="text-xl font-extrabold text-[#0a0a0b] mb-1 group-hover:text-[#cc0000] transition-colors" style="font-family:'Plus Jakarta Sans',sans-serif">{cat.name}</h3>
-              <p class="text-sm text-slate-500">{cat.subtitle}</p>
-            </div>
-          </a>
+          <div class="min-w-[280px] md:min-w-[320px] shrink-0 snap-center py-4">
+            <a href={`/categoria/${cat.id.toLowerCase()}`} class="block w-full h-full group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 reveal bg-white" style={`transition-delay:${i * 90}ms`}>
+              <div class="relative h-48 sm:h-72 overflow-hidden bg-slate-50">
+                <img src={cat.image} alt={cat.name} class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
+                <!-- gradient replaces harsh red overlay -->
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0b]/85 via-[#0a0a0b]/10 to-transparent"></div>
+                <div class="absolute inset-0 bg-[#cc0000]/0 group-hover:bg-[#cc0000]/30 transition-all duration-500"></div>
+                <span class="absolute bottom-5 left-5 text-white font-bold uppercase tracking-[0.12em] text-xs border border-white/60 px-4 py-2 rounded-full backdrop-blur-sm translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                  Vezi detalii →
+                </span>
+              </div>
+              <div class="p-6">
+                <h3 class="text-xl font-extrabold text-[#0a0a0b] mb-1 group-hover:text-[#cc0000] transition-colors" style="font-family:'Plus Jakarta Sans',sans-serif">{cat.name}</h3>
+                <p class="text-sm text-slate-500">{cat.subtitle}</p>
+              </div>
+            </a>
+          </div>
         ))}
       </div>
     </div>
@@ -415,7 +412,7 @@ const googleReviewsUrl = "https://www.google.com/search?q=START+DRIVE+BVL+(Scoal
             <div class="relative h-60 overflow-hidden bg-slate-100">
               <img src={inst.image} alt={inst.name} class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" loading="lazy" />
               <div class="absolute top-4 right-4 bg-[#cc0000] text-white text-xs font-bold px-3 py-1 rounded-full shadow">
-                {inst.experience} ani
+                {inst.experience.includes('ani') ? inst.experience : `${inst.experience} ani`}
               </div>
             </div>
             <div class="p-6 text-center">
@@ -486,18 +483,20 @@ const googleReviewsUrl = "https://www.google.com/search?q=START+DRIVE+BVL+(Scoal
         </div>
       </div>
 
-      <div id="cars-scroll" class="flex gap-6 overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth pb-4">
+      <div id="cars-scroll" class="flex gap-6 overflow-x-auto snap-x snap-mandatory hide-scrollbar scroll-smooth py-4 -my-4">
         {cars.map((car, i) => (
-          <div class="min-w-[300px] md:min-w-[380px] rounded-2xl overflow-hidden shadow-lg shrink-0 snap-center group reveal" style={`transition-delay:${i * 90}ms`}>
-            <div class="relative h-44 sm:h-56 overflow-hidden bg-slate-50">
-              <img src={car.image} alt={car.model} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-            </div>
-            <div class="bg-[#f6f6f7] p-5 flex justify-between items-center">
-              <div>
-                <h3 class="font-extrabold text-[#0a0a0b]" style="font-family:'Plus Jakarta Sans',sans-serif">{car.model}</h3>
-                <p class="text-xs text-slate-500">{car.tag}</p>
+          <div class="min-w-[300px] md:min-w-[380px] shrink-0 snap-center py-4">
+            <div class="rounded-2xl overflow-hidden shadow-lg group reveal bg-white" style={`transition-delay:${i * 90}ms`}>
+              <div class="relative h-44 sm:h-56 overflow-hidden bg-slate-50">
+                <img src={car.image} alt={car.model} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
               </div>
-              <div class="bg-[#cc0000] text-white text-xs font-bold px-3 py-1 rounded-full">{car.tag}</div>
+              <div class="bg-[#f6f6f7] p-5 flex justify-between items-center">
+                <div>
+                  <h3 class="font-extrabold text-[#0a0a0b]" style="font-family:'Plus Jakarta Sans',sans-serif">{car.model}</h3>
+                  <p class="text-xs text-slate-500">{car.tag}</p>
+                </div>
+                <div class="bg-[#cc0000] text-white text-xs font-bold px-3 py-1 rounded-full">{car.tag}</div>
+              </div>
             </div>
           </div>
         ))}
