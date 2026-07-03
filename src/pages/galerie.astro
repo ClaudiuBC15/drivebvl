@@ -6,12 +6,19 @@ export const prerender = false;
 
 const db = getDB(Astro.locals);
 let galleryItems: any[] = [];
+let dbSettings = {} as Record<string, string>;
 
 try {
   galleryItems = await queryAll<any>(db, 'SELECT * FROM gallery_images ORDER BY sort_order ASC, created_at DESC');
+  const rows = await queryAll<any>(db, 'SELECT key, value FROM settings');
+  rows.forEach(r => {
+    dbSettings[r.key] = r.value;
+  });
 } catch (err) {
-  console.error('Error fetching gallery items:', err);
+  console.error('Error fetching gallery items/settings:', err);
 }
+
+const heroImage = dbSettings.galerie_hero_image || 'https://i.imgur.com/y7rAASu.jpeg';
 
 // Fallback items if database is empty
 const fallbackItems = [
@@ -37,7 +44,7 @@ const itemsToDisplay = galleryItems.length > 0 ? galleryItems : fallbackItems;
   <!-- Hero Section with Background image fade-in -->
   <section class="relative bg-white pt-24 pb-12 md:pt-32 md:pb-16 overflow-hidden border-b border-slate-100">
     <div class="absolute inset-y-0 right-0 w-full lg:w-1/2 opacity-35 lg:opacity-75 pointer-events-none">
-      <div class="absolute inset-0 bg-[url('https://i.imgur.com/y7rAASu.jpeg')] bg-cover bg-center"></div>
+      <div class="absolute inset-0 bg-cover bg-center" style={`background-image: url('${heroImage}')`}></div>
       <div class="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent"></div>
     </div>
 

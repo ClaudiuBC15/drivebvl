@@ -7,6 +7,18 @@ export const prerender = false;
 const db = getDB(Astro.locals);
 const faqs = await queryAll<any>(db, 'SELECT * FROM faqs ORDER BY sort_order ASC, id ASC');
 
+let dbSettings = {} as Record<string, string>;
+try {
+  const rows = await queryAll<any>(db, 'SELECT key, value FROM settings');
+  rows.forEach(r => {
+    dbSettings[r.key] = r.value;
+  });
+} catch (err) {
+  console.error('Error fetching settings for FAQ page:', err);
+}
+
+const heroImage = dbSettings.faq_hero_image || '/images/faq_hero.webp';
+
 // Extract categories in priority order
 const categories = [
   'Toate',
@@ -96,7 +108,7 @@ const faqSchema = {
           
           <div class="relative rounded-3xl overflow-hidden shadow-2xl border-[6px] border-white bg-slate-100">
             <img 
-              src="/images/faq_hero.webp" 
+              src={heroImage} 
               alt="Instructor auto explicând traseul" 
               class="w-full aspect-[4/3] object-cover"
             />

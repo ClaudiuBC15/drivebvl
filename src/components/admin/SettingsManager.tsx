@@ -40,11 +40,42 @@ export default function SettingsManager({ initialSettings }: SettingsManagerProp
       });
       const data = (await res.json()) as any;
       if (res.ok && data.success) {
-        setSettings(prev => ({ ...prev, [targetField]: data.url }));
+        const url = data.url;
+        if (targetField === 'logo_url') {
+          const current = settings.logo_url || '/images/logo.png';
+          let history: string[] = [];
+          try {
+            history = JSON.parse(settings.logo_history || '["/images/logo.png"]');
+          } catch (e) {}
+          if (!history.includes(current)) {
+            history = [current, ...history].slice(0, 10);
+          }
+          setSettings(prev => ({ 
+            ...prev, 
+            logo_url: url,
+            logo_history: JSON.stringify(history)
+          }));
+        } else if (targetField === 'favicon_url') {
+          const current = settings.favicon_url || '/images/logo.png';
+          let history: string[] = [];
+          try {
+            history = JSON.parse(settings.favicon_history || '["/images/logo.png"]');
+          } catch (e) {}
+          if (!history.includes(current)) {
+            history = [current, ...history].slice(0, 10);
+          }
+          setSettings(prev => ({ 
+            ...prev, 
+            favicon_url: url,
+            favicon_history: JSON.stringify(history)
+          }));
+        } else {
+          setSettings(prev => ({ ...prev, [targetField]: url }));
+        }
 
         // Save avatar url to localStorage as fallback so it refreshes instantly in Layout
         if (targetField === 'admin_avatar') {
-          localStorage.setItem('admin_avatar', data.url);
+          localStorage.setItem('admin_avatar', url);
         }
       } else {
         alert(data.error || 'Încărcarea a eșuat.');
@@ -54,6 +85,38 @@ export default function SettingsManager({ initialSettings }: SettingsManagerProp
     } finally {
       setUploading(false);
     }
+  };
+
+  const selectActiveLogo = (url: string) => {
+    const current = settings.logo_url || '/images/logo.png';
+    let history: string[] = [];
+    try {
+      history = JSON.parse(settings.logo_history || '["/images/logo.png"]');
+    } catch (e) {}
+    if (!history.includes(current)) {
+      history = [current, ...history].slice(0, 10);
+    }
+    setSettings(prev => ({
+      ...prev,
+      logo_url: url,
+      logo_history: JSON.stringify(history)
+    }));
+  };
+
+  const selectActiveFavicon = (url: string) => {
+    const current = settings.favicon_url || '/images/logo.png';
+    let history: string[] = [];
+    try {
+      history = JSON.parse(settings.favicon_history || '["/images/logo.png"]');
+    } catch (e) {}
+    if (!history.includes(current)) {
+      history = [current, ...history].slice(0, 10);
+    }
+    setSettings(prev => ({
+      ...prev,
+      favicon_url: url,
+      favicon_history: JSON.stringify(history)
+    }));
   };
 
   // Handle Settings Save
@@ -79,6 +142,9 @@ export default function SettingsManager({ initialSettings }: SettingsManagerProp
         }
         if (settings.admin_avatar) {
           localStorage.setItem('admin_avatar', settings.admin_avatar);
+        }
+        if (settings.logo_url) {
+          localStorage.setItem('logo_url', settings.logo_url);
         }
 
         // Dispatch custom event to notify Sidebar (AdminLayout)
@@ -179,35 +245,138 @@ export default function SettingsManager({ initialSettings }: SettingsManagerProp
             ></textarea>
           </div>
 
-          <div>
-            <label className="block text-[10px] font-bold text-slate-450 uppercase tracking-wider mb-2">Imagine Hero Pagina Instructori</label>
-            <div className="flex items-center gap-3">
-              <input
-                type="text"
-                value={settings.instructori_hero_image || ''}
-                onChange={(e) => setSettings(prev => ({ ...prev, instructori_hero_image: e.target.value }))}
-                className="flex-grow bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-750 placeholder-slate-400 focus:border-[#cc0000] transition-all outline-none text-sm font-light"
-                placeholder="URL Imagine..."
-              />
-              <label className="bg-slate-100 hover:bg-slate-200 text-slate-750 font-bold py-3 px-4 rounded-xl text-xs uppercase cursor-pointer transition-all select-none shrink-0 border border-slate-200/60">
-                {uploading ? 'Încarcă...' : 'Încarcă'}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => handleFileUpload(e, 'instructori_hero_image')}
-                  className="hidden"
-                  disabled={uploading}
-                />
-              </label>
-            </div>
-            {settings.instructori_hero_image && (
-              <div className="mt-2 flex items-center gap-3">
-                <div className="w-16 h-12 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 shrink-0">
-                  <img src={settings.instructori_hero_image} className="w-full h-full object-cover" alt="Instructori Hero Preview" />
+          <div className="border-t border-slate-100 pt-6 mt-6 space-y-6">
+            <h5 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Imagini de Fundal (Hero) Pagini</h5>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Galerie */}
+              <div>
+                <label className="block text-[10px] font-bold text-slate-450 uppercase tracking-wider mb-2">Imagine Hero Galerie Foto</label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="text"
+                    value={settings.galerie_hero_image || ''}
+                    onChange={(e) => setSettings(prev => ({ ...prev, galerie_hero_image: e.target.value }))}
+                    className="flex-grow bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-750 placeholder-slate-400 focus:border-[#cc0000] outline-none text-sm font-light"
+                    placeholder="URL Imagine..."
+                  />
+                  <label className="bg-slate-100 hover:bg-slate-200 text-slate-750 font-bold py-3 px-4 rounded-xl text-xs uppercase cursor-pointer transition-all select-none shrink-0 border border-slate-200/60">
+                    {uploading ? 'Încarcă...' : 'Încarcă'}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleFileUpload(e, 'galerie_hero_image')}
+                      className="hidden"
+                      disabled={uploading}
+                    />
+                  </label>
                 </div>
-                <span className="text-xs text-slate-450">Previzualizare imagine Hero Instructori</span>
+                {settings.galerie_hero_image && (
+                  <div className="mt-2 flex items-center gap-3">
+                    <div className="w-16 h-12 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 shrink-0">
+                      <img src={settings.galerie_hero_image} className="w-full h-full object-cover" alt="Galerie Hero Preview" />
+                    </div>
+                    <span className="text-xs text-slate-450">Previzualizare Hero Galerie</span>
+                  </div>
+                )}
               </div>
-            )}
+
+              {/* FAQ */}
+              <div>
+                <label className="block text-[10px] font-bold text-slate-450 uppercase tracking-wider mb-2">Imagine Hero Întrebări Frecvente (FAQ)</label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="text"
+                    value={settings.faq_hero_image || ''}
+                    onChange={(e) => setSettings(prev => ({ ...prev, faq_hero_image: e.target.value }))}
+                    className="flex-grow bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-750 placeholder-slate-400 focus:border-[#cc0000] outline-none text-sm font-light"
+                    placeholder="URL Imagine..."
+                  />
+                  <label className="bg-slate-100 hover:bg-slate-200 text-slate-750 font-bold py-3 px-4 rounded-xl text-xs uppercase cursor-pointer transition-all select-none shrink-0 border border-slate-200/60">
+                    {uploading ? 'Încarcă...' : 'Încarcă'}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleFileUpload(e, 'faq_hero_image')}
+                      className="hidden"
+                      disabled={uploading}
+                    />
+                  </label>
+                </div>
+                {settings.faq_hero_image && (
+                  <div className="mt-2 flex items-center gap-3">
+                    <div className="w-16 h-12 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 shrink-0">
+                      <img src={settings.faq_hero_image} className="w-full h-full object-cover" alt="FAQ Hero Preview" />
+                    </div>
+                    <span className="text-xs text-slate-455">Previzualizare Hero FAQ</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Contact */}
+              <div>
+                <label className="block text-[10px] font-bold text-slate-450 uppercase tracking-wider mb-2">Imagine Hero Contact</label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="text"
+                    value={settings.contact_hero_image || ''}
+                    onChange={(e) => setSettings(prev => ({ ...prev, contact_hero_image: e.target.value }))}
+                    className="flex-grow bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-750 placeholder-slate-400 focus:border-[#cc0000] outline-none text-sm font-light"
+                    placeholder="URL Imagine..."
+                  />
+                  <label className="bg-slate-100 hover:bg-slate-200 text-slate-750 font-bold py-3 px-4 rounded-xl text-xs uppercase cursor-pointer transition-all select-none shrink-0 border border-slate-200/60">
+                    {uploading ? 'Încarcă...' : 'Încarcă'}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleFileUpload(e, 'contact_hero_image')}
+                      className="hidden"
+                      disabled={uploading}
+                    />
+                  </label>
+                </div>
+                {settings.contact_hero_image && (
+                  <div className="mt-2 flex items-center gap-3">
+                    <div className="w-16 h-12 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 shrink-0">
+                      <img src={settings.contact_hero_image} className="w-full h-full object-cover" alt="Contact Hero Preview" />
+                    </div>
+                    <span className="text-xs text-slate-450">Previzualizare Hero Contact</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Instructori */}
+              <div>
+                <label className="block text-[10px] font-bold text-slate-450 uppercase tracking-wider mb-2">Imagine Hero Instructori</label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="text"
+                    value={settings.instructori_hero_image || ''}
+                    onChange={(e) => setSettings(prev => ({ ...prev, instructori_hero_image: e.target.value }))}
+                    className="flex-grow bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-750 placeholder-slate-400 focus:border-[#cc0000] outline-none text-sm font-light"
+                    placeholder="URL Imagine..."
+                  />
+                  <label className="bg-slate-100 hover:bg-slate-200 text-slate-750 font-bold py-3 px-4 rounded-xl text-xs uppercase cursor-pointer transition-all select-none shrink-0 border border-slate-200/60">
+                    {uploading ? 'Încarcă...' : 'Încarcă'}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleFileUpload(e, 'instructori_hero_image')}
+                      className="hidden"
+                      disabled={uploading}
+                    />
+                  </label>
+                </div>
+                {settings.instructori_hero_image && (
+                  <div className="mt-2 flex items-center gap-3">
+                    <div className="w-16 h-12 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 shrink-0">
+                      <img src={settings.instructori_hero_image} className="w-full h-full object-cover" alt="Instructori Hero Preview" />
+                    </div>
+                    <span className="text-xs text-slate-450">Previzualizare Hero Instructori</span>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* Profil Administrator group */}
@@ -279,6 +448,136 @@ export default function SettingsManager({ initialSettings }: SettingsManagerProp
                   Salvează Setări
                 </>
               )}
+            </button>
+          </div>
+        </form>
+      </section>
+
+      {/* Branding Settings (Logo & Favicon) */}
+      <section className="bg-white border border-slate-200/60 rounded-3xl p-6 md:p-8 shadow-[0_4px_25px_-5px_rgba(0,0,0,0.02)] max-w-4xl mt-10">
+        <div className="border-b border-slate-100 pb-4 mb-6">
+          <h4 className="text-base font-extrabold text-slate-800 uppercase tracking-wider">Identitate Vizuală (Logo &amp; Favicon)</h4>
+          <p className="text-xs text-slate-450 font-normal mt-1">Modificare Logo principal, pictogramă Favicon și istoric de imagini utilizate.</p>
+        </div>
+
+        <form onSubmit={handleSettingsSave} className="space-y-8">
+          {/* Logo Field */}
+          <div className="space-y-4">
+            <label className="block text-[10px] font-bold text-slate-450 uppercase tracking-wider">Logo Site (Antet &amp; Subsol)</label>
+            <div className="flex items-center gap-4">
+              <div className="w-32 h-16 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-center p-2 shrink-0">
+                <img src={settings.logo_url || '/images/logo.png'} className="max-h-full max-w-full object-contain" alt="Current Logo" />
+              </div>
+              <div className="flex-grow flex items-center gap-3">
+                <input
+                  type="text"
+                  value={settings.logo_url || ''}
+                  onChange={(e) => setSettings(prev => ({ ...prev, logo_url: e.target.value }))}
+                  className="flex-grow bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-750 placeholder-slate-400 focus:border-[#cc0000] outline-none text-sm font-light"
+                  placeholder="Calea logo-ului..."
+                />
+                <label className="bg-slate-100 hover:bg-slate-200 text-slate-750 font-bold py-3 px-4 rounded-xl text-xs uppercase cursor-pointer select-none shrink-0 border border-slate-200/60">
+                  {uploading ? 'Încarcă...' : 'Încarcă'}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleFileUpload(e, 'logo_url')}
+                    className="hidden"
+                    disabled={uploading}
+                  />
+                </label>
+              </div>
+            </div>
+            
+            {/* Logo History */}
+            <div>
+              <span className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-2">Istoric Logo-uri (Click pe imagine pentru a o activa)</span>
+              <div className="flex flex-wrap gap-2">
+                {(() => {
+                  let history: string[] = [];
+                  try {
+                    history = JSON.parse(settings.logo_history || '["/images/logo.png"]');
+                  } catch (e) {}
+                  return history.map((logo, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => selectActiveLogo(logo)}
+                      className={`w-16 h-10 p-1 bg-slate-50 border rounded-lg hover:border-red-500 transition-all flex items-center justify-center cursor-pointer ${
+                        settings.logo_url === logo ? 'border-[#cc0000] ring-2 ring-red-100' : 'border-slate-200'
+                      }`}
+                    >
+                      <img src={logo} className="max-h-full max-w-full object-contain" alt={`Logo ${idx}`} />
+                    </button>
+                  ));
+                })()}
+              </div>
+            </div>
+          </div>
+
+          <div className="h-px bg-slate-100"></div>
+
+          {/* Favicon Field */}
+          <div className="space-y-4">
+            <label className="block text-[10px] font-bold text-slate-450 uppercase tracking-wider">Favicon (Pictogramă Browser)</label>
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-center p-3 shrink-0">
+                <img src={settings.favicon_url || '/images/logo.png'} className="max-h-full max-w-full object-contain" alt="Current Favicon" />
+              </div>
+              <div className="flex-grow flex items-center gap-3">
+                <input
+                  type="text"
+                  value={settings.favicon_url || ''}
+                  onChange={(e) => setSettings(prev => ({ ...prev, favicon_url: e.target.value }))}
+                  className="flex-grow bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-755 placeholder-slate-400 focus:border-[#cc0000] outline-none text-sm font-light"
+                  placeholder="Calea favicon-ului..."
+                />
+                <label className="bg-slate-100 hover:bg-slate-200 text-slate-750 font-bold py-3 px-4 rounded-xl text-xs uppercase cursor-pointer select-none shrink-0 border border-slate-200/60">
+                  {uploading ? 'Încarcă...' : 'Încarcă'}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleFileUpload(e, 'favicon_url')}
+                    className="hidden"
+                    disabled={uploading}
+                  />
+                </label>
+              </div>
+            </div>
+
+            {/* Favicon History */}
+            <div>
+              <span className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-2">Istoric Favicon-uri (Click pe imagine pentru a o activa)</span>
+              <div className="flex flex-wrap gap-2">
+                {(() => {
+                  let history: string[] = [];
+                  try {
+                    history = JSON.parse(settings.favicon_history || '["/images/logo.png"]');
+                  } catch (e) {}
+                  return history.map((fav, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => selectActiveFavicon(fav)}
+                      className={`w-10 h-10 p-1 bg-slate-50 border rounded-lg hover:border-red-500 transition-all flex items-center justify-center cursor-pointer ${
+                        settings.favicon_url === fav ? 'border-[#cc0000] ring-2 ring-red-100' : 'border-slate-200'
+                      }`}
+                    >
+                      <img src={fav} className="max-h-full max-w-full object-contain" alt={`Favicon ${idx}`} />
+                    </button>
+                  ));
+                })()}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-end pt-4 border-t border-slate-100">
+            <button
+              type="submit"
+              disabled={settingsSaving}
+              className="flex items-center gap-1.5 bg-[#cc0000] hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-xl transition-all duration-200 text-xs uppercase shadow-md cursor-pointer disabled:opacity-50"
+            >
+              {settingsSaving ? 'Se salvează...' : 'Salvează Branding'}
             </button>
           </div>
         </form>

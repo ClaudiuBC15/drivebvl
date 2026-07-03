@@ -198,6 +198,13 @@ INSERT INTO "settings" VALUES('contact_schedule','08 - 17 Luni-Vineri,  Sambata 
 INSERT INTO "settings" VALUES('admin_name','Bivol Sergiu');
 INSERT INTO "settings" VALUES('admin_avatar','/api/uploads/23');
 INSERT INTO "settings" VALUES('instructori_hero_image','/images/instructori/bivol-sergiu.webp');
+INSERT INTO "settings" VALUES('logo_url','/images/logo.png');
+INSERT INTO "settings" VALUES('logo_history','["/images/logo.png"]');
+INSERT INTO "settings" VALUES('favicon_url','/images/logo.png');
+INSERT INTO "settings" VALUES('favicon_history','["/images/logo.png"]');
+INSERT INTO "settings" VALUES('galerie_hero_image','https://i.imgur.com/y7rAASu.jpeg');
+INSERT INTO "settings" VALUES('faq_hero_image','/images/faq_hero.webp');
+INSERT INTO "settings" VALUES('contact_hero_image','/images/contact_student.webp');
 CREATE TABLE cars (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   model TEXT NOT NULL,

@@ -60,6 +60,7 @@ const finalKeywords = dbKeywords || "permis auto, scoala de soferi suceava, cat 
 const siteUrl = 'https://startdrivebvl.ro';
 const canonicalUrl = canonical || `${siteUrl}${Astro.url.pathname}`;
 const ogImageUrl = finalOgImage.startsWith('http') ? finalOgImage : `${siteUrl}${finalOgImage}`;
+const faviconUrl = (dbSettings as any).favicon_url || '/images/logo.png';
 ---
 
 <!DOCTYPE html>
@@ -69,7 +70,7 @@ const ogImageUrl = finalOgImage.startsWith('http') ? finalOgImage : `${siteUrl}$
     <meta name="description" content={finalDescription} />
     <meta name="keywords" content={finalKeywords} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="/images/logo.png" />
+    <link rel="icon" type="image/png" href={faviconUrl} />
     <meta name="generator" content={Astro.generator} />
     <title>{finalTitle}</title>
     {preloadImage && <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />}

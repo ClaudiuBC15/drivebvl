@@ -280,7 +280,14 @@ INSERT OR REPLACE INTO settings (key, value) VALUES
 ('inscrieri_cta_title', 'Ești pregătit să începi?'),
 ('inscrieri_cta_text', 'Înscrie-te astăzi și începe pregătirea pentru permisul tău.'),
 ('inscrieri_support_text', 'Nu trebuie să te descurci singur. Echipa Start Drive BVL te ajută cu pregătirea dosarului, programarea examenelor medicale și toate informațiile necesare pentru înscriere.'),
-('instructori_hero_image', '/images/instructori/bivol-sergiu.webp');
+('instructori_hero_image', '/images/instructori/bivol-sergiu.webp'),
+('logo_url', '/images/logo.png'),
+('logo_history', '["/images/logo.png"]'),
+('favicon_url', '/images/logo.png'),
+('favicon_history', '["/images/logo.png"]'),
+('galerie_hero_image', 'https://i.imgur.com/y7rAASu.jpeg'),
+('faq_hero_image', '/images/faq_hero.webp'),
+('contact_hero_image', '/images/contact_student.webp');
 
 -- ===================== TESTIMONIALE GENERAL =====================
 INSERT OR REPLACE INTO testimonials (id, name, text, rating, source, sort_order) VALUES

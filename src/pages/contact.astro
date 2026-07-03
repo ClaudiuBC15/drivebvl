@@ -1,5 +1,19 @@
 ---
 import MainLayout from '../layouts/main.astro';
+import { getDB, queryAll } from '../lib/db';
+
+const db = getDB(Astro.locals);
+let dbSettings = {} as Record<string, string>;
+try {
+  const rows = await queryAll<any>(db, 'SELECT key, value FROM settings');
+  rows.forEach(r => {
+    dbSettings[r.key] = r.value;
+  });
+} catch (err) {
+  console.error('Error fetching settings for Contact page:', err);
+}
+
+const heroImage = dbSettings.contact_hero_image || '/images/contact_student.webp';
 ---
 
 <MainLayout 
@@ -57,7 +71,7 @@ import MainLayout from '../layouts/main.astro';
           
           <div class="relative rounded-3xl overflow-hidden shadow-2xl border-[6px] border-white bg-slate-100">
             <img 
-              src="/images/contact_student.webp" 
+              src={heroImage} 
               alt="Cursantă Start Drive BVL cu permisul de conducere" 
               class="w-full aspect-[4/5] object-cover"
             />

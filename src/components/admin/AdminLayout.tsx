@@ -26,6 +26,7 @@ export default function AdminLayout({ children, activeTab }: AdminLayoutProps) {
 
   const [adminName, setAdminName] = React.useState('Admin');
   const [adminAvatar, setAdminAvatar] = React.useState('/images/instructori/radu-matei.webp');
+  const [logoUrl, setLogoUrl] = React.useState('/images/logo.png');
 
   const [notifications, setNotifications] = React.useState<any[]>([]);
   const [unreadCount, setUnreadCount] = React.useState(0);
@@ -68,8 +69,10 @@ export default function AdminLayout({ children, activeTab }: AdminLayoutProps) {
     // 1. Check localStorage first
     const cachedName = localStorage.getItem('admin_name');
     const cachedAvatar = localStorage.getItem('admin_avatar');
+    const cachedLogo = localStorage.getItem('logo_url');
     if (cachedName) setAdminName(cachedName);
     if (cachedAvatar) setAdminAvatar(cachedAvatar);
+    if (cachedLogo) setLogoUrl(cachedLogo);
 
     // 2. Fetch from DB
     fetch('/api/settings')
@@ -78,12 +81,15 @@ export default function AdminLayout({ children, activeTab }: AdminLayoutProps) {
         if (data.success && data.settings) {
           const name = data.settings.admin_name || 'Admin';
           const avatar = data.settings.admin_avatar || '/images/instructori/radu-matei.webp';
+          const logo = data.settings.logo_url || '/images/logo.png';
 
           setAdminName(name);
           setAdminAvatar(avatar);
+          setLogoUrl(logo);
 
           localStorage.setItem('admin_name', name);
           localStorage.setItem('admin_avatar', avatar);
+          localStorage.setItem('logo_url', logo);
         }
       })
       .catch((err) => console.error('Error loading admin settings:', err));
@@ -127,7 +133,7 @@ export default function AdminLayout({ children, activeTab }: AdminLayoutProps) {
       {/* Mobile Top Bar */}
       <header className="flex md:hidden items-center justify-between bg-white px-6 py-4 border-b border-slate-200 relative z-50">
         <div className="flex items-center gap-2">
-          <img src="/images/logo.png" alt="Start Drive BVL Logo" className="h-8 object-contain" />
+          <img src={logoUrl} alt="Start Drive BVL Logo" className="h-8 object-contain" />
           <span className="font-extrabold text-slate-800 text-sm tracking-wider uppercase">Start Drive <span className="text-[#cc0000]">CMS</span></span>
         </div>
         <button
@@ -154,7 +160,7 @@ export default function AdminLayout({ children, activeTab }: AdminLayoutProps) {
         <div className="space-y-6">
           {/* Logo */}
           <div className="hidden md:flex items-center justify-center py-2">
-            <img src="/images/logo.png" alt="Start Drive BVL Logo" className="h-16 object-contain" />
+            <img src={logoUrl} alt="Start Drive BVL Logo" className="h-16 object-contain" />
           </div>
 
           <div className="h-px bg-slate-100 hidden md:block"></div>
