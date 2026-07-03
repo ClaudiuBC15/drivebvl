@@ -20,6 +20,7 @@ try {
 const heroImage = dbSettings.instructori_hero_image || '/images/instructori/bivol-sergiu.webp';
 
 const getLocalImage = (name: string, fallback: string) => {
+  if (fallback) return fallback;
   const slug = name.toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   if (slug === 'bivol-sergiu') return '/images/instructori/bivol-sergiu.webp';
   if (['tofan-florin', 'bejinariu-florin', 'radu-matei'].includes(slug)) {
@@ -28,15 +29,7 @@ const getLocalImage = (name: string, fallback: string) => {
   return fallback;
 };
 
-const reviewsData = [
-  { rating: '4.9', count: 124 },
-  { rating: '4.9', count: 98 },
-  { rating: '4.8', count: 87 },
-  { rating: '4.9', count: 112 }
-];
-
-const instructors = instructorsFromDb.map((inst, index) => {
-  const reviews = reviewsData[index % reviewsData.length];
+const instructors = instructorsFromDb.map((inst) => {
   return {
     id: inst.id,
     name: inst.name,
@@ -46,8 +39,8 @@ const instructors = instructorsFromDb.map((inst, index) => {
     stats: { hours: inst.hours, students: inst.students },
     tags: parseJSON<string[]>(inst.tags, []),
     image: getLocalImage(inst.name, inst.image_url),
-    rating: reviews.rating,
-    reviewsCount: reviews.count
+    rating: inst.rating || '4.9',
+    reviewsCount: inst.reviews_count || 100
   };
 });
 ---
@@ -174,16 +167,9 @@ const instructors = instructorsFromDb.map((inst, index) => {
               <h3 class="text-lg font-bold text-slate-800 mb-1 group-hover:text-[#cc0000] transition-colors leading-tight">
                 {inst.name}
               </h3>
-              <p class="text-slate-500 text-xs font-medium mb-3">
+              <p class="text-slate-500 text-xs font-medium mb-6">
                 {inst.role}
               </p>
-              
-              <!-- Stars & reviews -->
-              <div class="flex items-center gap-1.5 text-xs text-slate-650 mb-6">
-                <span class="text-[#cc0000] text-sm leading-none">★</span>
-                <span class="font-extrabold text-slate-800">{inst.rating}</span>
-                <span class="text-slate-400">({inst.reviewsCount} recenzii)</span>
-              </div>
               
               <!-- Details Button triggers Modal -->
               <button
@@ -278,11 +264,7 @@ const instructors = instructorsFromDb.map((inst, index) => {
         <h4 id="modal-name" class="text-lg font-extrabold text-slate-800 mb-1" style="font-family:'Plus Jakarta Sans',sans-serif"></h4>
         <p id="modal-role" class="text-slate-500 text-xs font-semibold mb-3"></p>
         
-        <div class="flex items-center gap-1.5 text-xs text-slate-650 bg-white border border-slate-200/60 px-3.5 py-1.5 rounded-full shadow-sm">
-          <span class="text-[#cc0000] text-sm leading-none">★</span>
-          <span class="font-extrabold text-slate-850" id="modal-rating">4.9</span>
-          <span class="text-slate-400">Recenzat Excelent</span>
-        </div>
+
       </div>
 
       <!-- Right Panel: Detailed Specs -->
@@ -341,19 +323,11 @@ const instructors = instructorsFromDb.map((inst, index) => {
       const modalImage = document.getElementById('modal-image');
       const modalName = document.getElementById('modal-name');
       const modalRole = document.getElementById('modal-role');
-      const modalRating = document.getElementById('modal-rating');
       const modalCategoriesContainer = document.getElementById('modal-categories-container');
       const modalExp = document.getElementById('modal-exp');
       const modalHours = document.getElementById('modal-hours');
       const modalStudents = document.getElementById('modal-students');
       const modalTagsContainer = document.getElementById('modal-tags-container');
-
-      const ratingsMapping = {
-        'Tofan Florin': '4.9',
-        'Bivol Sergiu': '4.9',
-        'Bejinariu Florin': '4.8',
-        'Radu Matei': '4.9'
-      };
 
       function openModal(btn) {
         const name = btn.dataset.name;
@@ -375,7 +349,7 @@ const instructors = instructorsFromDb.map((inst, index) => {
         if (modalExp) modalExp.textContent = experience;
         if (modalHours) modalHours.textContent = hours;
         if (modalStudents) modalStudents.textContent = students;
-        if (modalRating) modalRating.textContent = ratingsMapping[name] || '4.9';
+
 
         // Categories badges
         if (modalCategoriesContainer) {
