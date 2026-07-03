@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Save } from 'lucide-react';
+import { compressAndConvertToWebP } from '../../lib/image-compress';
 
 interface SettingsManagerProps {
   initialSettings: Record<string, string>;
@@ -15,10 +16,20 @@ export default function SettingsManager({ initialSettings }: SettingsManagerProp
 
   // File Upload Helper
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, targetField: string) => {
-    const file = e.target.files?.[0];
+    let file = e.target.files?.[0];
     if (!file) return;
 
     setUploading(true);
+    
+    // Auto-compress and convert to webp client-side
+    if (file.type.startsWith('image/')) {
+      try {
+        file = await compressAndConvertToWebP(file);
+      } catch (err) {
+        console.error('Failed to compress image, using original', err);
+      }
+    }
+
     const formData = new FormData();
     formData.append('file', file);
 
@@ -166,6 +177,37 @@ export default function SettingsManager({ initialSettings }: SettingsManagerProp
               className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-755 placeholder-slate-400 focus:border-[#cc0000] transition-all outline-none text-sm font-light leading-relaxed resize-none"
               placeholder="Scrie textul de suport pentru înscrieri..."
             ></textarea>
+          </div>
+
+          <div>
+            <label className="block text-[10px] font-bold text-slate-450 uppercase tracking-wider mb-2">Imagine Hero Pagina Instructori</label>
+            <div className="flex items-center gap-3">
+              <input
+                type="text"
+                value={settings.instructori_hero_image || ''}
+                onChange={(e) => setSettings(prev => ({ ...prev, instructori_hero_image: e.target.value }))}
+                className="flex-grow bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-750 placeholder-slate-400 focus:border-[#cc0000] transition-all outline-none text-sm font-light"
+                placeholder="URL Imagine..."
+              />
+              <label className="bg-slate-100 hover:bg-slate-200 text-slate-750 font-bold py-3 px-4 rounded-xl text-xs uppercase cursor-pointer transition-all select-none shrink-0 border border-slate-200/60">
+                {uploading ? 'Încarcă...' : 'Încarcă'}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFileUpload(e, 'instructori_hero_image')}
+                  className="hidden"
+                  disabled={uploading}
+                />
+              </label>
+            </div>
+            {settings.instructori_hero_image && (
+              <div className="mt-2 flex items-center gap-3">
+                <div className="w-16 h-12 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 shrink-0">
+                  <img src={settings.instructori_hero_image} className="w-full h-full object-cover" alt="Instructori Hero Preview" />
+                </div>
+                <span className="text-xs text-slate-450">Previzualizare imagine Hero Instructori</span>
+              </div>
+            )}
           </div>
 
           {/* Profil Administrator group */}

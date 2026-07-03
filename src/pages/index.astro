@@ -17,7 +17,7 @@ const fallbackInstructors = [
     categories: "B1, B, BE, C, CE, D, DE",
     experience: "15+",
     students: "280+",
-    image: "/images/instructori/tofan-florin.png"
+    image: "/images/instructori/tofan-florin.webp"
   },
   {
     name: "Bivol Sergiu",
@@ -25,7 +25,7 @@ const fallbackInstructors = [
     categories: "B1, B, BE, C, CE, D, DE",
     experience: "12+",
     students: "250+",
-    image: "/images/instructori/bivol-sergiu.jpeg"
+    image: "/images/instructori/bivol-sergiu.webp"
   },
   {
     name: "Bejinariu Florin",
@@ -33,7 +33,7 @@ const fallbackInstructors = [
     categories: "B1, B, BE",
     experience: "10+",
     students: "300+",
-    image: "/images/instructori/bejinariu-florin.png"
+    image: "/images/instructori/bejinariu-florin.webp"
   },
   {
     name: "Radu Matei",
@@ -41,7 +41,7 @@ const fallbackInstructors = [
     categories: "B, B1",
     experience: "6+",
     students: "150+",
-    image: "/images/instructori/radu-matei.png"
+    image: "/images/instructori/radu-matei.webp"
   }
 ];
 
@@ -66,12 +66,12 @@ try {
 }
 
 const fallbackCategories = [
-  { id: 'B1', name: 'Categoria B1', subtitle: 'Cvadricicluri — de la 16 ani', image: '/images/cat-b1.png' },
-  { id: 'B',  name: 'Categoria B',  subtitle: 'Autoturisme — cel mai popular', image: '/images/cat-b.png' },
-  { id: 'BE', name: 'Categoria BE', subtitle: 'Mașină + Remorcă', image: '/images/cat-be.png' },
-  { id: 'C',  name: 'Categoria C',  subtitle: 'Camioane — peste 3.500 kg', image: '/images/cat-c.png' },
-  { id: 'CE', name: 'Categoria CE', subtitle: 'TIR — ansamblu autotren', image: '/images/cat-ce.png' },
-  { id: 'D',  name: 'Categoria D',  subtitle: 'Autobuze — transport persoane', image: '/images/cat-b.png' }
+  { id: 'B1', name: 'Categoria B1', subtitle: 'Cvadricicluri — de la 16 ani', image: '/images/cat-b1.webp' },
+  { id: 'B',  name: 'Categoria B',  subtitle: 'Autoturisme — cel mai popular', image: '/images/cat-b.webp' },
+  { id: 'BE', name: 'Categoria BE', subtitle: 'Mașină + Remorcă', image: '/images/cat-be.webp' },
+  { id: 'C',  name: 'Categoria C',  subtitle: 'Camioane — peste 3.500 kg', image: '/images/cat-c.webp' },
+  { id: 'CE', name: 'Categoria CE', subtitle: 'TIR — ansamblu autotren', image: '/images/cat-ce.webp' },
+  { id: 'D',  name: 'Categoria D',  subtitle: 'Autobuze — transport persoane', image: '/images/cat-b.webp' }
 ];
 
 let categories = [];
@@ -101,11 +101,11 @@ const steps = [
 ];
 
 const fallbackCars = [
-  { image: '/images/flota/dacia-logan.jpeg',         model: 'Dacia Logan',         tag: 'Manual' },
-  { image: '/images/flota/dacia-sandero.jpeg',       model: 'Dacia Sandero',       tag: 'Manual' },
-  { image: '/images/flota/dacia-logan-stepway.jpeg', model: 'Dacia Logan Stepway', tag: 'Manual' },
-  { image: '/images/flota/man-tgl.jpeg',             model: 'MAN TGL (Camion)',    tag: 'Manual' },
-  { image: '/images/flota/dacia-duster.jpeg',        model: 'Dacia Duster',        tag: 'Manual' },
+  { image: '/images/flota/dacia-logan.webp',         model: 'Dacia Logan',         tag: 'Manual' },
+  { image: '/images/flota/dacia-sandero.webp',       model: 'Dacia Sandero',       tag: 'Manual' },
+  { image: '/images/flota/dacia-logan-stepway.webp', model: 'Dacia Logan Stepway', tag: 'Manual' },
+  { image: '/images/flota/man-tgl.webp',             model: 'MAN TGL (Camion)',    tag: 'Manual' },
+  { image: '/images/flota/dacia-duster.webp',        model: 'Dacia Duster',        tag: 'Manual' },
 ];
 
 let cars = [];
@@ -129,7 +129,7 @@ const benefits = [
   { title: 'Program flexibil', desc: 'Ore de condus adaptate programului tău — inclusiv weekend.' },
   { title: 'Plată în rate', desc: 'Rate egale, fără dobândă, fără gaj.' },
   { title: 'Dosar DRPCIV', desc: 'Suport complet pentru întocmirea dosarului de examen.' },
-  { title: '95% promovabilitate', desc: 'Majoritatea cursanților noștri reușesc din prima.' },
+  { title: 'Top promovabilitate', desc: 'Cea mai bună rată de promovabilitate din Suceava.' },
 ];
 
 const googleReviewsUrl = "https://www.google.com/search?q=START+DRIVE+BVL+(Scoala+de+Soferi)+Recenzii";
@@ -137,14 +137,15 @@ const googleReviewsUrl = "https://www.google.com/search?q=START+DRIVE+BVL+(Scoal
 
 <MainLayout
   title="Start Drive BVL | Școala de Șoferi Suceava — Categorii B, BE, C, CE"
-  description="Școala de Șoferi Start Drive BVL din Suceava — instructori experimentați, flotă modernă, rată de promovabilitate 95%. Categorii B, B1, BE, C, CE. Înscrie-te acum!"
+  description="Școala de Șoferi Start Drive BVL din Suceava — instructori experimentați, flotă modernă, cea mai bună rată de promovabilitate din Suceava. Categorii B, B1, BE, C, CE. Înscrie-te acum!"
+  preloadImage="/images/23.webp"
 >
 
   <!-- ==================== HERO ==================== -->
   <section id="hero-section" class="relative w-full min-h-screen flex flex-col justify-between overflow-hidden bg-[#0a0a0b]">
     <!-- Parallax Background Image -->
     <div id="hero-parallax" class="absolute inset-0 w-full h-full">
-      <img src="/images/23.png" alt="Absolvenți Start Drive BVL Suceava — Conducem în direcția corectă!" class="w-full h-full object-cover object-center" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;" />
+      <img src="/images/23.webp" alt="Absolvenți Start Drive BVL Suceava — Conducem în direcția corectă!" width="1376" height="768" class="w-full h-full object-cover object-center" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;" />
     </div>
     <!-- Overlay echilibrat — text lizibil, imagine parțial vizibilă -->
     <div class="absolute inset-0 bg-gradient-to-br from-[#0a0a0b]/82 via-[#0a0a0b]/55 to-[#0a0a0b]/70 z-10"></div>
@@ -229,8 +230,8 @@ const googleReviewsUrl = "https://www.google.com/search?q=START+DRIVE+BVL+(Scoal
         <!-- Stacked Images with overlap -->
         <div class="relative reveal">
           <div class="relative">
-            <img src="/images/hero_nou.jpg" alt="Start Drive BVL" class="w-full h-[360px] object-cover rounded-2xl shadow-2xl" loading="lazy" />
-            <img src="/images/imagine.jpeg" alt="Mașina de școală Start Drive BVL" class="w-[64%] h-[230px] object-cover rounded-2xl shadow-2xl absolute -bottom-12 -right-4 lg:right-[-30px] border-4 border-white" loading="lazy" />
+            <img src="/images/hero_nou.webp" alt="Start Drive BVL" width="1339" height="784" class="w-full h-[360px] object-cover rounded-2xl shadow-2xl" loading="lazy" />
+            <img src="/images/imagine.webp" alt="Mașina de școală Start Drive BVL" width="800" height="643" class="w-[64%] h-[230px] object-cover rounded-2xl shadow-2xl absolute -bottom-12 -right-4 lg:right-[-30px] border-4 border-white" loading="lazy" />
             <!-- Stats badge on overlap -->
             <div class="absolute -bottom-6 left-6 bg-[#cc0000] text-white px-6 py-3 rounded-xl shadow-xl">
               <span class="text-2xl font-extrabold" style="font-family:'Plus Jakarta Sans',sans-serif">15+</span>
@@ -493,7 +494,6 @@ const googleReviewsUrl = "https://www.google.com/search?q=START+DRIVE+BVL+(Scoal
               <div class="bg-[#f6f6f7] p-5 flex justify-between items-center">
                 <div>
                   <h3 class="font-extrabold text-[#0a0a0b]" style="font-family:'Plus Jakarta Sans',sans-serif">{car.model}</h3>
-                  <p class="text-xs text-slate-500">{car.tag}</p>
                 </div>
                 <div class="bg-[#cc0000] text-white text-xs font-bold px-3 py-1 rounded-full">{car.tag}</div>
               </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Edit3, X, Save, Sparkles } from 'lucide-react';
 import DataTable from './DataTable';
+import { compressAndConvertToWebP } from '../../lib/image-compress';
 
 interface Category {
   id: string;
@@ -50,10 +51,20 @@ export default function CategoryManager({ initialCategories }: CategoryManagerPr
   const [uploading, setUploading] = useState(false);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, targetField: string) => {
-    const file = e.target.files?.[0];
+    let file = e.target.files?.[0];
     if (!file) return;
 
     setUploading(true);
+    
+    // Auto-compress and convert to webp client-side
+    if (file.type.startsWith('image/')) {
+      try {
+        file = await compressAndConvertToWebP(file);
+      } catch (err) {
+        console.error('Failed to compress image, using original', err);
+      }
+    }
+
     const formData = new FormData();
     formData.append('file', file);
 
@@ -83,7 +94,17 @@ export default function CategoryManager({ initialCategories }: CategoryManagerPr
     try {
       const uploadedUrls: string[] = [];
       for (let i = 0; i < files.length; i++) {
-        const file = files[i];
+        let file = files[i];
+        
+        // Auto-compress and convert to webp client-side
+        if (file.type.startsWith('image/')) {
+          try {
+            file = await compressAndConvertToWebP(file);
+          } catch (err) {
+            console.error('Failed to compress image, using original', err);
+          }
+        }
+
         const formData = new FormData();
         formData.append('file', file);
         const res = await fetch('/api/uploads', {

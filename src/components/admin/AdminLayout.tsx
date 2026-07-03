@@ -25,7 +25,44 @@ export default function AdminLayout({ children, activeTab }: AdminLayoutProps) {
   const [userDropdownOpen, setUserDropdownOpen] = React.useState(false);
 
   const [adminName, setAdminName] = React.useState('Admin');
-  const [adminAvatar, setAdminAvatar] = React.useState('/images/instructori/radu-matei.png');
+  const [adminAvatar, setAdminAvatar] = React.useState('/images/instructori/radu-matei.webp');
+
+  const [notifications, setNotifications] = React.useState<any[]>([]);
+  const [unreadCount, setUnreadCount] = React.useState(0);
+  const [notificationsOpen, setNotificationsOpen] = React.useState(false);
+
+  const loadNotifications = () => {
+    fetch('/api/leads')
+      .then((res) => {
+        if (res.status === 401) return null;
+        return res.json();
+      })
+      .then((data: any) => {
+        if (data && data.success && Array.isArray(data.leads)) {
+          const newLeads = data.leads.filter((l: any) => l.status === 'nou');
+          setNotifications(newLeads);
+          setUnreadCount(newLeads.length);
+        }
+      })
+      .catch((err) => console.error('Error loading notifications:', err));
+  };
+
+  const clearNotifications = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      const promises = notifications.map(lead => 
+        fetch(`/api/leads/${lead.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'citit' })
+        })
+      );
+      await Promise.all(promises);
+      loadNotifications();
+    } catch (err) {
+      console.error('Error clearing notifications:', err);
+    }
+  };
 
   const loadProfile = () => {
     // 1. Check localStorage first
@@ -40,7 +77,7 @@ export default function AdminLayout({ children, activeTab }: AdminLayoutProps) {
       .then((data: any) => {
         if (data.success && data.settings) {
           const name = data.settings.admin_name || 'Admin';
-          const avatar = data.settings.admin_avatar || '/images/instructori/radu-matei.png';
+          const avatar = data.settings.admin_avatar || '/images/instructori/radu-matei.webp';
 
           setAdminName(name);
           setAdminAvatar(avatar);
@@ -54,6 +91,7 @@ export default function AdminLayout({ children, activeTab }: AdminLayoutProps) {
 
   React.useEffect(() => {
     loadProfile();
+    loadNotifications();
 
     // Listen to profile updates from settings page
     window.addEventListener('admin-profile-updated', loadProfile);
@@ -183,12 +221,67 @@ export default function AdminLayout({ children, activeTab }: AdminLayoutProps) {
 
           <div className="flex items-center gap-5">
             {/* Notification bell with badge */}
-            <button className="relative p-2 rounded-full hover:bg-slate-100 transition-colors text-slate-500 cursor-pointer focus:outline-none">
-              <Bell size={20} />
-              <span className="absolute top-1 right-1 w-4 h-4 bg-[#cc0000] text-[9px] font-black text-white rounded-full flex items-center justify-center border border-white">
-                3
-              </span>
-            </button>
+            <div className="relative">
+              <button 
+                onClick={() => setNotificationsOpen(!notificationsOpen)}
+                className="relative p-2 rounded-full hover:bg-slate-100 transition-colors text-slate-500 cursor-pointer focus:outline-none"
+              >
+                <Bell size={20} />
+                {unreadCount > 0 && (
+                  <span className="absolute top-1 right-1 w-4 h-4 bg-[#cc0000] text-[9px] font-black text-white rounded-full flex items-center justify-center border border-white">
+                    {unreadCount}
+                  </span>
+                )}
+              </button>
+
+              {notificationsOpen && (
+                <div className="absolute right-0 mt-2 w-80 bg-white border border-slate-200 rounded-xl shadow-lg z-50 py-2 animate-fade-in-up">
+                  <div className="px-4 py-2 border-b border-slate-100 flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-800">Notificări</span>
+                    {unreadCount > 0 && (
+                      <button 
+                        onClick={clearNotifications}
+                        className="text-[10px] text-[#cc0000] hover:underline font-bold focus:outline-none cursor-pointer"
+                      >
+                        Curăță notificările
+                      </button>
+                    )}
+                  </div>
+                  
+                  <div className="max-h-64 overflow-y-auto">
+                    {notifications.length === 0 ? (
+                      <div className="px-4 py-6 text-center text-xs text-slate-400">
+                        Nicio notificare nouă.
+                      </div>
+                    ) : (
+                      notifications.slice(0, 5).map((lead) => (
+                        <a
+                          key={lead.id}
+                          href="/admin/leads"
+                          className="block px-4 py-3 hover:bg-slate-50 border-b border-slate-50 last:border-b-0 transition-colors"
+                        >
+                          <p className="text-xs font-bold text-slate-700 truncate">
+                            Înscriere nouă: {lead.name}
+                          </p>
+                          <p className="text-[10px] text-slate-500 mt-0.5">
+                            {lead.phone} • Categoria {lead.category || 'Nespecificată'}
+                          </p>
+                        </a>
+                      ))
+                    )}
+                  </div>
+                  
+                  <div className="px-4 pt-2 border-t border-slate-100">
+                    <a
+                      href="/admin/leads"
+                      className="block text-center text-xs font-bold text-[#cc0000] hover:underline"
+                    >
+                      Vezi toate înscrierile
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
 
             <div className="h-6 w-px bg-slate-200"></div>
 

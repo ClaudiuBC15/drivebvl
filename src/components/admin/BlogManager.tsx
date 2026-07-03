@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Plus, Edit3, Trash2, Search, X, Check, Save } from 'lucide-react';
 import DataTable from './DataTable';
 import WysiwygEditor from './WysiwygEditor';
+import { compressAndConvertToWebP } from '../../lib/image-compress';
 
 interface Article {
   id: number;
@@ -48,10 +49,20 @@ export default function BlogManager({ initialArticles }: BlogManagerProps) {
   const [uploading, setUploading] = useState(false);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, targetField: string) => {
-    const file = e.target.files?.[0];
+    let file = e.target.files?.[0];
     if (!file) return;
 
     setUploading(true);
+    
+    // Auto-compress and convert to webp client-side
+    if (file.type.startsWith('image/')) {
+      try {
+        file = await compressAndConvertToWebP(file);
+      } catch (err) {
+        console.error('Failed to compress image, using original', err);
+      }
+    }
+
     const formData = new FormData();
     formData.append('file', file);
 

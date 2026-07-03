@@ -8,6 +8,7 @@ interface Props {
   description?: string;
   ogImage?: string;
   canonical?: string;
+  preloadImage?: string;
 }
 
 const {
@@ -15,6 +16,7 @@ const {
   description,
   ogImage,
   canonical,
+  preloadImage,
 } = Astro.props;
 
 const db = getDB(Astro.locals);
@@ -70,6 +72,7 @@ const ogImageUrl = finalOgImage.startsWith('http') ? finalOgImage : `${siteUrl}$
     <link rel="icon" type="image/png" href="/images/logo.png" />
     <meta name="generator" content={Astro.generator} />
     <title>{finalTitle}</title>
+    {preloadImage && <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />}
 
     <!-- Canonical URL -->
     <link rel="canonical" href={canonicalUrl} />
@@ -89,8 +92,6 @@ const ogImageUrl = finalOgImage.startsWith('http') ? finalOgImage : `${siteUrl}$
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
 
-    <!-- CookieYes -->
-    <script is:inline id="cookieyes" type="text/javascript" src="https://cdn-cookieyes.com/client_data/b4a49c69d0d36c5b96796c05/script.js"></script>
 
     <!-- Fonts: Plus Jakarta Sans (headings) + Inter (body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -595,7 +596,7 @@ const ogImageUrl = finalOgImage.startsWith('http') ? finalOgImage : `${siteUrl}$
             <!-- Map Card -->
             <a href="https://www.google.com/maps/search/?api=1&query=47.64761027691624,26.252242589241373" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 bg-slate-50 border border-slate-100 p-2.5 rounded-2xl hover:bg-slate-100/50 hover:border-slate-200 transition-all group max-w-[260px] mt-4">
               <div class="w-16 h-12 rounded-xl overflow-hidden shrink-0 bg-slate-200 relative">
-                <img src="/images/map_thumbnail.png" alt="Locație Start Drive BVL" class="w-full h-full object-cover" />
+                <img src="/images/map_thumbnail.webp" alt="Locație Start Drive BVL" width="64" height="48" class="w-full h-full object-cover" />
                 <div class="absolute inset-0 bg-[#cc0000]/5 flex items-center justify-center">
                   <svg class="w-5 h-5 text-[#cc0000] animate-bounce" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>

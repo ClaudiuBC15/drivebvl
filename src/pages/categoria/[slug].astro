@@ -111,12 +111,21 @@ if (faqs.length > 0) {
   <script type="application/ld+json" set:html={JSON.stringify(schemaJson)} is:inline />
 
   <!-- Hero Section -->
-  <div class="relative w-full min-h-[450px] bg-[#0a0a0b] overflow-hidden flex flex-col justify-center items-center py-20 px-6">
+  <div class="relative w-full min-h-[450px] bg-[#0a0a0b] overflow-hidden flex flex-col justify-center items-center pt-32 pb-20 px-6">
     <!-- Background Image with Dark Overlay -->
-    <div class="absolute inset-0 bg-cover bg-center opacity-25 scale-105" style={`background-image: url('${category.image_url || '/images/cat-b.png'}')`}></div>
+    <div class="absolute inset-0 bg-cover bg-center opacity-25 scale-105" style={`background-image: url('${category.image_url || '/images/cat-b.webp'}')`}></div>
     <div class="absolute inset-0 bg-gradient-to-b from-[#0a0a0b]/80 via-[#0a0a0b]/95 to-[#0a0a0b]"></div>
     
     <div class="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center">
+      <!-- Breadcrumbs / Back button -->
+      <nav class="flex items-center gap-2 text-white/50 font-bold text-xs tracking-wider uppercase mb-6">
+        <a href="/" class="hover:text-[#cc0000] transition-colors">Acasă</a>
+        <span>&gt;</span>
+        <a href="/categorii" class="hover:text-[#cc0000] transition-colors">Categorii</a>
+        <span>&gt;</span>
+        <span class="text-white">{category.name}</span>
+      </nav>
+
       <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-red-950/80 text-[#ff3333] border border-red-900/50 mb-6 backdrop-blur-md">
         Școala de Șoferi Suceava
       </span>

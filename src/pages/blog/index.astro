@@ -65,7 +65,7 @@ function formatDate(dateStr: string) {
   <div class="relative w-full min-h-[360px] bg-[#0a0a0b] overflow-hidden flex flex-col justify-center items-center px-6 py-16">
     <!-- Background Image -->
     <div class="absolute inset-0 w-full h-full">
-      <img src="/images/hero_nou.jpg" alt="Start Drive BVL Blog" class="w-full h-full object-cover object-center opacity-25" />
+      <img src="/images/hero_nou.webp" alt="Start Drive BVL Blog" class="w-full h-full object-cover object-center opacity-25" />
     </div>
     <div class="absolute inset-0 bg-gradient-to-b from-[#0a0a0b]/90 via-[#0a0a0b]/75 to-[#0a0a0b]"></div>
     
@@ -102,7 +102,7 @@ function formatDate(dateStr: string) {
                     {/* Image Container */}
                     <a href={`/blog/${article.slug}`} class="block relative aspect-[16/10] overflow-hidden bg-slate-100 shrink-0">
                       <img 
-                        src={article.image_url || '/images/cat-b.png'} 
+                        src={article.image_url || '/images/cat-b.webp'} 
                         alt={article.title} 
                         class="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500"
                         loading="lazy"
@@ -242,7 +242,7 @@ function formatDate(dateStr: string) {
                 <a href={`/blog/${art.slug}`} class="flex gap-4 group">
                   <div class="w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-slate-100 border border-slate-100 shadow-inner">
                     <img 
-                      src={art.image_url || '/images/cat-b.png'} 
+                      src={art.image_url || '/images/cat-b.webp'} 
                       alt={art.title} 
                       class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />

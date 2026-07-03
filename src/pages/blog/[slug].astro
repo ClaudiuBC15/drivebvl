@@ -36,7 +36,7 @@ if (relatedArticles.length === 0) {
 
 // Fetch admin profile settings for author fallback
 let adminName = 'Bivol Sergiu';
-let adminAvatar = '/images/instructori/radu-matei.png';
+let adminAvatar = '/images/instructori/radu-matei.webp';
 
 try {
   const adminNameRow = await queryOne<any>(db, "SELECT value FROM settings WHERE key = 'admin_name'");
@@ -297,7 +297,7 @@ const schemaJson = {
             Vrei să începi școala de șoferi? Înscrie-te acum.
           </h3>
           <p class="text-slate-400 text-sm font-light max-w-md">
-            Profită de rata noastră ridicată de promovabilitate de peste 95%. Avem instructori răbdători și o flotă modernă adaptată ție!
+            Profită de cea mai bună rată de promovabilitate din Suceava. Avem instructori răbdători și o flotă modernă adaptată ție!
           </p>
         </div>
         <a href="/inscrieri" class="bg-[#cc0000] hover:bg-red-700 text-white font-extrabold py-4 px-8 rounded-xl transition-all duration-300 uppercase tracking-widest text-xs shadow-lg shadow-red-950/40 hover:-translate-y-0.5 whitespace-nowrap relative z-10">
@@ -313,7 +313,7 @@ const schemaJson = {
             {relatedArticles.map((art) => (
               <div class="bg-white border border-slate-200/60 rounded-2xl overflow-hidden group shadow-[0_4px_12px_rgba(0,0,0,0.015)] hover:shadow-lg transition-all hover:-translate-y-1">
                 <a href={`/blog/${art.slug}`} class="block aspect-[16/10] overflow-hidden bg-slate-100">
-                  <img src={art.image_url || '/images/cat-b.png'} alt={art.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <img src={art.image_url || '/images/cat-b.webp'} alt={art.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </a>
                 <div class="p-5">
                   <span class="text-[10px] font-bold text-[#cc0000] uppercase tracking-wider block mb-2">{art.category}</span>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, Edit3, Trash2, Save, X, Car } from 'lucide-react';
 import DataTable from './DataTable';
+import { compressAndConvertToWebP } from '../../lib/image-compress';
 
 interface Vehicle {
   id: number;
@@ -32,10 +33,20 @@ export default function CarManager({ initialCars }: CarManagerProps) {
   const [uploading, setUploading] = useState(false);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, targetField: string) => {
-    const file = e.target.files?.[0];
+    let file = e.target.files?.[0];
     if (!file) return;
 
     setUploading(true);
+    
+    // Auto-compress and convert to webp client-side
+    if (file.type.startsWith('image/')) {
+      try {
+        file = await compressAndConvertToWebP(file);
+      } catch (err) {
+        console.error('Failed to compress image, using original', err);
+      }
+    }
+
     const formData = new FormData();
     formData.append('file', file);
 
@@ -275,7 +286,7 @@ export default function CarManager({ initialCars }: CarManagerProps) {
             <tr key={v.id} className="hover:bg-slate-50/30 transition-colors">
               <td className="px-6 py-4">
                 <div className="w-20 h-12 rounded-xl overflow-hidden border border-slate-200 bg-slate-50">
-                  <img src={v.image_url || '/images/cat-b.png'} className="w-full h-full object-cover" />
+                  <img src={v.image_url || '/images/cat-b.webp'} className="w-full h-full object-cover" />
                 </div>
               </td>
               <td className="px-6 py-4 font-bold text-slate-800">{v.model}</td>

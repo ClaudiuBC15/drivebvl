@@ -14,7 +14,7 @@ INSERT OR REPLACE INTO categories (id, name, slug, hero_title, hero_subtitle, de
   'Cursul durează minim 4 săptămâni cu 24 ore teorie și 30 ore practică.',
   'Cursul pentru obținerea permisului auto categoria B1 asigură formarea deprinderilor necesare conducerii în siguranță a cvadriciclurilor înainte de împlinirea vârstei de 18 ani.',
   '[{"name": "Alex M.", "text": "Am luat permisul B1 la 16 ani și a fost cea mai bună decizie. Instructorii au fost super răbdători!", "rating": 5}]',
-  '/images/cat-b1.png',
+  '/images/cat-b1.webp',
   'Categoria B1 Suceava — Permis Cvadricicluri | Start Drive BVL',
   'Obține permisul categoria B1 în Suceava la Start Drive BVL. Cvadricicluri de la 16 ani. Instructori experimentați, rată mare de promovabilitate.',
   1),
@@ -29,9 +29,9 @@ INSERT OR REPLACE INTO categories (id, name, slug, hero_title, hero_subtitle, de
   'Cursul durează cel puțin 4 săptămâni: minim 24 ore pregătire teoretică și 30 ore pregătire practică.',
   'Cursul pentru obținerea permisului auto categoria B durează cel puțin 4 săptămâni, timp în care se efectuează minim 24 de ore de pregătire teoretică (legislație rutieră) și 30 de ore de pregătire practică (conducere auto).',
   '[{"name": "Maria P.", "text": "Am ales Start Drive BVL pentru categoria B și nu am regretat nici o secundă. Am luat permisul din prima!", "rating": 5}, {"name": "Andrei C.", "text": "Instructori foarte profesioniști. Program flexibil, exact cum aveam nevoie pe lângă facultate.", "rating": 5}, {"name": "Elena R.", "text": "Recomand cu căldură! Am venit fără experiență și am plecat cu permisul și multă încredere la volan.", "rating": 5}]',
-  '/images/cat-b.png',
+  '/images/cat-b.webp',
   'Categoria B Suceava — Școala de Șoferi Start Drive BVL',
-  'Obține permisul auto categoria B în Suceava la Start Drive BVL. Instructori experimentați, flotă modernă Dacia, rată de promovabilitate 95%. Înscrie-te acum!',
+  'Obține permisul auto categoria B în Suceava la Start Drive BVL. Instructori experimentați, flotă modernă Dacia, cea mai bună rată de promovabilitate din Suceava. Înscrie-te acum!',
   2),
 
 ('BE', 'Categoria BE', 'be',
@@ -44,7 +44,7 @@ INSERT OR REPLACE INTO categories (id, name, slug, hero_title, hero_subtitle, de
   'Cursul cuprinde pregătire practică intensivă cu ansamblu auto + remorcă pe trasee variate.',
   'Acest curs este esențial pentru cei care doresc să tracteze rulote mari, platforme auto sau remorci pentru bărci care depășesc greutatea standard permisă de categoria B.',
   '[{"name": "Dan V.", "text": "Aveam nevoie de BE pentru platforma auto. Curs scurt, instructori pricepuți. Recomand!", "rating": 5}]',
-  '/images/cat-be.png',
+  '/images/cat-be.webp',
   'Categoria BE Suceava — Permis Remorcă | Start Drive BVL',
   'Obține permisul categoria BE în Suceava. Tractare rulote și remorci grele. Start Drive BVL — instructori specializați și pregătire completă.',
   3),
@@ -59,7 +59,7 @@ INSERT OR REPLACE INTO categories (id, name, slug, hero_title, hero_subtitle, de
   'Pregătirea practică este axată pe manevrarea vehiculelor de gabarit depășit, parcări complexe și conducere preventivă.',
   'Pregătirea practică este personalizată și axată pe manevrarea vehiculelor de gabarit depășit, parcări complexe și conducere preventivă în trafic intens.',
   '[{"name": "Ionuț S.", "text": "Am obținut categoria C pentru cariera de șofer profesionist. Pregătire serioasă pe camion real, nu simulatoare.", "rating": 5}]',
-  '/images/cat-c.png',
+  '/images/cat-c.webp',
   'Categoria C Suceava — Permis Camion | Start Drive BVL',
   'Obține permisul categoria C în Suceava la Start Drive BVL. Pregătire pe camion modern MAN TGL, instructori specializați transport marfă.',
   4),
@@ -74,7 +74,7 @@ INSERT OR REPLACE INTO categories (id, name, slug, hero_title, hero_subtitle, de
   'Cursul include exerciții specifice în poligon (andocare, mers înapoi cu ansamblu) și trasee externe complexe.',
   'Cursul implică exerciții specifice în poligon (andocare, mers înapoi cu ansamblu) și trasee externe complexe destinate transportului de marfă.',
   '[{"name": "Marius T.", "text": "Am luat CE-ul la Start Drive BVL. Exercițiile din poligon m-au pregătit excelent pentru examen. Mulțumesc!", "rating": 5}]',
-  '/images/cat-ce.png',
+  '/images/cat-ce.webp',
   'Categoria CE Suceava — Permis TIR | Start Drive BVL',
   'Obține permisul categoria CE (TIR) în Suceava. Start Drive BVL — pregătire completă cu ansamblu camion + semiremorcă, instructori profesioniști.',
   5),
@@ -89,7 +89,7 @@ INSERT OR REPLACE INTO categories (id, name, slug, hero_title, hero_subtitle, de
   'Pregătirea include ore de teorie specifice transportului de persoane și practică pe autobuz.',
   'Categoria D este destinată celor care doresc să lucreze ca șoferi de autobuz sau autocar, în transport urban sau interurban.',
   '[{"name": "Vasile L.", "text": "Am ales Start Drive BVL pentru categoria D. Pregătirea a fost completă și profesionistă.", "rating": 5}]',
-  '/images/cat-b.png',
+  '/images/cat-b.webp',
   'Categoria D Suceava — Permis Autobuz | Start Drive BVL',
   'Obține permisul categoria D în Suceava la Start Drive BVL. Transport persoane, autobuze. Instructori specializați și program flexibil.',
   6);
@@ -106,9 +106,9 @@ INSERT OR REPLACE INTO faqs (id, question, answer, category, sort_order) VALUES
 (8, 'De unde obțin cazierul judiciar pentru școala de șoferi?', 'Cazierul judiciar cu mențiunea „EXAMEN AUTO" se poate obține online prin platforma Ghișeul.ro (cel mai rapid), fizic de la sediul IPJ Suceava, sau de la orice agenție CEC Bank. Termenul de eliberare online este de 3-5 zile lucrătoare.', 'Acte necesare', 2),
 (9, 'Cum se desfășoară examenul teoretic (sala)?', 'Examenul teoretic se susține la sediul DRPCIV Suceava pe calculator. Primești 26 de întrebări cu variante de răspuns și ai la dispoziție 30 de minute. Trebuie să răspunzi corect la minimum 22 de întrebări (din 26) pentru a promova. Întrebările acoperă legislație rutieră, semnalizare și prim ajutor.', 'Examen teoretic', 1),
 (10, 'Câte greșeli am voie la examenul teoretic auto?', 'La examenul teoretic ai dreptul la maximum 4 greșeli din 26 de întrebări. Asta înseamnă că trebuie să răspunzi corect la cel puțin 22 de întrebări. La Start Drive BVL te pregătim temeinic cu simulări de examen pentru a te asigura că ești 100% pregătit.', 'Examen teoretic', 2),
-(11, 'Cum să te pregătești pentru examenul teoretic auto?', 'Sfaturile noastre: (1) Participă activ la orele de legislație — nu le sări! (2) Folosește aplicații și teste grila online zilnic, (3) Concentrează-te pe prioritățile de trecere și regulile de circulație, (4) Fă cât mai multe simulări de examen, (5) Întreabă instructorul orice nu e clar. Media de promovabilitate la Start Drive BVL este de 95%.', 'Examen teoretic', 3),
+(11, 'Cum să te pregătești pentru examenul teoretic auto?', 'Sfaturile noastre: (1) Participă activ la orele de legislație — nu le sări! (2) Folosește aplicații și teste grila online zilnic, (3) Concentrează-te pe prioritățile de trecere și regulile de circulație, (4) Fă cât mai multe simulări de examen, (5) Întreabă instructorul orice nu e clar. Avem o rată de promovabilitate excelentă la Start Drive BVL.', 'Examen teoretic', 3),
 (12, 'Cum se desfășoară examenul practic de conducere (traseu)?', 'Examenul practic durează aproximativ 25-30 de minute și se desfășoară pe traseele oficiale din Suceava. Vei fi evaluat de un polițist examinator pe abilități precum: pornire de pe loc, schimbarea direcției, parcarea, depășirea, circulația prin intersecții și respectarea regulilor de circulație.', 'Examen practic', 1),
-(13, 'Ce se întâmplă dacă pic examenul auto de traseu?', 'Dacă nu promovezi traseul, va trebui să efectuezi minim 6 ore suplimentare de condus (3 ședințe) și să te reprogramezi. Vestea bună: examenul teoretic rămâne valid pe toată perioada de 1 an a dosarului. La Start Drive BVL, rata de promovabilitate este de 95%, dar în cazul nepromovării, suntem alături de tine cu ore suplimentare.', 'Examen practic', 2),
+(13, 'Ce se întâmplă dacă pic examenul auto de traseu?', 'Dacă nu promovezi traseul, va trebui să efectuezi minim 6 ore suplimentare de condus (3 ședințe) și să te reprogramezi. Vestea bună: examenul teoretic rămâne valid pe toată perioada de 1 an a dosarului. La Start Drive BVL avem o rată de promovabilitate excelentă, dar în cazul nepromovării, suntem alături de tine cu ore suplimentare.', 'Examen practic', 2),
 (14, 'Care sunt cele mai frecvente greșeli la examenul de traseu?', 'Cele mai frecvente greșeli sunt: (1) Neacordarea de prioritate, (2) Oprirea incorectă la semnul STOP, (3) Nerespectarea semnalizării rutiere, (4) Viteza inadecvată condițiilor, (5) Emoțiile și stresul. Instructorii noștri te pregătesc specific pe aceste puncte pentru a le evita.', 'Examen practic', 3),
 (15, 'Cât durează cursul pentru obținerea permisului auto categoria B?', 'Cursul standard pentru categoria B la Start Drive BVL durează cel puțin 4 săptămâni. Acesta cuprinde minim 24 de ore de pregătire teoretică (legislație rutieră) și 30 de ore de pregătire practică (conducere auto) alături de un instructor autorizat. Durata efectivă depinde și de disponibilitatea ta pentru programarea orelor.', 'Categoria B', 1),
 (16, 'În cât timp pot obține permisul auto categoria B?', 'Durata medie de la înscriere până la obținerea permisului este de 2-3 luni, în funcție de ritmul tău de pregătire și de programarea examenelor DRPCIV. Cei mai rapizi cursanți ai noștri au obținut permisul în aproximativ 6 săptămâni.', 'Categoria B', 2),
@@ -267,11 +267,11 @@ Oferim pregătire completă atât pentru B cât și pentru BE. Contactează-ne p
 
 -- ===================== FLOTĂ MAȘINI =====================
 INSERT OR REPLACE INTO cars (id, model, tag, image_url, sort_order) VALUES
-(1, 'Dacia Logan', 'Manual', '/images/flota/dacia-logan.jpeg', 1),
-(2, 'Dacia Sandero', 'Manual', '/images/flota/dacia-sandero.jpeg', 2),
-(3, 'Dacia Logan Stepway', 'Manual', '/images/flota/dacia-logan-stepway.jpeg', 3),
-(4, 'MAN TGL (Camion)', 'Manual', '/images/flota/man-tgl.jpeg', 4),
-(5, 'Dacia Duster', 'Manual', '/images/flota/dacia-duster.jpeg', 5);
+(1, 'Dacia Logan', 'Manual', '/images/flota/dacia-logan.webp', 1),
+(2, 'Dacia Sandero', 'Manual', '/images/flota/dacia-sandero.webp', 2),
+(3, 'Dacia Logan Stepway', 'Manual', '/images/flota/dacia-logan-stepway.webp', 3),
+(4, 'MAN TGL (Camion)', 'Manual', '/images/flota/man-tgl.webp', 4),
+(5, 'Dacia Duster', 'Manual', '/images/flota/dacia-duster.webp', 5);
 
 -- ===================== SETĂRI =====================
 INSERT OR REPLACE INTO settings (key, value) VALUES
@@ -279,7 +279,8 @@ INSERT OR REPLACE INTO settings (key, value) VALUES
 ('contact_schedule', 'Luni - Vineri: 08:00 - 17:00'),
 ('inscrieri_cta_title', 'Ești pregătit să începi?'),
 ('inscrieri_cta_text', 'Înscrie-te astăzi și începe pregătirea pentru permisul tău.'),
-('inscrieri_support_text', 'Nu trebuie să te descurci singur. Echipa Start Drive BVL te ajută cu pregătirea dosarului, programarea examenelor medicale și toate informațiile necesare pentru înscriere.');
+('inscrieri_support_text', 'Nu trebuie să te descurci singur. Echipa Start Drive BVL te ajută cu pregătirea dosarului, programarea examenelor medicale și toate informațiile necesare pentru înscriere.'),
+('instructori_hero_image', '/images/instructori/bivol-sergiu.webp');
 
 -- ===================== TESTIMONIALE GENERAL =====================
 INSERT OR REPLACE INTO testimonials (id, name, text, rating, source, sort_order) VALUES

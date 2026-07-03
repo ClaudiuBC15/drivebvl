@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, Trash2, Save, X, Image as ImageIcon, Edit2 } from 'lucide-react';
+import { compressAndConvertToWebP } from '../../lib/image-compress';
 
 interface GalleryImage {
   id: number;
@@ -39,10 +40,20 @@ export default function GalleryManager({ initialImages }: GalleryManagerProps) {
   const [uploading, setUploading] = useState(false);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, targetField: string) => {
-    const file = e.target.files?.[0];
+    let file = e.target.files?.[0];
     if (!file) return;
 
     setUploading(true);
+    
+    // Auto-compress and convert images to webp client-side
+    if (file.type.startsWith('image/')) {
+      try {
+        file = await compressAndConvertToWebP(file);
+      } catch (err) {
+        console.error('Failed to compress image, using original', err);
+      }
+    }
+
     const formData = new FormData();
     formData.append('file', file);
 

@@ -7,11 +7,23 @@ export const prerender = false;
 const db = getDB(Astro.locals);
 const instructorsFromDb = await queryAll<any>(db, 'SELECT * FROM instructors ORDER BY sort_order ASC');
 
+let dbSettings = {} as Record<string, string>;
+try {
+  const rows = await queryAll<any>(db, 'SELECT key, value FROM settings');
+  rows.forEach(r => {
+    dbSettings[r.key] = r.value;
+  });
+} catch (err) {
+  console.error('Error fetching settings for instructors page:', err);
+}
+
+const heroImage = dbSettings.instructori_hero_image || '/images/instructori/bivol-sergiu.webp';
+
 const getLocalImage = (name: string, fallback: string) => {
   const slug = name.toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  if (slug === 'bivol-sergiu') return '/images/instructori/bivol-sergiu.jpeg';
+  if (slug === 'bivol-sergiu') return '/images/instructori/bivol-sergiu.webp';
   if (['tofan-florin', 'bejinariu-florin', 'radu-matei'].includes(slug)) {
-    return `/images/instructori/${slug}.png`;
+    return `/images/instructori/${slug}.webp`;
   }
   return fallback;
 };
@@ -109,7 +121,7 @@ const instructors = instructorsFromDb.map((inst, index) => {
           
           <div class="relative rounded-[32px] overflow-hidden shadow-2xl border-[6px] border-white bg-slate-100">
             <img 
-              src="/images/instructori/bivol-sergiu.jpeg" 
+              src={heroImage} 
               alt="Instructor Sergiu Bivol și mașina școlii auto" 
               class="w-full aspect-[4/3] object-cover"
             />
@@ -207,7 +219,7 @@ const instructors = instructorsFromDb.map((inst, index) => {
       <!-- Car Image Column -->
       <div class="hidden lg:block lg:col-span-4 relative z-10 select-none pointer-events-none">
         <img 
-          src="/images/about-car.png" 
+          src="/images/about-car.webp" 
           alt="Mașină școală auto" 
           class="w-full h-auto object-contain scale-110 translate-x-[-10%]"
         />
