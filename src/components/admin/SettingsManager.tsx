@@ -209,6 +209,30 @@ export default function SettingsManager({ initialSettings }: SettingsManagerProp
             </div>
           </div>
 
+          {/* Social Links: Facebook & TikTok */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-[10px] font-bold text-slate-450 uppercase tracking-wider mb-2">Link Facebook</label>
+              <input
+                type="text"
+                value={settings.contact_facebook || ''}
+                onChange={(e) => setSettings(prev => ({ ...prev, contact_facebook: e.target.value }))}
+                className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-750 placeholder-slate-400 focus:border-[#cc0000] transition-all outline-none text-sm font-light"
+                placeholder="Ex: https://www.facebook.com/pagina-ta"
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold text-slate-450 uppercase tracking-wider mb-2">Link TikTok</label>
+              <input
+                type="text"
+                value={settings.contact_tiktok || ''}
+                onChange={(e) => setSettings(prev => ({ ...prev, contact_tiktok: e.target.value }))}
+                className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-750 placeholder-slate-400 focus:border-[#cc0000] transition-all outline-none text-sm font-light"
+                placeholder="Ex: https://www.tiktok.com/@contul-tau"
+              />
+            </div>
+          </div>
+
           <div>
             <label className="block text-[10px] font-bold text-slate-450 uppercase tracking-wider mb-2">Titlu Secțiune Finală CTA</label>
             <input

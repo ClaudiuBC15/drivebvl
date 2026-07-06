@@ -2,7 +2,7 @@
 import MainLayout from '../layouts/main.astro';
 import Button from '../components/Button.astro';
 import SectionHeading from '../components/SectionHeading.astro';
-import Testimonials3D from '../components/ui/3d-testimonials-demo';
+import GoogleReviewsSlider from '../components/ui/GoogleReviewsSlider';
 import StatsCards from '../components/ui/StatsCards';
 import { getDB, queryAll } from '../lib/db';
 
@@ -437,37 +437,48 @@ const googleReviewsUrl = "https://www.google.com/search?q=START+DRIVE+BVL+(Scoal
   </section>
 
   <!-- ==================== RECENZII ==================== -->
-  <section class="py-24 sm:py-28 bg-[#0a0a0b] overflow-hidden relative">
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-[#cc0000]/12 blur-[130px] rounded-full pointer-events-none"></div>
+  <section class="pt-16 pb-28 sm:pb-36 bg-[#f8fafc]/60 overflow-hidden relative border-t border-slate-100">
+    <!-- Road Line Graphic in Background -->
+    <div class="absolute inset-0 w-full h-full pointer-events-none opacity-[0.03] z-0 flex items-center justify-center">
+      <svg viewBox="0 0 1200 600" class="w-[120%] h-full text-slate-900" fill="none">
+        <path d="M0,150 C300,50 900,550 1200,450" stroke="currentColor" stroke-width="40" stroke-linecap="round" />
+        <path d="M0,150 C300,50 900,550 1200,450" stroke="#fff" stroke-width="2" stroke-dasharray="15,15" stroke-linecap="round" />
+      </svg>
+    </div>
+
+    <!-- Traffic Light Graphic on the Left -->
+    <div class="absolute left-6 md:left-14 top-1/2 -translate-y-1/2 w-16 md:w-24 h-48 pointer-events-none opacity-[0.08] md:opacity-[0.14] z-0 hidden lg:block">
+      <svg viewBox="0 0 80 200" fill="none" class="w-full h-full text-slate-800">
+        <rect x="36" y="100" width="8" height="100" fill="currentColor" rx="2" />
+        <rect x="20" y="10" width="40" height="100" rx="8" fill="currentColor" stroke="currentColor" stroke-width="2" />
+        <circle cx="40" cy="30" r="10" fill="#ef4444" opacity="0.9" />
+        <circle cx="40" cy="60" r="10" fill="#f59e0b" opacity="0.3" />
+        <circle cx="40" cy="90" r="10" fill="#10b981" opacity="0.3" />
+      </svg>
+    </div>
+
     <div class="container-wide relative z-10">
-      <SectionHeading eyebrow="Ce Spun Cursanții" title="Recenzii &amp; Testimoniale" tone="light" />
-      <div class="flex items-center justify-center gap-3 mb-14 -mt-8 reveal">
-        <div class="flex gap-0.5">
-          {[1,2,3,4,5].map(() => (
-            <svg class="w-6 h-6 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          ))}
-        </div>
-        <span class="text-white font-bold text-lg">5.0/5</span>
-        <span class="text-slate-400 text-sm">din recenzii Google</span>
+      
+      <div class="mt-8 reveal">
+        <GoogleReviewsSlider reviewsUrl={googleReviewsUrl} client:load />
       </div>
+    </div>
 
-      <!-- 3D Testimonials -->
-      <div class="flex justify-center w-full reveal py-4">
-        <Testimonials3D client:load />
-      </div>
-
-      <!-- CTA to Google Reviews -->
-      <div class="text-center mt-12 reveal">
-        <Button href={googleReviewsUrl} variant="outline" class="!text-[#cc0000] !border-[#cc0000] hover:!bg-[#cc0000] hover:!text-white">
-          <span>Vezi toate recenziile pe Google</span>
-          <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-        </Button>
-      </div>
+    <!-- Bottom Overlapping Wavy Ribbons (Mockup style) -->
+    <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-none pointer-events-none z-10">
+      <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="relative block w-[calc(100%+1.3px)] h-[50px] md:h-[90px]">
+        <!-- Red Ribbon -->
+        <path d="M0,50 C300,110 900,10 1200,70 L1200,85 C900,25 300,125 0,65 Z" fill="#cc0000" opacity="0.95" />
+        <!-- Black Ribbon -->
+        <path d="M0,70 C300,130 900,30 1200,90 L1200,105 C900,45 300,145 0,85 Z" fill="#0a0a0b" />
+        <!-- White Filler (blends with next section) -->
+        <path d="M0,85 C300,145 900,45 1200,105 L1200,120 L0,120 Z" fill="#ffffff" />
+      </svg>
     </div>
   </section>
 
   <!-- ==================== MAȘINI CAROUSEL ==================== -->
-  <section class="py-24 sm:py-28 bg-white">
+  <section class="pt-10 pb-24 sm:pt-12 sm:pb-28 bg-white">
     <div class="container-wide">
       <div class="flex flex-col sm:flex-row justify-between items-end gap-6 mb-12 reveal">
         <div>

@@ -14,11 +14,15 @@ export default defineConfig({
     },
   }),
   integrations: [react()],
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'viewport',
+  },
   devToolbar: {
     enabled: false,
   },
   server: {
-    port: 3000,
+    port: 3001,
     host: true,
     strictPort: true,
   },
