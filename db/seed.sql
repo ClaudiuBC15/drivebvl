@@ -89,7 +89,7 @@ INSERT OR REPLACE INTO categories (id, name, slug, hero_title, hero_subtitle, de
   'Pregătirea include ore de teorie specifice transportului de persoane și practică pe autobuz.',
   'Categoria D este destinată celor care doresc să lucreze ca șoferi de autobuz sau autocar, în transport urban sau interurban.',
   '[{"name": "Vasile L.", "text": "Am ales Start Drive BVL pentru categoria D. Pregătirea a fost completă și profesionistă.", "rating": 5}]',
-  '/images/cat-b.webp',
+  '/images/cat-d.png',
   'Categoria D Suceava — Permis Autobuz | Start Drive BVL',
   'Obține permisul categoria D în Suceava la Start Drive BVL. Transport persoane, autobuze. Instructori specializați și program flexibil.',
   6);

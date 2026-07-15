@@ -7,28 +7,41 @@ export const prerender = false;
 const { cat } = Astro.params;
 const db = getDB(Astro.locals);
 
-// Capitalize category name for display
-const formattedCat = cat ? cat.toUpperCase() : '';
+// Helper to slugify category names (strips diacritics and special characters)
+function slugifyCategory(categoryName: string): string {
+  return categoryName
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // remove diacritics
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
 
-// Fetch filtered articles
-const articles = await queryAll<any>(
-  db,
-  "SELECT * FROM articles WHERE status = 'published' AND UPPER(category) = ? ORDER BY created_at DESC",
-  [formattedCat]
-);
-
-// Fetch recent articles for the sidebar
-const recentArticles = await queryAll<any>(
-  db,
-  "SELECT * FROM articles WHERE status = 'published' ORDER BY created_at DESC LIMIT 4"
-);
-
-// Fetch other categories
+// Fetch distinct categories of published articles
 const categoryRows = await queryAll<any>(
   db,
   "SELECT DISTINCT category FROM articles WHERE status = 'published' AND category IS NOT NULL AND category != ''"
 );
-const categories = ['Toate', ...categoryRows.map(r => r.category)];
+const categoryNames = categoryRows.map(r => r.category);
+const categories = ['Toate', ...categoryNames];
+
+// Find original category name matching the slugified route parameter
+const originalCatName = categoryNames.find(c => slugifyCategory(c) === cat) || cat;
+const formattedCat = originalCatName.toUpperCase();
+
+// Fetch all published articles
+const allArticles = await queryAll<any>(
+  db,
+  "SELECT * FROM articles WHERE status = 'published' ORDER BY created_at DESC"
+);
+
+// Filter articles matching the slugified category parameter in memory
+const articles = allArticles.filter(art => 
+  art.category && slugifyCategory(art.category) === cat
+);
+
+// Fetch recent articles for the sidebar (first 4 published articles)
+const recentArticles = allArticles.slice(0, 4);
 
 // Date formatting helper
 function formatDate(dateStr: string) {
@@ -78,8 +91,8 @@ function formatDate(dateStr: string) {
           <!-- Category Tabs on top -->
           <div class="flex flex-wrap gap-2.5 pb-2 overflow-x-auto no-scrollbar border-b border-slate-100">
             {categories.map((c) => {
-              const isActive = (c.toLowerCase() === formattedCat.toLowerCase());
-              const targetUrl = c === 'Toate' ? '/blog' : `/blog/categorie/${c.toLowerCase()}`;
+              const isActive = (c.toLowerCase() === originalCatName.toLowerCase());
+              const targetUrl = c === 'Toate' ? '/blog' : `/blog/categorie/${slugifyCategory(c)}`;
               return (
                 <a
                   href={targetUrl}
