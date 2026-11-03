@@ -5,6 +5,8 @@ import { getDB, queryAll } from '../../lib/db';
 
 export const prerender = false;
 
+Astro.response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate, no-cache');
+
 const db = getDB(Astro.locals);
 
 // Parse query parameters

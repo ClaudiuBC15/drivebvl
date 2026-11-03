@@ -47,6 +47,7 @@ export async function PUT(context: any) {
     const adminNameRow = await queryOne<{ value: string }>(db, "SELECT value FROM settings WHERE key = 'admin_name'");
     const authorName = adminNameRow?.value || 'Bivol Sergiu';
 
+    const articleId = Number(id) || id;
     await execute(
       db,
       `UPDATE articles 
@@ -64,13 +65,16 @@ export async function PUT(context: any) {
         seo_description || '',
         status || 'draft',
         authorName,
-        id
+        articleId
       ]
     );
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store, no-cache, must-revalidate'
+      }
     });
   } catch (err: any) {
     return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500 });

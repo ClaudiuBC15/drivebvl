@@ -13,12 +13,18 @@ export async function GET(context: any) {
     const articles = await queryAll(db, 'SELECT * FROM articles ORDER BY created_at DESC');
     return new Response(JSON.stringify({ success: true, articles }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store, no-cache, must-revalidate'
+      }
     });
   } catch (err: any) {
     return new Response(JSON.stringify({ success: false, error: err.message }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store, no-cache, must-revalidate'
+      }
     });
   }
 }

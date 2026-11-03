@@ -7,6 +7,8 @@ import BlogManager from '../../components/admin/BlogManager';
 
 export const prerender = false;
 
+Astro.response.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+
 const redirect = requireAuth(Astro.request);
 if (redirect) {
   return redirect;

@@ -42,10 +42,11 @@ export default function BlogManager({ initialArticles }: BlogManagerProps) {
     image_url: '',
     seo_title: '',
     seo_description: '',
-    status: 'draft' as 'draft' | 'published'
+    status: 'published' as 'draft' | 'published'
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [uploading, setUploading] = useState(false);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, targetField: string) => {
@@ -97,7 +98,7 @@ export default function BlogManager({ initialArticles }: BlogManagerProps) {
       image_url: '',
       seo_title: '',
       seo_description: '',
-      status: 'draft'
+      status: 'published'
     });
     setEditingId(null);
     setIsEditing(true);
@@ -213,6 +214,8 @@ export default function BlogManager({ initialArticles }: BlogManagerProps) {
           setArticles(refreshedData.articles);
         }
         setIsEditing(false);
+        setSuccessMessage(editingId ? 'Articolul a fost actualizat cu succes!' : 'Articolul a fost publicat cu succes!');
+        setTimeout(() => setSuccessMessage(''), 5000);
       } else {
         setError(data.error || 'A apărut o eroare la salvare.');
       }
@@ -297,6 +300,22 @@ export default function BlogManager({ initialArticles }: BlogManagerProps) {
           >
             <Plus size={14} />
             Adaugă Articol
+          </button>
+        </div>
+      )}
+
+      {successMessage && !isEditing && (
+        <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold p-4 rounded-xl flex items-center justify-between shadow-sm animate-fade-in">
+          <div className="flex items-center gap-2">
+            <Check size={16} className="text-emerald-600" />
+            <span>{successMessage}</span>
+          </div>
+          <button 
+            type="button" 
+            onClick={() => setSuccessMessage('')}
+            className="text-emerald-500 hover:text-emerald-800"
+          >
+            <X size={14} />
           </button>
         </div>
       )}
