@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Save } from 'lucide-react';
+import { Save, Send, CheckCircle2, AlertCircle, MessageSquare } from 'lucide-react';
 import { compressAndConvertToWebP } from '../../lib/image-compress';
 
 interface SettingsManagerProps {
@@ -13,6 +13,8 @@ export default function SettingsManager({ initialSettings }: SettingsManagerProp
   const [settingsError, setSettingsError] = useState('');
   const [settingsSuccess, setSettingsSuccess] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [telegramTesting, setTelegramTesting] = useState(false);
+  const [telegramTestResult, setTelegramTestResult] = useState<{ success: boolean; message?: string } | null>(null);
 
   // File Upload Helper
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, targetField: string) => {
@@ -117,6 +119,31 @@ export default function SettingsManager({ initialSettings }: SettingsManagerProp
       favicon_url: url,
       favicon_history: JSON.stringify(history)
     }));
+  };
+
+  const handleTestTelegram = async () => {
+    setTelegramTesting(true);
+    setTelegramTestResult(null);
+    try {
+      const res = await fetch('/api/settings/test-telegram', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          botToken: settings.telegram_bot_token,
+          chatId: settings.telegram_chat_id
+        })
+      });
+      const data = (await res.json()) as any;
+      if (res.ok && data.success) {
+        setTelegramTestResult({ success: true, message: data.message || 'Mesaj de test trimis cu succes pe grupul Telegram!' });
+      } else {
+        setTelegramTestResult({ success: false, message: data.error || 'Eroare la trimiterea mesajului de test.' });
+      }
+    } catch (err: any) {
+      setTelegramTestResult({ success: false, message: 'Eroare de rețea la testarea conexiunii Telegram.' });
+    } finally {
+      setTelegramTesting(false);
+    }
   };
 
   // Handle Settings Save
@@ -472,6 +499,120 @@ export default function SettingsManager({ initialSettings }: SettingsManagerProp
                   Salvează Setări
                 </>
               )}
+            </button>
+          </div>
+        </form>
+      </section>
+
+      {/* Telegram Group Notifications Section */}
+      <section className="bg-white border border-slate-200/60 rounded-3xl p-6 md:p-8 shadow-[0_4px_25px_-5px_rgba(0,0,0,0.02)] max-w-4xl mt-10">
+        <div className="border-b border-slate-100 pb-4 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <h4 className="text-base font-extrabold text-slate-800 uppercase tracking-wider">
+                Notificări Telegram (Înscrieri pe Telefon)
+              </h4>
+            </div>
+            <p className="text-xs text-slate-450 font-normal mt-1">
+              Primești instant fiecare înscriere și mesaj nou de pe site direct pe telefon, în grupul Telegram al echipei.
+            </p>
+          </div>
+          <label className="relative inline-flex items-center cursor-pointer select-none self-start sm:self-auto">
+            <input
+              type="checkbox"
+              checked={settings.telegram_enabled !== '0'}
+              onChange={(e) => setSettings(prev => ({ ...prev, telegram_enabled: e.target.checked ? '1' : '0' }))}
+              className="sr-only peer"
+            />
+            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#cc0000]"></div>
+            <span className="ml-3 text-xs font-bold text-slate-700">
+              {settings.telegram_enabled !== '0' ? 'Activat' : 'Dezactivat'}
+            </span>
+          </label>
+        </div>
+
+        <form onSubmit={handleSettingsSave} className="space-y-6">
+          <div className="p-4 bg-slate-50 border border-slate-200/70 rounded-2xl flex items-start gap-3">
+            <div className="w-8 h-8 rounded-xl bg-red-50 text-[#cc0000] flex items-center justify-center shrink-0 mt-0.5">
+              <MessageSquare size={16} />
+            </div>
+            <div className="text-xs text-slate-600 space-y-1">
+              <p className="font-bold text-slate-800">
+                Grup conectat: <span className="text-[#cc0000]">Start Drive Inscrieri</span>
+              </p>
+              <p className="leading-relaxed">
+                Fiecare înscriere trimisă pe site ajunge automat în grupul de Telegram al școlii auto cu toate detaliile: Nume, Telefon, Categorie și buton de apel rapid pe WhatsApp.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-[10px] font-bold text-slate-450 uppercase tracking-wider mb-2">
+                Telegram Bot Token
+              </label>
+              <input
+                type="text"
+                value={settings.telegram_bot_token || ''}
+                onChange={(e) => setSettings(prev => ({ ...prev, telegram_bot_token: e.target.value }))}
+                className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-750 placeholder-slate-400 focus:border-[#cc0000] transition-all outline-none text-sm font-mono"
+                placeholder="Ex: 9007953709:AAE2orLDk..."
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold text-slate-450 uppercase tracking-wider mb-2">
+                Telegram Group ID (Chat ID)
+              </label>
+              <input
+                type="text"
+                value={settings.telegram_chat_id || ''}
+                onChange={(e) => setSettings(prev => ({ ...prev, telegram_chat_id: e.target.value }))}
+                className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-750 placeholder-slate-400 focus:border-[#cc0000] transition-all outline-none text-sm font-mono"
+                placeholder="Ex: -5188167926"
+              />
+            </div>
+          </div>
+
+          {telegramTestResult && (
+            <div
+              className={`p-3.5 rounded-xl text-xs font-semibold flex items-center gap-2 ${
+                telegramTestResult.success
+                  ? 'bg-emerald-50 border border-emerald-200 text-emerald-700'
+                  : 'bg-red-50 border border-red-200 text-red-700'
+              }`}
+            >
+              {telegramTestResult.success ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+              <span>{telegramTestResult.message}</span>
+            </div>
+          )}
+
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-100">
+            <button
+              type="button"
+              onClick={handleTestTelegram}
+              disabled={telegramTesting}
+              className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 px-4 rounded-xl transition-all duration-200 text-xs uppercase cursor-pointer disabled:opacity-50"
+            >
+              {telegramTesting ? (
+                <>
+                  <div className="w-3.5 h-3.5 rounded-full border border-slate-500 border-t-transparent animate-spin"></div>
+                  Se trimite testul...
+                </>
+              ) : (
+                <>
+                  <Send size={13} />
+                  Trimite mesaj de test în grup
+                </>
+              )}
+            </button>
+
+            <button
+              type="submit"
+              disabled={settingsSaving}
+              className="flex items-center gap-1.5 bg-[#cc0000] hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-xl transition-all duration-200 text-xs uppercase shadow-md cursor-pointer disabled:opacity-50"
+            >
+              {settingsSaving ? 'Se salvează...' : 'Salvează Setări Telegram'}
             </button>
           </div>
         </form>

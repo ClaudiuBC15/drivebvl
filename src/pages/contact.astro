@@ -167,14 +167,15 @@ const heroImage = dbSettings.contact_hero_image || '/images/contact_student.webp
                     name="name"
                     required
                     class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-12 pr-4 py-3.5 text-slate-800 placeholder-slate-400 focus:bg-white focus:border-[#cc0000] focus:ring-4 focus:ring-red-500/10 transition-all outline-none"
-                    placeholder="Nume complet"
+                    placeholder="Nume complet *"
                   />
                 </div>
+                <p id="contact-err-name" class="hidden text-xs text-red-600 font-semibold mt-1.5"></p>
               </div>
 
               <!-- Phone Input -->
               <div>
-                <label for="phone" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Telefon</label>
+                <label for="phone" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Telefon *</label>
                 <div class="relative">
                   <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -186,15 +187,17 @@ const heroImage = dbSettings.contact_hero_image || '/images/contact_student.webp
                     id="phone"
                     name="phone"
                     required
+                    inputmode="numeric"
                     class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-12 pr-4 py-3.5 text-slate-800 placeholder-slate-400 focus:bg-white focus:border-[#cc0000] focus:ring-4 focus:ring-red-500/10 transition-all outline-none"
-                    placeholder="Telefon"
+                    placeholder="ex: 0744 123 456"
                   />
                 </div>
+                <p id="contact-err-phone" class="hidden text-xs text-red-600 font-semibold mt-1.5"></p>
               </div>
 
               <!-- Email Input -->
               <div>
-                <label for="email" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Email</label>
+                <label for="email" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Email *</label>
                 <div class="relative">
                   <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -207,14 +210,15 @@ const heroImage = dbSettings.contact_hero_image || '/images/contact_student.webp
                     name="email"
                     required
                     class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-12 pr-4 py-3.5 text-slate-800 placeholder-slate-400 focus:bg-white focus:border-[#cc0000] focus:ring-4 focus:ring-red-500/10 transition-all outline-none"
-                    placeholder="Email"
+                    placeholder="email@exemplu.com"
                   />
                 </div>
+                <p id="contact-err-email" class="hidden text-xs text-red-600 font-semibold mt-1.5"></p>
               </div>
 
               <!-- Category Dropdown -->
               <div>
-                <label for="category" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Categoria dorită</label>
+                <label for="category" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Categoria dorită *</label>
                 <div class="relative">
                   <select
                     id="category"
@@ -222,12 +226,13 @@ const heroImage = dbSettings.contact_hero_image || '/images/contact_student.webp
                     required
                     class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-slate-850 focus:bg-white focus:border-[#cc0000] focus:ring-4 focus:ring-red-500/10 transition-all outline-none appearance-none cursor-pointer"
                   >
-                    <option value="" disabled selected>Alege categoria...</option>
-                    <option value="B">Categoria B</option>
-                    <option value="BE">Categoria BE</option>
-                    <option value="C">Categoria C</option>
-                    <option value="CE">Categoria CE</option>
-                    <option value="D">Categoria D</option>
+                    <option value="" disabled selected>Alege categoria *</option>
+                    <option value="Categoria B">Categoria B</option>
+                    <option value="Categoria B1">Categoria B1</option>
+                    <option value="Categoria BE">Categoria BE</option>
+                    <option value="Categoria C">Categoria C</option>
+                    <option value="Categoria CE">Categoria CE</option>
+                    <option value="Categoria D">Categoria D</option>
                   </select>
                   <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -235,6 +240,7 @@ const heroImage = dbSettings.contact_hero_image || '/images/contact_student.webp
                     </svg>
                   </div>
                 </div>
+                <p id="contact-err-category" class="hidden text-xs text-red-600 font-semibold mt-1.5"></p>
               </div>
 
               <!-- Message Input -->
@@ -621,42 +627,162 @@ const heroImage = dbSettings.contact_hero_image || '/images/contact_student.webp
       const successContainer = document.getElementById('success-container');
       const resetBtn = document.getElementById('reset-form-btn');
 
+      // Filter phone input to digits and symbols only
+      const contactPhoneInput = document.getElementById('phone');
+      if (contactPhoneInput) {
+        contactPhoneInput.addEventListener('input', () => {
+          contactPhoneInput.value = contactPhoneInput.value.replace(/[^0-9+\s\-]/g, '');
+        });
+      }
+
+      // Clear field errors on input
+      ['name', 'phone', 'email', 'category'].forEach(id => {
+        const el = document.getElementById(id);
+        const errEl = document.getElementById('contact-err-' + id);
+        if (el) {
+          const clear = () => {
+            el.classList.remove('!border-red-500', 'ring-4', 'ring-red-500/10');
+            if (errEl) errEl.classList.add('hidden');
+          };
+          el.addEventListener('input', clear);
+          el.addEventListener('change', clear);
+        }
+      });
+
       if (form && formContainer && successContainer) {
         form.addEventListener('submit', async (e) => {
           e.preventDefault();
+
+          const nameEl = document.getElementById('name');
+          const phoneEl = document.getElementById('phone');
+          const emailEl = document.getElementById('email');
+          const categoryEl = document.getElementById('category');
+
+          const errName = document.getElementById('contact-err-name');
+          const errPhone = document.getElementById('contact-err-phone');
+          const errEmail = document.getElementById('contact-err-email');
+          const errCategory = document.getElementById('contact-err-category');
+
+          let valid = true;
+
+          // Reset errors
+          [nameEl, phoneEl, emailEl, categoryEl].forEach(el => {
+            if (el) el.classList.remove('!border-red-500', 'ring-4', 'ring-red-500/10');
+          });
+          [errName, errPhone, errEmail, errCategory].forEach(el => {
+            if (el) { el.textContent = ''; el.classList.add('hidden'); }
+          });
+
+          // Validate Name
+          const nameVal = nameEl?.value.trim() || '';
+          if (!nameVal || nameVal.length < 3) {
+            valid = false;
+            nameEl?.classList.add('!border-red-500', 'ring-4', 'ring-red-500/10');
+            if (errName) {
+              errName.textContent = 'Introdu numele complet (minim 3 caractere).';
+              errName.classList.remove('hidden');
+            }
+          }
+
+          // Validate Phone
+          const phoneVal = phoneEl?.value.trim() || '';
+          const phoneDigits = phoneVal.replace(/[^0-9]/g, '');
+          if (!phoneVal) {
+            valid = false;
+            phoneEl?.classList.add('!border-red-500', 'ring-4', 'ring-red-500/10');
+            if (errPhone) {
+              errPhone.textContent = 'Numărul de telefon este obligatoriu.';
+              errPhone.classList.remove('hidden');
+            }
+          } else if (phoneDigits.length < 10) {
+            valid = false;
+            phoneEl?.classList.add('!border-red-500', 'ring-4', 'ring-red-500/10');
+            if (errPhone) {
+              errPhone.textContent = 'Introdu un număr valid din minim 10 cifre (ex: 0744 123 456).';
+              errPhone.classList.remove('hidden');
+            }
+          }
+
+          // Validate Email
+          const emailVal = emailEl?.value.trim() || '';
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+          if (!emailVal) {
+            valid = false;
+            emailEl?.classList.add('!border-red-500', 'ring-4', 'ring-red-500/10');
+            if (errEmail) {
+              errEmail.textContent = 'Adresa de email este obligatorie.';
+              errEmail.classList.remove('hidden');
+            }
+          } else if (!emailRegex.test(emailVal)) {
+            valid = false;
+            emailEl?.classList.add('!border-red-500', 'ring-4', 'ring-red-500/10');
+            if (errEmail) {
+              errEmail.textContent = 'Introdu o adresă de email validă (ex: nume@domeniu.ro).';
+              errEmail.classList.remove('hidden');
+            }
+          }
+
+          // Validate Category
+          const categoryVal = categoryEl?.value || '';
+          if (!categoryVal) {
+            valid = false;
+            categoryEl?.classList.add('!border-red-500', 'ring-4', 'ring-red-500/10');
+            if (errCategory) {
+              errCategory.textContent = 'Te rugăm să alegi o categorie auto din listă.';
+              errCategory.classList.remove('hidden');
+            }
+          }
+
+          if (!valid) {
+            return;
+          }
+
+          const submitBtn = form.querySelector('button[type="submit"]');
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Se trimite...';
+          }
           
           const formData = new FormData(form);
           const email = formData.get('email');
           const originalMessage = formData.get('message') || '';
           
-          // Format message to include email on top, as the database leads table does not have an email column
           const message = email ? `Email: ${email}\n\nMesaj:\n${originalMessage}` : originalMessage;
 
           const payload = {
             name: formData.get('name'),
             phone: formData.get('phone'),
+            email: email,
             category: formData.get('category'),
             message: message,
             source: 'website_contact_page'
           };
 
           try {
-            await fetch('/api/leads', {
+            const res = await fetch('/api/leads', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(payload)
             });
+            const data = await res.json().catch(() => ({}));
             
-            // Switch views on success
-            formContainer.classList.add('hidden');
-            successContainer.classList.remove('hidden');
-            form.reset();
+            if (res.ok && data.success) {
+              formContainer.classList.add('hidden');
+              successContainer.classList.remove('hidden');
+              form.reset();
+            } else {
+              alert(data.error || 'A apărut o eroare la trimitere.');
+            }
           } catch (err) {
             console.error('Error submitting contact lead:', err);
-            // Fallback success view for a good user experience
             formContainer.classList.add('hidden');
             successContainer.classList.remove('hidden');
             form.reset();
+          } finally {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Trimite mesajul';
+            }
           }
         });
       }

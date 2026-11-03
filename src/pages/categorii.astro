@@ -39,8 +39,8 @@ const categories = categoriesFromDb.map(cat => ({
     {categories.map((cat, index) => (
       <div class="flex flex-col reveal" style={`transition-delay: ${index * 100}ms`}>
         <div class="grid lg:grid-cols-2 gap-10 items-start mb-8">
-          <a href={`/categoria/${cat.slug}`} class="block rounded-2xl overflow-hidden shadow-lg h-48 sm:h-64 lg:h-96 w-full group">
-            <img src={cat.image} alt={cat.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+          <a href={`/categoria/${cat.slug}`} class="block rounded-2xl overflow-hidden shadow-lg aspect-[4/3] sm:aspect-[16/10] lg:h-96 w-full group [transform:translateZ(0)] isolate bg-slate-100">
+            <img src={cat.image} alt={cat.name} class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 will-change-transform" loading="lazy" decoding="async" />
           </a>
           
           <div class="flex flex-col">

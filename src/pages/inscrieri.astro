@@ -118,39 +118,43 @@ const faqSchema = {
             <div id="form-step-1" class="form-step space-y-4">
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="field-name">Nume complet</label>
+                  <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="field-name">Nume complet *</label>
                   <input type="text" id="field-name" name="name" required placeholder="ex: Popescu Andrei"
                     class="w-full bg-slate-50/60 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm placeholder-slate-400 focus:border-[#cc0000] focus:ring-4 focus:ring-red-500/10 outline-none transition-all" />
+                  <p id="err-name" class="hidden text-xs text-red-600 font-semibold mt-1.5"></p>
                 </div>
                 <div>
-                  <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="field-email">Email</label>
+                  <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="field-email">Email (opțional)</label>
                   <input type="email" id="field-email" name="email" placeholder="ex: andrei@email.com"
                     class="w-full bg-slate-50/60 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm placeholder-slate-400 focus:border-[#cc0000] focus:ring-4 focus:ring-red-500/10 outline-none transition-all" />
+                  <p id="err-email" class="hidden text-xs text-red-600 font-semibold mt-1.5"></p>
                 </div>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="field-phone">Telefon</label>
-                  <input type="tel" id="field-phone" name="phone" required placeholder="ex: 07xx xxx xxx"
+                  <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="field-phone">Telefon *</label>
+                  <input type="tel" id="field-phone" name="phone" required placeholder="ex: 0744 123 456" inputmode="numeric"
                     class="w-full bg-slate-50/60 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm placeholder-slate-400 focus:border-[#cc0000] focus:ring-4 focus:ring-red-500/10 outline-none transition-all" />
+                  <p id="err-phone" class="hidden text-xs text-red-600 font-semibold mt-1.5"></p>
                 </div>
                 <div>
-                  <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="field-category">Categorie dorită</label>
+                  <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="field-category">Categorie dorită *</label>
                   <div class="relative">
-                    <select id="field-category" name="category"
+                    <select id="field-category" name="category" required
                       class="w-full bg-slate-50/60 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm focus:border-[#cc0000] focus:ring-4 focus:ring-red-500/10 outline-none transition-all appearance-none cursor-pointer">
-                      <option value="">Alege categoria</option>
-                      <option>Categoria B</option>
-                      <option>Categoria B1</option>
-                      <option>Categoria BE</option>
-                      <option>Categoria C</option>
-                      <option>Categoria CE</option>
-                      <option>Categoria D</option>
+                      <option value="">Alege categoria *</option>
+                      <option value="Categoria B">Categoria B</option>
+                      <option value="Categoria B1">Categoria B1</option>
+                      <option value="Categoria BE">Categoria BE</option>
+                      <option value="Categoria C">Categoria C</option>
+                      <option value="Categoria CE">Categoria CE</option>
+                      <option value="Categoria D">Categoria D</option>
                     </select>
                     <div class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">
                       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
                     </div>
                   </div>
+                  <p id="err-category" class="hidden text-xs text-red-600 font-semibold mt-1.5"></p>
                 </div>
               </div>
             </div>
@@ -943,19 +947,119 @@ const faqSchema = {
         }
       }
 
+      // Restrict phone input to numbers, plus, spaces, dashes
+      const phoneInput = document.getElementById('field-phone');
+      if (phoneInput) {
+        phoneInput.addEventListener('input', () => {
+          phoneInput.value = phoneInput.value.replace(/[^0-9+\s\-]/g, '');
+        });
+      }
+
+      function validateStep1() {
+        let valid = true;
+        const nameEl = document.getElementById('field-name');
+        const phoneEl = document.getElementById('field-phone');
+        const emailEl = document.getElementById('field-email');
+        const categoryEl = document.getElementById('field-category');
+
+        const errName = document.getElementById('err-name');
+        const errPhone = document.getElementById('err-phone');
+        const errEmail = document.getElementById('err-email');
+        const errCategory = document.getElementById('err-category');
+
+        // Reset errors
+        [nameEl, phoneEl, emailEl, categoryEl].forEach(el => {
+          if (el) el.classList.remove('!border-red-500', 'ring-4', 'ring-red-500/10');
+        });
+        [errName, errPhone, errEmail, errCategory].forEach(el => {
+          if (el) {
+            el.textContent = '';
+            el.classList.add('hidden');
+          }
+        });
+
+        // 1. Validate Name
+        const nameVal = nameEl?.value.trim() || '';
+        if (!nameVal || nameVal.length < 3) {
+          valid = false;
+          nameEl?.classList.add('!border-red-500', 'ring-4', 'ring-red-500/10');
+          if (errName) {
+            errName.textContent = 'Introdu numele complet (minim 3 caractere).';
+            errName.classList.remove('hidden');
+          }
+        }
+
+        // 2. Validate Phone
+        const phoneVal = phoneEl?.value.trim() || '';
+        const phoneDigits = phoneVal.replace(/[^0-9]/g, '');
+        if (!phoneVal) {
+          valid = false;
+          phoneEl?.classList.add('!border-red-500', 'ring-4', 'ring-red-500/10');
+          if (errPhone) {
+            errPhone.textContent = 'Numărul de telefon este obligatoriu.';
+            errPhone.classList.remove('hidden');
+          }
+        } else if (phoneDigits.length < 10) {
+          valid = false;
+          phoneEl?.classList.add('!border-red-500', 'ring-4', 'ring-red-500/10');
+          if (errPhone) {
+            errPhone.textContent = 'Introdu un număr valid din minim 10 cifre (ex: 0744 123 456).';
+            errPhone.classList.remove('hidden');
+          }
+        }
+
+        // 3. Validate Category (must be selected)
+        const catVal = categoryEl?.value || '';
+        if (!catVal || catVal === '') {
+          valid = false;
+          categoryEl?.classList.add('!border-red-500', 'ring-4', 'ring-red-500/10');
+          if (errCategory) {
+            errCategory.textContent = 'Te rugăm să alegi o categorie auto din listă.';
+            errCategory.classList.remove('hidden');
+          }
+        }
+
+        // 4. Validate Email (optional, but if filled must be valid)
+        const emailVal = emailEl?.value.trim() || '';
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+        if (emailVal && !emailRegex.test(emailVal)) {
+          valid = false;
+          emailEl?.classList.add('!border-red-500', 'ring-4', 'ring-red-500/10');
+          if (errEmail) {
+            errEmail.textContent = 'Adresa de email este invalidă (trebuie să conțină @ și un domeniu).';
+            errEmail.classList.remove('hidden');
+          }
+        }
+
+        if (!valid && formStatus) {
+          formStatus.className = 'text-sm font-semibold p-3 rounded-xl bg-red-50 border border-red-200 text-red-600';
+          formStatus.textContent = 'Te rugăm să corectezi câmpurile evidențiate cu roșu.';
+          formStatus.classList.remove('hidden');
+        }
+
+        return valid;
+      }
+
+      // Clear errors on input
+      ['field-name', 'field-phone', 'field-email', 'field-category'].forEach(id => {
+        const el = document.getElementById(id);
+        const errEl = document.getElementById('err-' + id.replace('field-', ''));
+        if (el) {
+          const clearErr = () => {
+            el.classList.remove('!border-red-500', 'ring-4', 'ring-red-500/10');
+            if (errEl) errEl.classList.add('hidden');
+            if (formStatus) formStatus.classList.add('hidden');
+          };
+          el.addEventListener('input', clearErr);
+          el.addEventListener('change', clearErr);
+        }
+      });
+
       if (btnNext) {
         btnNext.addEventListener('click', async () => {
           if (currentStep < totalSteps) {
-            // Basic validation step 1
             if (currentStep === 1) {
-              const name = document.getElementById('field-name')?.value.trim();
-              const phone = document.getElementById('field-phone')?.value.trim();
-              if (!name || !phone) {
-                if (formStatus) {
-                  formStatus.className = 'text-sm font-semibold p-3 rounded-xl bg-red-50 border border-red-200 text-red-600';
-                  formStatus.textContent = 'Completează cel puțin Numele și Telefonul.';
-                  formStatus.classList.remove('hidden');
-                }
+              if (!validateStep1()) {
                 return;
               }
             }
@@ -963,21 +1067,18 @@ const faqSchema = {
             currentStep++;
             updateStepUI();
           } else {
-            // Submit
+            // Submit: final check
+            if (!validateStep1()) {
+              currentStep = 1;
+              updateStepUI();
+              return;
+            }
+
             const name = document.getElementById('field-name')?.value.trim();
             const phone = document.getElementById('field-phone')?.value.trim();
             const email = document.getElementById('field-email')?.value.trim();
             const category = document.getElementById('field-category')?.value;
             const message = document.getElementById('field-message')?.value.trim();
-
-            if (!name || !phone) {
-              if (formStatus) {
-                formStatus.className = 'text-sm font-semibold p-3 rounded-xl bg-red-50 border border-red-200 text-red-600';
-                formStatus.textContent = 'Completează cel puțin Numele și Telefonul.';
-                formStatus.classList.remove('hidden');
-              }
-              return;
-            }
 
             if (btnNext) {
               btnNext.disabled = true;
@@ -991,7 +1092,9 @@ const faqSchema = {
                 body: JSON.stringify({ name, phone, email, category, message, source: 'website' })
               });
 
-              if (res.ok) {
+              const resultData = await res.json().catch(() => ({}));
+
+              if (res.ok && resultData.success) {
                 if (formStatus) {
                   formStatus.className = 'text-sm font-semibold p-3 rounded-xl bg-green-50 border border-green-200 text-green-700';
                   formStatus.innerHTML = '✓ Cererea ta a fost trimisă cu succes! Te contactăm în cel mai scurt timp.';
@@ -1002,12 +1105,14 @@ const faqSchema = {
                 updateStepUI();
                 if (btnNext) btnNext.disabled = false;
               } else {
-                throw new Error('server error');
+                throw new Error(resultData.error || 'server error');
               }
             } catch (err) {
               if (formStatus) {
                 formStatus.className = 'text-sm font-semibold p-3 rounded-xl bg-red-50 border border-red-200 text-red-600';
-                formStatus.textContent = 'A apărut o eroare. Încearcă din nou sau sună la ' + '{settings.contact_phone}'.replace('{settings.contact_phone}', '0744 420 905');
+                formStatus.textContent = err.message && err.message !== 'server error' 
+                  ? err.message 
+                  : 'A apărut o eroare. Încearcă din nou sau sună la ' + '{settings.contact_phone}'.replace('{settings.contact_phone}', '0744 420 905');
                 formStatus.classList.remove('hidden');
               }
               if (btnNext) {

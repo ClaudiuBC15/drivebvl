@@ -17,6 +17,12 @@ function slugifyCategory(categoryName: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
+// 301 Redirect if the category parameter contains diacritics or uppercase characters
+const slugifiedCat = slugifyCategory(cat || '');
+if (cat !== slugifiedCat) {
+  return Astro.redirect(`/blog/categorie/${slugifiedCat}`, 301);
+}
+
 // Fetch distinct categories of published articles
 const categoryRows = await queryAll<any>(
   db,

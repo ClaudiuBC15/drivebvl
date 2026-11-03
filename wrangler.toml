@@ -5,6 +5,8 @@ compatibility_flags = ["nodejs_compat"]
 [vars]
 ADMIN_USER = "admin"
 ADMIN_PASS = "StartDrive2025!"
+TELEGRAM_BOT_TOKEN = "9007953709:AAE2orLDkCC_-JHwTNGbJoHyYBPcx5TZOpE"
+TELEGRAM_CHAT_ID = "-5188167926"
 
 [[d1_databases]]
 binding = "DB"
