@@ -853,11 +853,17 @@ const faqSchema = {
     .process-card:hover {
       box-shadow: 0 12px 30px rgba(204,0,0,0.07), 0 0 0 1px rgba(204,0,0,0.08);
     }
+    /* Field error styles */
+    :global(.field-error-input),
+    .field-error-input {
+      border-color: #dc2626 !important;
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15) !important;
+      background-color: #fffbfb !important;
+    }
   </style>
 
   <script is:inline>
-    document.addEventListener('DOMContentLoaded', () => {
-
+    function initInscrieriPage() {
       // ===== SCROLL REVEAL =====
       const reveals = document.querySelectorAll('.reveal');
       const revealObserver = new IntersectionObserver((entries) => {
@@ -900,6 +906,172 @@ const faqSchema = {
       const formStatus = document.getElementById('form-status');
       const summaryPreview = document.getElementById('summary-preview');
 
+      const nameEl = document.getElementById('field-name');
+      const phoneEl = document.getElementById('field-phone');
+      const emailEl = document.getElementById('field-email');
+      const categoryEl = document.getElementById('field-category');
+
+      const errName = document.getElementById('err-name');
+      const errPhone = document.getElementById('err-phone');
+      const errEmail = document.getElementById('err-email');
+      const errCategory = document.getElementById('err-category');
+
+      function setFieldError(inputEl, errEl, message) {
+        if (!inputEl) return;
+        inputEl.classList.add('field-error-input');
+        inputEl.style.borderColor = '#dc2626';
+        inputEl.style.boxShadow = '0 0 0 3px rgba(220, 38, 38, 0.15)';
+        inputEl.style.backgroundColor = '#fffbfb';
+        if (errEl) {
+          errEl.textContent = message;
+          errEl.classList.remove('hidden');
+          errEl.style.display = 'block';
+        }
+      }
+
+      function clearFieldError(inputEl, errEl) {
+        if (!inputEl) return;
+        inputEl.classList.remove('field-error-input');
+        inputEl.style.borderColor = '';
+        inputEl.style.boxShadow = '';
+        inputEl.style.backgroundColor = '';
+        if (errEl) {
+          errEl.textContent = '';
+          errEl.classList.add('hidden');
+          errEl.style.display = 'none';
+        }
+      }
+
+      // Real-time validator functions
+      function checkName(showError = true) {
+        const val = nameEl ? nameEl.value.trim() : '';
+        if (!val) {
+          if (showError) setFieldError(nameEl, errName, 'Numele complet este obligatoriu.');
+          return false;
+        }
+        if (val.length < 3) {
+          if (showError) setFieldError(nameEl, errName, 'Numele trebuie să conțină cel puțin 3 litere.');
+          return false;
+        }
+        clearFieldError(nameEl, errName);
+        return true;
+      }
+
+      function checkPhone(showError = true) {
+        const val = phoneEl ? phoneEl.value.trim() : '';
+        const digits = val.replace(/[^0-9]/g, '');
+        if (!val) {
+          if (showError) setFieldError(phoneEl, errPhone, 'Numărul de telefon este obligatoriu.');
+          return false;
+        }
+        if (digits.length < 10) {
+          if (showError) setFieldError(phoneEl, errPhone, `Numărul trebuie să conțină minim 10 cifre (ai introdus ${digits.length}/10).`);
+          return false;
+        }
+        clearFieldError(phoneEl, errPhone);
+        return true;
+      }
+
+      function checkCategory(showError = true) {
+        const val = categoryEl ? categoryEl.value : '';
+        if (!val || val === '') {
+          if (showError) setFieldError(categoryEl, errCategory, 'Te rugăm să alegi o categorie auto din listă.');
+          return false;
+        }
+        clearFieldError(categoryEl, errCategory);
+        return true;
+      }
+
+      function checkEmail(showError = true) {
+        const val = emailEl ? emailEl.value.trim() : '';
+        // Email is completely OPTIONAL:
+        if (!val) {
+          clearFieldError(emailEl, errEmail);
+          return true;
+        }
+        // If user typed something, it MUST be a valid email:
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+        if (!emailRegex.test(val)) {
+          if (showError) setFieldError(emailEl, errEmail, 'Adresa de email este invalidă (ex: nume@domeniu.ro).');
+          return false;
+        }
+        clearFieldError(emailEl, errEmail);
+        return true;
+      }
+
+      // Real-time input listeners (instant feedback as you type)
+      if (nameEl) {
+        nameEl.addEventListener('input', () => {
+          const val = nameEl.value.trim();
+          if (val.length > 0 && val.length < 3) {
+            setFieldError(nameEl, errName, 'Numele trebuie să conțină cel puțin 3 litere.');
+          } else if (val.length >= 3) {
+            clearFieldError(nameEl, errName);
+          }
+        });
+        nameEl.addEventListener('blur', () => checkName(true));
+      }
+
+      if (phoneEl) {
+        phoneEl.addEventListener('input', () => {
+          // Strictly digits and spaces only (strip all letters/symbols instantly)
+          const raw = phoneEl.value;
+          const cleaned = raw.replace(/[^0-9\s]/g, '');
+          if (raw !== cleaned) {
+            phoneEl.value = cleaned;
+          }
+          const digits = cleaned.replace(/[^0-9]/g, '');
+
+          if (digits.length > 0 && digits.length < 10) {
+            setFieldError(phoneEl, errPhone, `Numărul trebuie să conțină minim 10 cifre (ai introdus ${digits.length}/10).`);
+          } else if (digits.length >= 10) {
+            clearFieldError(phoneEl, errPhone);
+          } else if (digits.length === 0) {
+            if (phoneEl.classList.contains('field-error-input')) {
+              setFieldError(phoneEl, errPhone, 'Numărul de telefon este obligatoriu.');
+            }
+          }
+        });
+        phoneEl.addEventListener('blur', () => checkPhone(true));
+      }
+
+      if (emailEl) {
+        emailEl.addEventListener('input', () => {
+          const val = emailEl.value.trim();
+          if (!val) {
+            clearFieldError(emailEl, errEmail);
+          } else {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+            if (!emailRegex.test(val)) {
+              setFieldError(emailEl, errEmail, 'Adresa de email este invalidă (ex: nume@domeniu.ro).');
+            } else {
+              clearFieldError(emailEl, errEmail);
+            }
+          }
+        });
+        emailEl.addEventListener('blur', () => checkEmail(true));
+      }
+
+      if (categoryEl) {
+        categoryEl.addEventListener('change', () => {
+          if (!categoryEl.value) {
+            setFieldError(categoryEl, errCategory, 'Te rugăm să alegi o categorie auto din listă.');
+          } else {
+            clearFieldError(categoryEl, errCategory);
+          }
+        });
+        categoryEl.addEventListener('blur', () => checkCategory(true));
+      }
+
+      // Prevent enter submit bypassing validation
+      const formEl = document.getElementById('inscriere-form');
+      if (formEl) {
+        formEl.addEventListener('submit', (e) => {
+          e.preventDefault();
+          if (btnNext) btnNext.click();
+        });
+      }
+
       function updateStepUI() {
         if (!stepLabel || !stepTitle) return;
         stepLabel.textContent = `Pasul ${currentStep} din ${totalSteps}`;
@@ -933,10 +1105,10 @@ const faqSchema = {
         }
 
         if (currentStep === 3 && summaryPreview) {
-          const name = document.getElementById('field-name')?.value || '—';
-          const phone = document.getElementById('field-phone')?.value || '—';
-          const email = document.getElementById('field-email')?.value || '—';
-          const category = document.getElementById('field-category')?.value || '—';
+          const name = nameEl?.value || '—';
+          const phone = phoneEl?.value || '—';
+          const email = emailEl?.value || '—';
+          const category = categoryEl?.value || '—';
           summaryPreview.innerHTML = `
             <div class="space-y-1 text-slate-600">
               <p class="text-xs"><span class="font-bold text-slate-800">Nume:</span> ${name}</p>
@@ -947,137 +1119,54 @@ const faqSchema = {
         }
       }
 
-      // Restrict phone input to numbers, plus, spaces, dashes
-      const phoneInput = document.getElementById('field-phone');
-      if (phoneInput) {
-        phoneInput.addEventListener('input', () => {
-          phoneInput.value = phoneInput.value.replace(/[^0-9+\s\-]/g, '');
-        });
-      }
-
-      function validateStep1() {
-        let valid = true;
-        const nameEl = document.getElementById('field-name');
-        const phoneEl = document.getElementById('field-phone');
-        const emailEl = document.getElementById('field-email');
-        const categoryEl = document.getElementById('field-category');
-
-        const errName = document.getElementById('err-name');
-        const errPhone = document.getElementById('err-phone');
-        const errEmail = document.getElementById('err-email');
-        const errCategory = document.getElementById('err-category');
-
-        // Reset errors
-        [nameEl, phoneEl, emailEl, categoryEl].forEach(el => {
-          if (el) el.classList.remove('!border-red-500', 'ring-4', 'ring-red-500/10');
-        });
-        [errName, errPhone, errEmail, errCategory].forEach(el => {
-          if (el) {
-            el.textContent = '';
-            el.classList.add('hidden');
-          }
-        });
-
-        // 1. Validate Name
-        const nameVal = nameEl?.value.trim() || '';
-        if (!nameVal || nameVal.length < 3) {
-          valid = false;
-          nameEl?.classList.add('!border-red-500', 'ring-4', 'ring-red-500/10');
-          if (errName) {
-            errName.textContent = 'Introdu numele complet (minim 3 caractere).';
-            errName.classList.remove('hidden');
-          }
-        }
-
-        // 2. Validate Phone
-        const phoneVal = phoneEl?.value.trim() || '';
-        const phoneDigits = phoneVal.replace(/[^0-9]/g, '');
-        if (!phoneVal) {
-          valid = false;
-          phoneEl?.classList.add('!border-red-500', 'ring-4', 'ring-red-500/10');
-          if (errPhone) {
-            errPhone.textContent = 'Numărul de telefon este obligatoriu.';
-            errPhone.classList.remove('hidden');
-          }
-        } else if (phoneDigits.length < 10) {
-          valid = false;
-          phoneEl?.classList.add('!border-red-500', 'ring-4', 'ring-red-500/10');
-          if (errPhone) {
-            errPhone.textContent = 'Introdu un număr valid din minim 10 cifre (ex: 0744 123 456).';
-            errPhone.classList.remove('hidden');
-          }
-        }
-
-        // 3. Validate Category (must be selected)
-        const catVal = categoryEl?.value || '';
-        if (!catVal || catVal === '') {
-          valid = false;
-          categoryEl?.classList.add('!border-red-500', 'ring-4', 'ring-red-500/10');
-          if (errCategory) {
-            errCategory.textContent = 'Te rugăm să alegi o categorie auto din listă.';
-            errCategory.classList.remove('hidden');
-          }
-        }
-
-        // 4. Validate Email (optional, but if filled must be valid)
-        const emailVal = emailEl?.value.trim() || '';
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-        if (emailVal && !emailRegex.test(emailVal)) {
-          valid = false;
-          emailEl?.classList.add('!border-red-500', 'ring-4', 'ring-red-500/10');
-          if (errEmail) {
-            errEmail.textContent = 'Adresa de email este invalidă (trebuie să conțină @ și un domeniu).';
-            errEmail.classList.remove('hidden');
-          }
-        }
-
-        if (!valid && formStatus) {
-          formStatus.className = 'text-sm font-semibold p-3 rounded-xl bg-red-50 border border-red-200 text-red-600';
-          formStatus.textContent = 'Te rugăm să corectezi câmpurile evidențiate cu roșu.';
-          formStatus.classList.remove('hidden');
-        }
-
-        return valid;
-      }
-
-      // Clear errors on input
-      ['field-name', 'field-phone', 'field-email', 'field-category'].forEach(id => {
-        const el = document.getElementById(id);
-        const errEl = document.getElementById('err-' + id.replace('field-', ''));
-        if (el) {
-          const clearErr = () => {
-            el.classList.remove('!border-red-500', 'ring-4', 'ring-red-500/10');
-            if (errEl) errEl.classList.add('hidden');
-            if (formStatus) formStatus.classList.add('hidden');
-          };
-          el.addEventListener('input', clearErr);
-          el.addEventListener('change', clearErr);
-        }
-      });
-
       if (btnNext) {
-        btnNext.addEventListener('click', async () => {
+        btnNext.addEventListener('click', async (e) => {
+          e.preventDefault();
+
           if (currentStep < totalSteps) {
             if (currentStep === 1) {
-              if (!validateStep1()) {
+              const vName = checkName(true);
+              const vPhone = checkPhone(true);
+              const vCategory = checkCategory(true);
+              const vEmail = checkEmail(true);
+
+              if (!vName || !vPhone || !vCategory || !vEmail) {
+                if (formStatus) {
+                  formStatus.className = 'text-sm font-semibold p-3 rounded-xl bg-red-50 border border-red-200 text-red-600';
+                  formStatus.textContent = 'Te rugăm să completezi corect câmpurile obligatorii marcate cu roșu.';
+                  formStatus.classList.remove('hidden');
+                  formStatus.style.display = 'block';
+                }
+                if (!vName) nameEl?.focus();
+                else if (!vPhone) phoneEl?.focus();
+                else if (!vCategory) categoryEl?.focus();
+                else if (!vEmail) emailEl?.focus();
                 return;
               }
             }
-            if (formStatus) formStatus.classList.add('hidden');
+            if (formStatus) {
+              formStatus.classList.add('hidden');
+              formStatus.style.display = 'none';
+            }
             currentStep++;
             updateStepUI();
           } else {
-            // Submit: final check
-            if (!validateStep1()) {
+            // Final submit
+            const vName = checkName(true);
+            const vPhone = checkPhone(true);
+            const vCategory = checkCategory(true);
+            const vEmail = checkEmail(true);
+
+            if (!vName || !vPhone || !vCategory || !vEmail) {
               currentStep = 1;
               updateStepUI();
               return;
             }
 
-            const name = document.getElementById('field-name')?.value.trim();
-            const phone = document.getElementById('field-phone')?.value.trim();
-            const email = document.getElementById('field-email')?.value.trim();
-            const category = document.getElementById('field-category')?.value;
+            const name = nameEl?.value.trim();
+            const phone = phoneEl?.value.trim();
+            const email = emailEl?.value.trim();
+            const category = categoryEl?.value;
             const message = document.getElementById('field-message')?.value.trim();
 
             if (btnNext) {
@@ -1099,6 +1188,7 @@ const faqSchema = {
                   formStatus.className = 'text-sm font-semibold p-3 rounded-xl bg-green-50 border border-green-200 text-green-700';
                   formStatus.innerHTML = '✓ Cererea ta a fost trimisă cu succes! Te contactăm în cel mai scurt timp.';
                   formStatus.classList.remove('hidden');
+                  formStatus.style.display = 'block';
                 }
                 document.getElementById('inscriere-form')?.reset();
                 currentStep = 1;
@@ -1114,6 +1204,7 @@ const faqSchema = {
                   ? err.message 
                   : 'A apărut o eroare. Încearcă din nou sau sună la ' + '{settings.contact_phone}'.replace('{settings.contact_phone}', '0744 420 905');
                 formStatus.classList.remove('hidden');
+                formStatus.style.display = 'block';
               }
               if (btnNext) {
                 btnNext.disabled = false;
@@ -1128,7 +1219,10 @@ const faqSchema = {
         btnPrev.addEventListener('click', () => {
           if (currentStep > 1) {
             currentStep--;
-            if (formStatus) formStatus.classList.add('hidden');
+            if (formStatus) {
+              formStatus.classList.add('hidden');
+              formStatus.style.display = 'none';
+            }
             updateStepUI();
           }
         });
@@ -1148,8 +1242,13 @@ const faqSchema = {
           toggle.setAttribute('aria-expanded', !expanded);
         });
       });
+    }
 
-    });
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initInscrieriPage);
+    } else {
+      initInscrieriPage();
+    }
   </script>
 
 </MainLayout>

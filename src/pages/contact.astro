@@ -627,27 +627,90 @@ const heroImage = dbSettings.contact_hero_image || '/images/contact_student.webp
       const successContainer = document.getElementById('success-container');
       const resetBtn = document.getElementById('reset-form-btn');
 
-      // Filter phone input to digits and symbols only
+      // Filter phone input to strictly digits and spaces
       const contactPhoneInput = document.getElementById('phone');
       if (contactPhoneInput) {
         contactPhoneInput.addEventListener('input', () => {
-          contactPhoneInput.value = contactPhoneInput.value.replace(/[^0-9+\s\-]/g, '');
+          const raw = contactPhoneInput.value;
+          const cleaned = raw.replace(/[^0-9\s]/g, '');
+          if (raw !== cleaned) contactPhoneInput.value = cleaned;
+          const digits = cleaned.replace(/[^0-9]/g, '');
+          const errEl = document.getElementById('contact-err-phone');
+          if (digits.length > 0 && digits.length < 10) {
+            contactPhoneInput.classList.add('!border-red-500', 'ring-4', 'ring-red-500/10');
+            if (errEl) {
+              errEl.textContent = `Numărul trebuie să conțină minim 10 cifre (ai introdus ${digits.length}/10).`;
+              errEl.classList.remove('hidden');
+            }
+          } else if (digits.length >= 10) {
+            contactPhoneInput.classList.remove('!border-red-500', 'ring-4', 'ring-red-500/10');
+            if (errEl) errEl.classList.add('hidden');
+          }
         });
       }
 
-      // Clear field errors on input
-      ['name', 'phone', 'email', 'category'].forEach(id => {
-        const el = document.getElementById(id);
-        const errEl = document.getElementById('contact-err-' + id);
-        if (el) {
-          const clear = () => {
-            el.classList.remove('!border-red-500', 'ring-4', 'ring-red-500/10');
+      // Real-time validation for email
+      const contactEmailInput = document.getElementById('email');
+      if (contactEmailInput) {
+        contactEmailInput.addEventListener('input', () => {
+          const val = contactEmailInput.value.trim();
+          const errEl = document.getElementById('contact-err-email');
+          if (!val) {
+            contactEmailInput.classList.remove('!border-red-500', 'ring-4', 'ring-red-500/10');
             if (errEl) errEl.classList.add('hidden');
-          };
-          el.addEventListener('input', clear);
-          el.addEventListener('change', clear);
-        }
-      });
+          } else {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+            if (!emailRegex.test(val)) {
+              contactEmailInput.classList.add('!border-red-500', 'ring-4', 'ring-red-500/10');
+              if (errEl) {
+                errEl.textContent = 'Introdu o adresă de email validă (ex: nume@domeniu.ro).';
+                errEl.classList.remove('hidden');
+              }
+            } else {
+              contactEmailInput.classList.remove('!border-red-500', 'ring-4', 'ring-red-500/10');
+              if (errEl) errEl.classList.add('hidden');
+            }
+          }
+        });
+      }
+
+      // Real-time validation for name
+      const contactNameInput = document.getElementById('name');
+      if (contactNameInput) {
+        contactNameInput.addEventListener('input', () => {
+          const val = contactNameInput.value.trim();
+          const errEl = document.getElementById('contact-err-name');
+          if (val.length > 0 && val.length < 3) {
+            contactNameInput.classList.add('!border-red-500', 'ring-4', 'ring-red-500/10');
+            if (errEl) {
+              errEl.textContent = 'Introdu numele complet (minim 3 caractere).';
+              errEl.classList.remove('hidden');
+            }
+          } else if (val.length >= 3) {
+            contactNameInput.classList.remove('!border-red-500', 'ring-4', 'ring-red-500/10');
+            if (errEl) errEl.classList.add('hidden');
+          }
+        });
+      }
+
+      // Real-time validation for category
+      const contactCatInput = document.getElementById('category');
+      if (contactCatInput) {
+        contactCatInput.addEventListener('change', () => {
+          const val = contactCatInput.value;
+          const errEl = document.getElementById('contact-err-category');
+          if (val) {
+            contactCatInput.classList.remove('!border-red-500', 'ring-4', 'ring-red-500/10');
+            if (errEl) errEl.classList.add('hidden');
+          } else {
+            contactCatInput.classList.add('!border-red-500', 'ring-4', 'ring-red-500/10');
+            if (errEl) {
+              errEl.textContent = 'Te rugăm să alegi o categorie auto din listă.';
+              errEl.classList.remove('hidden');
+            }
+          }
+        });
+      }
 
       if (form && formContainer && successContainer) {
         form.addEventListener('submit', async (e) => {
