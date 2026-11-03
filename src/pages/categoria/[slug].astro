@@ -44,8 +44,12 @@ const testimonials = parseJSON<any[]>(category.testimonials, []);
 const graduateImages = parseJSON<string[]>(category.graduate_images, []);
 
 // SEO Tags
+const defaultCategoryBDesc = 'Obține permisul categoria B la Start Drive BVL, școală de șoferi din Suceava. Pregătire teoretică și practică, instructori dedicați și înscriere simplă. Începe pregătirea pentru permis!';
+
 const title = category.seo_title || `${category.name} Suceava — Școala de Șoferi Start Drive BVL`;
-const description = category.seo_description || `Obține permisul auto ${category.name} în Suceava. Cursuri teoretice și practice cu instructori profesioniști la Start Drive BVL.`;
+const description = (slug === 'b' && (!category.seo_description || category.seo_description.includes('Dacia') || category.seo_description.includes('libertatea')))
+  ? defaultCategoryBDesc
+  : (category.seo_description || (slug === 'b' ? defaultCategoryBDesc : `Obține permisul auto ${category.name} în Suceava. Cursuri teoretice și practice cu instructori profesioniști la Start Drive BVL.`));
 
 // Build course Schema.org JSON-LD
 const schemaJson = {

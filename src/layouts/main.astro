@@ -53,7 +53,7 @@ if (isHome) {
 }
 
 const finalTitle = title || dbTitle || "Start Drive BVL | Școala de Șoferi Suceava";
-const finalDescription = description || dbDescription || "Obține-ți permisul auto cu încredere alături de Start Drive BVL Suceava. Instructori experimentați, flotă modernă și rată mare de promovabilitate.";
+const finalDescription = description || dbDescription || "Descoperă Start Drive BVL, școală de șoferi în Suceava pentru categoriile B, BE, C și CE. Pregătire teoretică și practică, instructori dedicați și înscriere online. Începe drumul către permis!";
 const finalOgImage = ogImage || dbOgImage || "/images/logo.png";
 const finalKeywords = dbKeywords || "permis auto, scoala de soferi suceava, cat B, CPI, CPC";
 
@@ -108,7 +108,13 @@ const schoolSchema = {
     <meta name="description" content={finalDescription} />
     <meta name="keywords" content={finalKeywords} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href={faviconUrl} />
+    <!-- Favicon & Touch Icons (Google Search & Mobile compliant) -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="generator" content={Astro.generator} />
     <title>{finalTitle}</title>
     {preloadImage && <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />}

@@ -1,6 +1,9 @@
 # Start Drive BVL — robots.txt
 User-agent: *
 Allow: /
+Allow: /favicon.ico
+Allow: /favicon*.png
+Allow: /apple-touch-icon.png
 
 Disallow: /admin/
 Disallow: /api/
