@@ -8,14 +8,18 @@ interface AnimatedCounterProps {
 }
 
 function AnimatedCounter({ value, duration = 1.5 }: AnimatedCounterProps) {
-  const [count, setCount] = useState(0);
+  // SSR & initial client render uses the real value so Googlebot and search engines index the correct numbers
+  const [count, setCount] = useState(value);
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const hasAnimatedRef = useRef(false);
 
   useEffect(() => {
-    if (!isInView) return;
+    if (!isInView || hasAnimatedRef.current) return;
+    hasAnimatedRef.current = true;
 
     let start = 0;
+    setCount(0);
     const end = value;
     const totalMiliseconds = duration * 1000;
     

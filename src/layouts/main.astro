@@ -53,7 +53,7 @@ if (isHome) {
 }
 
 const finalTitle = title || dbTitle || "Start Drive BVL | Școala de Șoferi Suceava";
-const finalDescription = description || dbDescription || "Descoperă Start Drive BVL, școală de șoferi în Suceava pentru categoriile B, BE, C și CE. Pregătire teoretică și practică, instructori dedicați și înscriere online. Începe drumul către permis!";
+const finalDescription = description || dbDescription || "Școala de șoferi Start Drive BVL Suceava — Categoriile B1, B, BE, C, CE, D. Plată în rate fără dobândă, program flexibil și flotă completă. Înscrie-te online!";
 const finalOgImage = ogImage || dbOgImage || "/images/logo.png";
 const finalKeywords = dbKeywords || "permis auto, scoala de soferi suceava, cat B, CPI, CPC";
 
@@ -64,8 +64,9 @@ const faviconUrl = (dbSettings as any).favicon_url || '/images/logo.png';
 
 const contactFacebook = (dbSettings as any).contact_facebook || "https://www.facebook.com/profile.php?id=100090298179249";
 const contactTiktok = (dbSettings as any).contact_tiktok || "";
+const contactMaps = (dbSettings as any).contact_maps || "https://maps.app.goo.gl/qRVyWYK1ihdfXJAS7";
 
-const sameAsLinks = [contactFacebook];
+const sameAsLinks = [contactFacebook, contactMaps];
 if (contactTiktok) {
   sameAsLinks.push(contactTiktok);
 }
@@ -76,19 +77,20 @@ const schoolSchema = {
   "name": "Start Drive BVL",
   "image": faviconUrl.startsWith('http') ? faviconUrl : `${siteUrl}${faviconUrl}`,
   "url": "https://startdrivebvl.ro/",
+  "hasMap": contactMaps,
   "telephone": (dbSettings as any).contact_phone || "+40744420905",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "Strada Mărășești 48",
+    "streetAddress": "Strada Mărăști, Nr. 12, Bl. T2 (pe Mărășești, în parcarea MPO)",
     "addressLocality": "Suceava",
-    "addressRegion": "SV",
+    "addressRegion": "Suceava",
     "postalCode": "720166",
     "addressCountry": "RO"
   },
   "geo": {
     "@type": "GeoCoordinates",
-    "latitude": 47.6416,
-    "longitude": 26.2575
+    "latitude": 47.6476102,
+    "longitude": 26.2522425
   },
   "openingHoursSpecification": {
     "@type": "OpeningHoursSpecification",
@@ -133,8 +135,8 @@ const schoolSchema = {
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:title" content={finalTitle} />
+    <meta name="twitter:description" content={finalDescription} />
     <meta name="twitter:image" content={ogImageUrl} />
 
 
@@ -423,19 +425,19 @@ const schoolSchema = {
             <div class="w-6 h-[2px] bg-[#cc0000] mt-2 mb-6"></div>
             <ul class="space-y-3">
               <li>
+                <a href="/categoria/b1" class="group flex items-center text-slate-500 text-sm hover:text-[#cc0000] font-medium transition-colors">
+                  <svg class="w-3 h-3 text-slate-400 group-hover:text-[#cc0000] transition-colors mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                  </svg>
+                  Categoria B1
+                </a>
+              </li>
+              <li>
                 <a href="/categoria/b" class="group flex items-center text-slate-500 text-sm hover:text-[#cc0000] font-medium transition-colors">
                   <svg class="w-3 h-3 text-slate-400 group-hover:text-[#cc0000] transition-colors mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
                   </svg>
                   Categoria B
-                </a>
-              </li>
-              <li>
-                <a href="/categorii" class="group flex items-center text-slate-500 text-sm hover:text-[#cc0000] font-medium transition-colors">
-                  <svg class="w-3 h-3 text-slate-400 group-hover:text-[#cc0000] transition-colors mr-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
-                  </svg>
-                  Categoria A
                 </a>
               </li>
               <li>

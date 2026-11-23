@@ -54,14 +54,14 @@ const faqSchema = {
   )}
 
   <!-- ===== HERO SPLIT SECTION ===== -->
-  <section class="relative bg-white pt-28 md:pt-36 pb-0 overflow-hidden border-b border-slate-100">
+  <section class="relative bg-white pt-28 md:pt-32 pb-0 overflow-hidden border-b border-slate-100">
     <!-- Subtle grid pattern -->
     <div class="absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_70%_60%_at_40%_0%,#000_60%,transparent_100%)] opacity-50 pointer-events-none"></div>
 
     <div class="relative z-10 max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center pb-16 md:pb-20">
 
       <!-- Left: Title & Badges -->
-      <div class="lg:col-span-6 text-left space-y-6 animate-fade-in-up">
+      <div class="lg:col-span-6 text-left space-y-6 animate-fade-in-up lg:self-center lg:-translate-y-8">
         <!-- Breadcrumb -->
         <nav class="flex items-center gap-2 text-slate-400 font-bold text-xs tracking-wider uppercase">
           <a href="/" class="hover:text-[#cc0000] transition-colors">Acas&#x103;</a>
@@ -96,26 +96,22 @@ const faqSchema = {
         </div>
       </div>
 
-      <!-- Right: Multi-step Form Card -->
+      <!-- Right: Direct 1-Step Form Card -->
       <div class="lg:col-span-6 animate-fade-in-up" style="animation-delay:0.1s">
         <div class="bg-white border border-slate-200/80 rounded-[24px] shadow-[0_20px_60px_-10px_rgba(0,0,0,0.08)] overflow-hidden">
-          <!-- Step Indicator Header -->
+          <!-- Form Header -->
           <div class="px-8 pt-7 pb-5 border-b border-slate-100">
-            <div class="flex items-center justify-between mb-4">
-              <p class="text-xs font-bold text-slate-400 uppercase tracking-wider" id="step-label">Pasul 1 din 3</p>
-              <div class="flex items-center gap-2">
-                {[1,2,3].map(n => (
-                  <div class={`step-dot w-7 h-7 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300 ${n === 1 ? 'bg-[#cc0000] text-white shadow-md shadow-red-200' : 'bg-slate-100 text-slate-400'}`} data-step={n}>{n}</div>
-                ))}
-              </div>
-            </div>
-            <h2 class="text-lg font-extrabold text-[#0a0a0b]" id="step-title" style="font-family:'Plus Jakarta Sans',sans-serif;">Informații personale</h2>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-red-50 text-[#cc0000] border border-red-100/80 mb-2">
+              Înscriere Rapidă
+            </span>
+            <h2 class="text-xl font-extrabold text-[#0a0a0b]" style="font-family:'Plus Jakarta Sans',sans-serif;">Completează formularul de înscriere</h2>
+            <p class="text-xs text-slate-500 font-light mt-1">Durează mai puțin de 1 minut. Te vom contacta pentru a stabili detaliile și programul dorit.</p>
           </div>
 
-          <!-- Form Steps -->
+          <!-- 1-Step Form -->
           <form id="inscriere-form" class="px-8 py-6 space-y-4" novalidate>
-            <!-- STEP 1: Personal Info -->
-            <div id="form-step-1" class="form-step space-y-4">
+            <div class="space-y-4">
+              <!-- Nume & Telefon -->
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="field-name">Nume complet *</label>
@@ -124,19 +120,15 @@ const faqSchema = {
                   <p id="err-name" class="hidden text-xs text-red-600 font-semibold mt-1.5"></p>
                 </div>
                 <div>
-                  <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="field-email">Email (opțional)</label>
-                  <input type="email" id="field-email" name="email" placeholder="ex: andrei@email.com"
-                    class="w-full bg-slate-50/60 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm placeholder-slate-400 focus:border-[#cc0000] focus:ring-4 focus:ring-red-500/10 outline-none transition-all" />
-                  <p id="err-email" class="hidden text-xs text-red-600 font-semibold mt-1.5"></p>
-                </div>
-              </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
                   <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="field-phone">Telefon *</label>
                   <input type="tel" id="field-phone" name="phone" required placeholder="ex: 0744 123 456" inputmode="numeric"
                     class="w-full bg-slate-50/60 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm placeholder-slate-400 focus:border-[#cc0000] focus:ring-4 focus:ring-red-500/10 outline-none transition-all" />
                   <p id="err-phone" class="hidden text-xs text-red-600 font-semibold mt-1.5"></p>
                 </div>
+              </div>
+
+              <!-- Categorie & Email -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="field-category">Categorie dorită *</label>
                   <div class="relative">
@@ -156,49 +148,43 @@ const faqSchema = {
                   </div>
                   <p id="err-category" class="hidden text-xs text-red-600 font-semibold mt-1.5"></p>
                 </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="field-email">Email (opțional)</label>
+                  <input type="email" id="field-email" name="email" placeholder="ex: andrei@email.com"
+                    class="w-full bg-slate-50/60 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm placeholder-slate-400 focus:border-[#cc0000] focus:ring-4 focus:ring-red-500/10 outline-none transition-all" />
+                  <p id="err-email" class="hidden text-xs text-red-600 font-semibold mt-1.5"></p>
+                </div>
               </div>
-            </div>
 
-            <!-- STEP 2: Message -->
-            <div id="form-step-2" class="form-step hidden space-y-4">
+              <!-- Mesaj (opțional) -->
               <div>
-                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="field-message">Mesaj (opțional)</label>
-                <textarea id="field-message" name="message" rows="4" placeholder="Întrebări despre acte, programare sau orare..."
+                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="field-message">Mesaj sau întrebări (opțional)</label>
+                <textarea id="field-message" name="message" rows="2" placeholder="Mențiuni despre program, disponibilitate sau întrebări..."
                   class="w-full bg-slate-50/60 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm placeholder-slate-400 focus:border-[#cc0000] focus:ring-4 focus:ring-red-500/10 outline-none transition-all resize-none"></textarea>
               </div>
-              <p class="text-xs text-slate-400 font-light">Ne poți spune orice nelămurire — îți răspundem în cel mai scurt timp posibil.</p>
-            </div>
-
-            <!-- STEP 3: Confirm -->
-            <div id="form-step-3" class="form-step hidden space-y-4 text-center py-2">
-              <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto border border-red-100">
-                <svg class="w-8 h-8 text-[#cc0000]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              </div>
-              <div>
-                <h3 class="font-extrabold text-[#0a0a0b] text-lg" style="font-family:'Plus Jakarta Sans',sans-serif;">Confirmi trimiterea?</h3>
-                <p class="text-slate-500 text-sm font-light mt-1">Verifică datele și apasă „Trimite" pentru a finaliza înscrierea.</p>
-              </div>
-              <div id="summary-preview" class="bg-slate-50 border border-slate-100 rounded-xl p-4 text-left space-y-2 text-sm"></div>
             </div>
 
             <!-- Form Error/Success Message -->
-            <div id="form-status" class="hidden text-sm font-semibold p-3 rounded-xl"></div>
+            <div id="form-status" class="hidden text-sm font-semibold p-3.5 rounded-xl"></div>
 
-            <!-- Navigation Buttons -->
-            <div class="flex items-center gap-3 pt-2">
-              <button type="button" id="btn-prev" class="hidden flex-shrink-0 px-5 py-3.5 rounded-xl border border-slate-200 text-slate-600 hover:border-slate-300 hover:text-slate-800 text-sm font-bold transition-all cursor-pointer">
-                Înapoi
-              </button>
-              <button type="button" id="btn-next"
-                class="flex-1 bg-[#cc0000] hover:bg-red-700 text-white font-bold py-3.5 px-6 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer text-sm uppercase tracking-wider">
-                Continuă
+            <!-- Submit Button -->
+            <div class="pt-2">
+              <button type="submit" id="btn-submit"
+                class="w-full bg-[#cc0000] hover:bg-red-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer text-sm uppercase tracking-wider active:scale-[0.99]">
+                <span>Trimite Înscrierea</span>
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
               </button>
             </div>
 
+            <!-- Risk Reversal Guarantee Notice -->
+            <p class="text-xs text-emerald-800 bg-emerald-50 border border-emerald-100 rounded-xl py-2.5 px-3 text-center font-medium flex items-center justify-center gap-2">
+              <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span>Înscrierea online este gratuită — nu plătești nimic pe site. Te contactăm pentru detalii.</span>
+            </p>
+
             <p class="text-center text-[11px] text-slate-400 font-light flex items-center justify-center gap-1.5 pb-1">
               <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-              Datele tale sunt în siguranță și nu vor fi distribuite.
+              Datele tale sunt în siguranță și protejate conform GDPR.
             </p>
           </form>
         </div>
@@ -894,17 +880,9 @@ const faqSchema = {
         pathObserver.observe(stepsSection);
       }
 
-      // ===== MULTI-STEP FORM =====
-      const stepTitles = ['Informații personale', 'Mesaj opțional', 'Confirmă trimiterea'];
-      let currentStep = 1;
-      const totalSteps = 3;
-
-      const stepLabel = document.getElementById('step-label');
-      const stepTitle = document.getElementById('step-title');
-      const btnPrev = document.getElementById('btn-prev');
-      const btnNext = document.getElementById('btn-next');
+      // ===== DIRECT 1-STEP FORM =====
       const formStatus = document.getElementById('form-status');
-      const summaryPreview = document.getElementById('summary-preview');
+      const submitBtn = document.getElementById('btn-submit');
 
       const nameEl = document.getElementById('field-name');
       const phoneEl = document.getElementById('field-phone');
@@ -1063,172 +1041,88 @@ const faqSchema = {
         categoryEl.addEventListener('blur', () => checkCategory(true));
       }
 
-      // Prevent enter submit bypassing validation
+      // Direct 1-Step Form Submit Handler
       const formEl = document.getElementById('inscriere-form');
       if (formEl) {
-        formEl.addEventListener('submit', (e) => {
-          e.preventDefault();
-          if (btnNext) btnNext.click();
-        });
-      }
-
-      function updateStepUI() {
-        if (!stepLabel || !stepTitle) return;
-        stepLabel.textContent = `Pasul ${currentStep} din ${totalSteps}`;
-        stepTitle.textContent = stepTitles[currentStep - 1];
-
-        document.querySelectorAll('.form-step').forEach((s, i) => {
-          s.classList.toggle('hidden', i + 1 !== currentStep);
-        });
-        document.querySelectorAll('.step-dot').forEach((dot, i) => {
-          const n = i + 1;
-          if (n < currentStep) {
-            dot.className = 'step-dot w-7 h-7 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300 bg-green-500 text-white';
-            dot.textContent = '✓';
-          } else if (n === currentStep) {
-            dot.className = 'step-dot w-7 h-7 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300 bg-[#cc0000] text-white shadow-md shadow-red-200';
-            dot.textContent = n;
-          } else {
-            dot.className = 'step-dot w-7 h-7 rounded-full flex items-center justify-center text-xs font-black transition-all duration-300 bg-slate-100 text-slate-400';
-            dot.textContent = n;
-          }
-        });
-
-        if (btnPrev) btnPrev.classList.toggle('hidden', currentStep === 1);
-
-        if (btnNext) {
-          if (currentStep < totalSteps) {
-            btnNext.innerHTML = 'Continuă <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>';
-          } else {
-            btnNext.innerHTML = 'Trimite înscrierea <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>';
-          }
-        }
-
-        if (currentStep === 3 && summaryPreview) {
-          const name = nameEl?.value || '—';
-          const phone = phoneEl?.value || '—';
-          const email = emailEl?.value || '—';
-          const category = categoryEl?.value || '—';
-          summaryPreview.innerHTML = `
-            <div class="space-y-1 text-slate-600">
-              <p class="text-xs"><span class="font-bold text-slate-800">Nume:</span> ${name}</p>
-              <p class="text-xs"><span class="font-bold text-slate-800">Telefon:</span> ${phone}</p>
-              <p class="text-xs"><span class="font-bold text-slate-800">Email:</span> ${email}</p>
-              <p class="text-xs"><span class="font-bold text-slate-800">Categorie:</span> ${category}</p>
-            </div>`;
-        }
-      }
-
-      if (btnNext) {
-        btnNext.addEventListener('click', async (e) => {
+        formEl.addEventListener('submit', async (e) => {
           e.preventDefault();
 
-          if (currentStep < totalSteps) {
-            if (currentStep === 1) {
-              const vName = checkName(true);
-              const vPhone = checkPhone(true);
-              const vCategory = checkCategory(true);
-              const vEmail = checkEmail(true);
+          const vName = checkName(true);
+          const vPhone = checkPhone(true);
+          const vCategory = checkCategory(true);
+          const vEmail = checkEmail(true);
 
-              if (!vName || !vPhone || !vCategory || !vEmail) {
-                if (formStatus) {
-                  formStatus.className = 'text-sm font-semibold p-3 rounded-xl bg-red-50 border border-red-200 text-red-600';
-                  formStatus.textContent = 'Te rugăm să completezi corect câmpurile obligatorii marcate cu roșu.';
-                  formStatus.classList.remove('hidden');
-                  formStatus.style.display = 'block';
-                }
-                if (!vName) nameEl?.focus();
-                else if (!vPhone) phoneEl?.focus();
-                else if (!vCategory) categoryEl?.focus();
-                else if (!vEmail) emailEl?.focus();
-                return;
-              }
-            }
+          if (!vName || !vPhone || !vCategory || !vEmail) {
             if (formStatus) {
-              formStatus.classList.add('hidden');
-              formStatus.style.display = 'none';
+              formStatus.className = 'text-sm font-semibold p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-600 block';
+              formStatus.textContent = 'Te rugăm să completezi corect câmpurile obligatorii marcate cu roșu.';
+              formStatus.classList.remove('hidden');
+              formStatus.style.display = 'block';
             }
-            currentStep++;
-            updateStepUI();
-          } else {
-            // Final submit
-            const vName = checkName(true);
-            const vPhone = checkPhone(true);
-            const vCategory = checkCategory(true);
-            const vEmail = checkEmail(true);
+            if (!vName) nameEl?.focus();
+            else if (!vPhone) phoneEl?.focus();
+            else if (!vCategory) categoryEl?.focus();
+            else if (!vEmail) emailEl?.focus();
+            return;
+          }
 
-            if (!vName || !vPhone || !vCategory || !vEmail) {
-              currentStep = 1;
-              updateStepUI();
-              return;
-            }
+          if (formStatus) {
+            formStatus.classList.add('hidden');
+            formStatus.style.display = 'none';
+          }
 
-            const name = nameEl?.value.trim();
-            const phone = phoneEl?.value.trim();
-            const email = emailEl?.value.trim();
-            const category = categoryEl?.value;
-            const message = document.getElementById('field-message')?.value.trim();
+          const name = nameEl?.value.trim();
+          const phone = phoneEl?.value.trim();
+          const email = emailEl?.value.trim();
+          const category = categoryEl?.value;
+          const message = document.getElementById('field-message')?.value.trim() || '';
 
-            if (btnNext) {
-              btnNext.disabled = true;
-              btnNext.innerHTML = '<div class="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin"></div> Se trimite...';
-            }
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<div class="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin"></div> Se trimite...';
+          }
 
-            try {
-              const res = await fetch('/api/leads', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, phone, email, category, message, source: 'website' })
-              });
+          try {
+            const res = await fetch('/api/leads', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name, phone, email, category, message, source: 'website' })
+            });
 
-              const resultData = await res.json().catch(() => ({}));
+            const resultData = await res.json().catch(() => ({}));
 
-              if (res.ok && resultData.success) {
-                if (formStatus) {
-                  formStatus.className = 'text-sm font-semibold p-3 rounded-xl bg-green-50 border border-green-200 text-green-700';
-                  formStatus.innerHTML = '✓ Cererea ta a fost trimisă cu succes! Te contactăm în cel mai scurt timp.';
-                  formStatus.classList.remove('hidden');
-                  formStatus.style.display = 'block';
-                }
-                document.getElementById('inscriere-form')?.reset();
-                currentStep = 1;
-                updateStepUI();
-                if (btnNext) btnNext.disabled = false;
-              } else {
-                throw new Error(resultData.error || 'server error');
-              }
-            } catch (err) {
+            if (res.ok && resultData.success) {
               if (formStatus) {
-                formStatus.className = 'text-sm font-semibold p-3 rounded-xl bg-red-50 border border-red-200 text-red-600';
-                formStatus.textContent = err.message && err.message !== 'server error' 
-                  ? err.message 
-                  : 'A apărut o eroare. Încearcă din nou sau sună la ' + '{settings.contact_phone}'.replace('{settings.contact_phone}', '0744 420 905');
+                formStatus.className = 'text-sm font-semibold p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 block';
+                formStatus.innerHTML = '✓ Cererea ta a fost trimisă cu succes! Te vom contacta în cel mai scurt timp pentru confirmare și detalii.';
                 formStatus.classList.remove('hidden');
                 formStatus.style.display = 'block';
               }
-              if (btnNext) {
-                btnNext.disabled = false;
-                btnNext.innerHTML = 'Trimite înscrierea <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>';
+              formEl.reset();
+              [nameEl, phoneEl, emailEl, categoryEl].forEach(el => clearFieldError(el, null));
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span>Trimite Înscrierea</span> <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>';
               }
+            } else {
+              throw new Error(resultData.error || 'server error');
             }
-          }
-        });
-      }
-
-      if (btnPrev) {
-        btnPrev.addEventListener('click', () => {
-          if (currentStep > 1) {
-            currentStep--;
+          } catch (err) {
             if (formStatus) {
-              formStatus.classList.add('hidden');
-              formStatus.style.display = 'none';
+              formStatus.className = 'text-sm font-semibold p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-600 block';
+              formStatus.textContent = err.message && err.message !== 'server error' 
+                ? err.message 
+                : 'A apărut o eroare. Încearcă din nou sau sună la 0744 420 905.';
+              formStatus.classList.remove('hidden');
+              formStatus.style.display = 'block';
             }
-            updateStepUI();
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = '<span>Trimite Înscrierea</span> <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>';
+            }
           }
         });
       }
-
-      updateStepUI();
 
       // ===== FAQ ACCORDION =====
       document.querySelectorAll('.faq-toggle').forEach(toggle => {
